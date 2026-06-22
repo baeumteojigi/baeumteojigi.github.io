@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROTECTED VALUE SYSTEM | Knowledge Guardian</title>
+    <title>PROTECTED VALUE SYSTEM | 배움터지기</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
         
         :root {
             --teal: #008080;
             --silver: #C0C0C0;
-            --dark: #001f1f;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,53 +24,28 @@
         header {
             height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), 
-                        url('https://picsum.photos/id/1015/1920/1080') center/cover no-repeat;
+                        url('https://picsum.photos/id/1015/1920/1080') center/cover;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            position: relative;
         }
         
-        .shield-container {
+        .logo {
             width: 260px;
-            height: 260px;
+            margin-bottom: 30px;
             border: 10px solid var(--silver);
-            border-radius: 50%;
-            background: var(--teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            box-shadow: 0 0 70px rgba(0, 128, 128, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(0, 128, 128, 0.6);
         }
         
-        .shield {
-            width: 200px;
-            height: 220px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 25% 25% 55% 55%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #001f1f;
-            font-weight: bold;
-        }
-        
-        .laurel { font-size: 38px; margin-bottom: 8px; }
-        .stars { font-size: 26px; letter-spacing: 15px; }
-        
-        .hero-content {
-            max-width: 920px;
-            padding: 0 20px;
-        }
+        .hero-content { max-width: 920px; padding: 0 20px; }
         
         h1 {
             font-family: 'Noto Serif KR', serif;
             font-size: 3.4rem;
             letter-spacing: 6px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
         
         .subtitle {
@@ -86,76 +60,50 @@
             gap: 50px;
             font-size: 1.45rem;
             font-weight: 500;
-        }
-        
-        section {
-            padding: 110px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .identity {
-            background: #f8f8f8;
-            color: #222;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            margin-top: 70px;
-        }
-        
-        .element {
-            background: white;
-            padding: 45px 35px;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            text-align: center;
-            transition: all 0.4s;
-        }
-        
-        .element:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 40px rgba(0,128,128,0.15);
-        }
-        
-        .element h3 {
-            color: var(--teal);
-            margin: 25px 0 16px;
-            font-size: 1.6rem;
+            margin-bottom: 40px;
         }
         
         .ribbon {
             background: linear-gradient(90deg, #C0C0C0, #e8e8e8, #C0C0C0);
             color: #001f1f;
-            padding: 14px 80px;
-            display: inline-block;
+            padding: 16px 80px;
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             border-radius: 6px;
-            margin: 40px 0;
+            display: inline-block;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        section { padding: 110px 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .identity { background: #f8f8f8; color: #222; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .element {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
         }
         
         footer {
             background: #001f1f;
             text-align: center;
-            padding: 70px 20px 40px;
-            font-size: 1rem;
+            padding: 60px 20px;
         }
     </style>
 </head>
 <body>
     <header>
         <div class="hero-content">
-            <div class="shield-container">
-                <div class="shield">
-                    <div class="laurel">월계관</div>
-                    <div class="stars">★ ★ ★</div>
-                    <div style="margin-top:25px; font-size:32px;">📖</div>
-                </div>
-            </div>
+            <img src="배움터지기%20상표.jpg" alt="배움터지기 상표" class="logo">
             
             <h1>PROTECTED VALUE SYSTEM</h1>
             <p class="subtitle">
@@ -175,55 +123,25 @@
     </header>
 
     <section class="identity">
-        <h2 style="text-align:center; font-size:2.9rem; margin-bottom:30px; color:#001f1f;">IDENTITY SYSTEM</h2>
-        <p style="text-align:center; max-width:820px; margin:0 auto 70px; font-size:1.25rem;">
+        <h2 style="text-align:center; font-size:2.8rem; margin-bottom:30px; color:#001f1f;">IDENTITY SYSTEM</h2>
+        <p style="text-align:center; max-width:820px; margin:0 auto 60px; font-size:1.25rem;">
             배움터지기 방패 마크는 전통과 현대의 조화를 바탕으로<br>
             학문을 수호하고 인격과 윤리를 지키는 상징 체계입니다.
         </p>
         
         <div class="grid">
-            <div class="element">
-                <h3>청록색 바탕</h3>
-                <p>정서 안정과 치유 공간을 상징하며, 창의성 탐구와 투명·청렴한 교육 가치를 담습니다.</p>
-            </div>
-            <div class="element">
-                <h3>월계관</h3>
-                <p>학문·덕행·인격에서 우수함을 추구하며 완전성과 끊임없는 성장을 의미합니다.</p>
-            </div>
-            <div class="element">
-                <h3>별 3개</h3>
-                <p>지식 · 기술 · 태도를 균형 있게 갖추어 개개인의 탁월함을 향해 나아가는 단계</p>
-            </div>
-            <div class="element">
-                <h3>책</h3>
-                <p>전통 위 열린 탐구와 학습·연구 여정을 상징하며 전통과 현대성의 조화를 나타냅니다.</p>
-            </div>
-            <div class="element">
-                <h3>리본</h3>
-                <p>견고한 기반을 상징하며, 지향하는 가치와 모토를 담는 그릇입니다.</p>
-            </div>
-            <div class="element">
-                <h3>은색 방패</h3>
-                <p>순수·성실과 평화·화합을 기반으로 지혜롭고 통찰력 있는 학문 추구를 강조합니다.</p>
-            </div>
+            <div class="element"><h3>청록색 바탕</h3><p>정서 안정과 치유 공간을 상징</p></div>
+            <div class="element"><h3>월계관</h3><p>학문·덕행·인격의 우수함과 성장</p></div>
+            <div class="element"><h3>별 3개</h3><p>지식·기술·태도의 균형</p></div>
+            <div class="element"><h3>책</h3><p>전통과 현대의 조화</p></div>
+            <div class="element"><h3>리본</h3><p>가치와 모토를 담는 그릇</p></div>
+            <div class="element"><h3>은색 방패</h3><p>순수·성실·지혜로운 학문 추구</p></div>
         </div>
     </section>
 
-    <section style="background:#001f1f; text-align:center;">
-        <h2 style="font-size:2.6rem; margin-bottom:40px;">KNOWLEDGE GUARDIAN</h2>
-        <p style="font-size:1.4rem; max-width:800px; margin:0 auto;">
-            학문을 수호하고, 균형을 지키며,<br>
-            더 높은 가치를 향해 비상합니다.
-        </p>
-    </section>
-
     <footer>
-        <p><strong>대표 : 유종경</strong></p>
-        <p style="margin-top:12px;">배움터지기 | PROTECTED VALUE SYSTEM</p>
-        <p style="margin-top:25px; opacity:0.7;">
-            baemteojigi.github.io<br>
-            © 2026 Knowledge Guardian. All Rights Reserved.
-        </p>
+        <p><strong>대표 : 유종경</strong> | 배움터지기</p>
+        <p>© 2026 PROTECTED VALUE SYSTEM. All Rights Reserved.</p>
     </footer>
 </body>
 </html>
