@@ -23,7 +23,6 @@
             --card: rgba(255, 255, 255, 0.95);
             --paper: #f7f7f4;
             --paper-2: #f2f4ef;
-            --paper-3: #eef2ee;
         }
 
         html {
@@ -45,7 +44,7 @@
             line-height: 2.02;
             color: #222;
             background:
-                linear-gradient(rgba(247, 247, 244, 0.92), rgba(247, 247, 244, 0.92)),
+                linear-gradient(rgba(247, 247, 244, 0.90), rgba(247, 247, 244, 0.90)),
                 url('배움터지기%20상표.jpg') center center fixed;
             background-size: 2300px;
             background-repeat: no-repeat;
@@ -60,9 +59,9 @@
             z-index: 0;
             pointer-events: none;
             background: url('배움터지기%20상표.jpg') center center no-repeat;
-            background-size: clamp(1600px, 130vw, 2400px);
-            opacity: 0.055;
-            filter: blur(0.15px);
+            background-size: clamp(1700px, 130vw, 2500px);
+            opacity: 0.10;
+            filter: blur(0.2px);
             transform: translate3d(var(--logo-x, 0px), var(--logo-y, 0px), 0);
             transition: transform 120ms linear, opacity 220ms ease;
         }
@@ -73,8 +72,8 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            background: radial-gradient(circle at top center, rgba(255,255,255,0.34), transparent 58%);
-            opacity: 0.52;
+            background: radial-gradient(circle at top center, rgba(255,255,255,0.38), transparent 58%);
+            opacity: 0.46;
         }
 
         body > * {
@@ -210,6 +209,24 @@
             box-shadow: 0 18px 44px rgba(0,0,0,0.04);
         }
 
+        section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('배움터지기%20상표.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        section > * {
+            position: relative;
+            z-index: 1;
+        }
+
         #identity {
             max-width: 100%;
             border-radius: 0;
@@ -217,22 +234,44 @@
             background:
                 linear-gradient(180deg, rgba(41, 74, 71, 0.94), rgba(32, 56, 52, 0.97)),
                 linear-gradient(135deg, rgba(95, 143, 138, 0.22), rgba(255, 255, 255, 0.02));
+            --logo-opacity: 0.16;
+        }
+
+        #identity::before {
+            opacity: 0.15;
+            background-size: contain;
         }
 
         #history {
             background: linear-gradient(180deg, rgba(242, 244, 239, 0.93), rgba(236, 241, 236, 0.94));
         }
 
+        #history::before {
+            opacity: 0.07;
+        }
+
         #activity {
             background: linear-gradient(180deg, rgba(247, 247, 244, 0.93), rgba(242, 244, 239, 0.94));
+        }
+
+        #activity::before {
+            opacity: 0.07;
         }
 
         #links {
             background: linear-gradient(180deg, rgba(245, 247, 243, 0.93), rgba(239, 243, 240, 0.94));
         }
 
+        #links::before {
+            opacity: 0.07;
+        }
+
         #inquiry {
             background: linear-gradient(180deg, rgba(243, 244, 240, 0.93), rgba(237, 240, 236, 0.94));
+        }
+
+        #inquiry::before {
+            opacity: 0.07;
         }
 
         .section-title {
@@ -267,7 +306,7 @@
         .identity-content h3 {
             color: var(--teal-dark);
             font-family: 'Noto Serif KR', serif;
-            font-size: 2.38rem;
+            font-size: 3.0rem;
             line-height: 1.2;
             margin: 46px 0 16px;
             text-align: center;
@@ -275,7 +314,7 @@
         }
 
         .identity-content p {
-            font-size: 1.18rem;
+            font-size: 1.28rem;
             text-align: center;
             line-height: 1.88;
             font-family: 'Gowun Batang', serif;
@@ -283,14 +322,14 @@
         }
 
         .identity-lead {
-            font-size: 1.28rem;
-            line-height: 1.95;
+            font-size: 1.42rem;
+            line-height: 1.96;
             margin-bottom: 62px;
             color: #2a2a2a;
         }
 
         .identity-tagline {
-            font-size: 2.2rem;
+            font-size: 2.35rem;
             line-height: 1.15;
             font-weight: 900;
             color: var(--teal-dark);
@@ -300,7 +339,7 @@
         }
 
         .identity-bottom {
-            font-size: 1.34rem;
+            font-size: 1.52rem;
             line-height: 1.78;
             text-align: center;
             color: #2d2d2d;
@@ -489,18 +528,28 @@
         .email-card {
             justify-content: space-between;
             gap: 18px;
-        }
-
-        .email-label {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--teal-dark);
-            margin-bottom: 12px;
-            font-family: 'Noto Serif KR', serif;
+            border: none;
+            box-shadow: 0 14px 38px rgba(0,0,0,0.08);
         }
 
         .email-wrap {
             width: 100%;
+        }
+
+        .email-label {
+            font-size: 1.48rem;
+            font-weight: 900;
+            color: var(--teal-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .email-label i {
+            font-size: 1.35rem;
+            color: var(--teal-dark);
         }
 
         .email-row {
@@ -512,21 +561,21 @@
 
         .email-input {
             flex: 1 1 360px;
-            font-size: 1.55rem;
-            padding: 18px 18px;
-            border-radius: 18px;
+            font-size: 1.78rem;
+            padding: 18px 14px;
+            border-radius: 16px;
             border: none;
-            background: #f8faf8;
+            background: transparent;
             color: #222;
             outline: none;
             text-align: center;
             user-select: all;
-            box-shadow: inset 0 0 0 1px rgba(95, 143, 138, 0.12);
+            box-shadow: none;
         }
 
         .copy-btn {
             flex: 0 0 auto;
-            font-size: 1.2rem;
+            font-size: 1.22rem;
             font-weight: 800;
             padding: 16px 24px;
             border-radius: 18px;
@@ -597,15 +646,15 @@
             }
 
             .identity-content p {
-                font-size: 1.08rem;
+                font-size: 1.06rem;
             }
 
             .identity-lead {
-                font-size: 1.12rem;
+                font-size: 1.1rem;
             }
 
             .identity-content h3 {
-                font-size: 1.82rem;
+                font-size: 1.85rem;
             }
 
             .identity-tagline {
@@ -670,11 +719,11 @@
             }
 
             .email-label {
-                font-size: 1.15rem;
+                font-size: 1.18rem;
             }
 
             .email-input {
-                font-size: 1.12rem;
+                font-size: 1.15rem;
             }
 
             .copy-btn {
@@ -838,7 +887,7 @@
 
             <div class="email-card">
                 <div class="email-wrap">
-                    <div class="email-label">이메일 주소 복사</div>
+                    <div class="email-label"><i class="fas fa-envelope"></i><span>이메일</span></div>
                     <div class="email-row">
                         <input id="emailAddress" class="email-input" type="text" value="baeumteojigi@naver.com" readonly>
                         <button type="button" class="copy-btn" id="copyEmailBtn">복사</button>
