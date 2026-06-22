@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="배움터지기 - PROTECTED VALUE SYSTEM. 학문을 수호하고 인격과 윤리를 지키는 교육 공동체">
-    <meta name="keywords" content="배움터지기, 유종경, Knowledge Guardian, 교육, 인격교육, 학문수호">
+    <meta name="description" content="배움터지기 - PROTECTED VALUE SYSTEM | 학문을 수호하고 인격과 윤리를 지키는 교육 공동체">
+    <meta name="keywords" content="배움터지기, 유종경, Knowledge Guardian, 인격교육, 학문수호">
+    
+    <!-- Google Search Console 소유권 확인 -->
+    <meta name="google-site-verification" content="Yx700oYZ4xlrnqY1" />
+    
     <title>배움터지기 | PROTECTED VALUE SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
         
@@ -33,7 +38,6 @@
         .identity-content { background: white; padding: 60px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); line-height: 2.0; }
         .identity-content h3 { color: var(--teal); margin: 35px 0 15px; font-size: 1.6rem; }
         
-        /* 캐러셀 */
         .carousel { position: relative; max-width: 1100px; margin: 40px auto; overflow: hidden; border-radius: 16px; }
         .carousel-inner { display: flex; transition: transform 0.6s ease; }
         .carousel-item img { width: 100%; height: 620px; object-fit: cover; }
@@ -55,6 +59,7 @@
     </style>
 </head>
 <body>
+    <!-- 나머지 내용은 이전과 동일하게 유지 -->
     <nav>
         <div class="nav-container">
             <div style="font-weight:bold; font-size:1.5rem;">배움터지기</div>
@@ -159,7 +164,6 @@
     </footer>
 
     <script>
-        // 활동 사진 1~11 자동 추가
         const inner = document.getElementById('carouselInner');
         for(let i = 1; i <= 11; i++) {
             const div = document.createElement('div');
@@ -167,7 +171,6 @@
             div.innerHTML = `<img src="활동${i}.jpg" alt="활동 ${i}">`;
             inner.appendChild(div);
         }
-        
         let current = 0;
         function show() { inner.style.transform = `translateX(-${current * 100}%)`; }
         function nextSlide() { current = (current + 1) % 11; show(); }
