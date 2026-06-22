@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="배움터지기 - PROTECTED VALUE SYSTEM | 학문을 수호하고 인격과 윤리를 지키는 교육 공동체">
+    <meta name="description" content="배움터지기 - PROTECTED VALUE SYSTEM">
     <meta name="google-site-verification" content="Yx700oYZ4xlrnqY1" />
     
     <title>배움터지기 | PROTECTED VALUE SYSTEM</title>
@@ -15,9 +15,7 @@
         :root {
             --teal: #006666;
             --teal-light: #008080;
-            --teal-dark: #004d4d;
             --gold: #d4af37;
-            --blue-light: #e0f0f5;
             --dark: #002f2f;
         }
         
@@ -26,134 +24,129 @@
             font-family: 'Noto Sans KR', sans-serif; 
             background: #f8f9fa; 
             color: #222; 
-            line-height: 1.85; 
+            line-height: 1.9; 
         }
         
         nav { 
             position: fixed; top: 0; width: 100%; 
             background: rgba(0,47,47,0.97); 
-            z-index: 1000; padding: 16px 0; 
+            z-index: 1000; padding: 18px 0; 
         }
         .nav-container { 
             max-width: 1300px; margin: 0 auto; 
             display: flex; justify-content: space-between; 
             align-items: center; padding: 0 20px; color: white; 
-            flex-wrap: wrap;
         }
         
         header {
             min-height: 100vh;
-            background: linear-gradient(rgba(0,47,47,0.78), rgba(0,47,47,0.85)), 
+            background: linear-gradient(rgba(0,47,47,0.75), rgba(0,47,47,0.85)), 
                         url('https://picsum.photos/id/1015/1920/1080') center/cover;
             display: flex; align-items: center; justify-content: center; 
             text-align: center; color: white;
         }
         
         .logo { 
-            width: 360px; 
-            max-width: 85vw;
-            border: 16px solid var(--silver); 
-            border-radius: 28px; 
-            box-shadow: 0 0 80px rgba(0,128,128,0.8); 
-            margin-bottom: 40px; 
+            width: 460px; 
+            max-width: 92vw;
+            border: 18px solid #C0C0C0; 
+            border-radius: 32px; 
+            box-shadow: 0 0 100px rgba(0,128,128,0.85); 
+            margin-bottom: 50px; 
         }
         
         h1 { 
             font-family: 'Noto Serif KR', serif; 
-            font-size: clamp(2.4rem, 6vw, 4.2rem); 
-            letter-spacing: 6px; 
-            margin-bottom: 25px; 
+            font-size: clamp(2.8rem, 8vw, 4.8rem); 
+            letter-spacing: 8px; 
+            margin-bottom: 30px; 
         }
         
-        section { padding: 110px 20px; max-width: 1300px; margin: 0 auto; }
+        section { padding: 130px 20px; max-width: 1300px; margin: 0 auto; }
         .section-title { 
             text-align: center; 
-            font-size: clamp(2.2rem, 5vw, 3.2rem); 
-            margin-bottom: 70px; 
+            font-size: clamp(2.6rem, 6.5vw, 3.6rem); 
+            margin-bottom: 80px; 
             color: var(--teal); 
             font-weight: 900; 
         }
         
-        /* IDENTITY SECTION */
+        /* IDENTITY */
         #identity {
-            background: linear-gradient(rgba(0,47,47,0.88), rgba(0,47,47,0.92)), 
+            background: linear-gradient(rgba(0,47,47,0.88), rgba(0,47,47,0.93)), 
                         url('배움터지기%20상표.jpg') center/cover fixed;
             color: white;
             position: relative;
         }
         .identity-content { 
             position: relative; z-index: 2;
-            background: rgba(255,255,255,0.96); 
+            background: rgba(255,255,255,0.97); 
             color: #222;
-            padding: 70px 40px; 
+            padding: 80px 50px; 
             border-radius: 24px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25); 
-            max-width: 1100px;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.3); 
+            max-width: 1150px;
             margin: 0 auto;
         }
         .identity-content h3 { 
             color: var(--teal); 
-            margin: 45px 0 18px; 
-            font-size: 1.75rem; 
+            margin: 55px 0 22px; 
+            font-size: 2rem; 
         }
-        .identity-content p { font-size: 1.18rem; }
+        .identity-content p { font-size: 1.35rem; }
         
-        /* 캐러셀 */
+        /* 활동 사진 - 화질 최우선 */
         .carousel { 
             position: relative; 
-            max-width: 1180px; 
+            max-width: 1200px; 
             margin: 0 auto; 
             overflow: hidden; 
             border-radius: 20px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
         }
         .carousel-inner { display: flex; transition: transform 0.8s ease-in-out; }
         .carousel-item img { 
             width: 100%; 
             height: auto; 
-            max-height: 680px; 
-            object-fit: cover; 
+            min-height: 500px;
+            max-height: 780px;
+            object-fit: contain;     /* 화질 깨짐 방지 */
+            background: #f8f9fa;
         }
         
         .links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
         }
         .link-card {
             background: white; 
-            padding: 45px 25px; 
+            padding: 50px 30px; 
             border-radius: 20px; 
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
             transition: all 0.4s;
-        }
-        .link-card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 25px 50px rgba(0,128,128,0.2); 
         }
         
         footer { 
-            background: linear-gradient(#002f2f, #001f1f); 
+            background: var(--dark); 
             color: #ddd; 
             text-align: center; 
-            padding: 90px 20px 50px; 
+            padding: 100px 20px 60px; 
         }
 
-        /* 반응형 */
         @media (max-width: 768px) {
-            .nav-container { padding: 0 15px; justify-content: center; gap: 15px; }
-            section { padding: 80px 15px; }
-            .identity-content { padding: 50px 25px; }
+            section { padding: 90px 15px; }
+            .identity-content { padding: 60px 30px; }
         }
     </style>
 </head>
 <body>
     <nav>
         <div class="nav-container">
-            <div style="font-weight:900; font-size:1.6rem;">배움터지기</div>
-            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px 20px;">
+            <div style="font-weight:900; font-size:1.65rem;">배움터지기</div>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:18px;">
                 <a href="#identity" style="color:white; text-decoration:none; font-weight:500;">정체성</a>
                 <a href="#history" style="color:white; text-decoration:none; font-weight:500;">연혁</a>
                 <a href="#activity" style="color:white; text-decoration:none; font-weight:500;">활동</a>
@@ -164,22 +157,22 @@
     </nav>
 
     <header>
-        <div style="max-width:1200px; padding:0 20px; text-align:center;">
+        <div style="max-width:1250px; padding:0 20px; text-align:center;">
             <img src="배움터지기%20상표.jpg" alt="배움터지기" class="logo">
             <h1>PROTECTED VALUE SYSTEM</h1>
-            <p style="font-size:1.65rem; margin:35px 0 20px; line-height:1.7;">
+            <p style="font-size:1.85rem; margin:45px 0 30px; line-height:1.7;">
                 전통(傳統) 위에 세운 순수(純粹)와 지혜(智慧)<br>
                 안정(安定)한 열린 배움터에서 창의(創意) 날개를 달아<br>
                 최고 가치(價值)를 향해 도약(跳躍)합니다.
             </p>
-            <p style="font-size:2rem; font-weight:bold; color:var(--gold);">수호(守護) · 균형(均衡) · 비상(飛翔)</p>
+            <p style="font-size:2.2rem; font-weight:bold; color:var(--gold);">수호(守護) · 균형(均衡) · 비상(飛翔)</p>
         </div>
     </header>
 
     <section id="identity">
         <h2 class="section-title" style="color:white;">IDENTITY SYSTEM</h2>
         <div class="identity-content">
-            <p style="font-size:1.3rem; text-align:center; margin-bottom:55px;">
+            <p style="font-size:1.38rem; text-align:center; margin-bottom:65px;">
                 배움터지기 방패 마크는 전통(傳統)과 현대(現代) 조화(調和)를 바탕으로<br>
                 학문(學問)을 수호(守護)하고 인격(人格)과 윤리(倫理)를 지키는 상징(象徵) 체계(體系)입니다.
             </p>
@@ -202,19 +195,19 @@
             <h3>은색 방패</h3>
             <p>순수·성실과 평화·화합을 기반으로 지혜롭고 통찰력 있는 학문 추구를 강조합니다.</p>
             
-            <h2 style="text-align:center; margin:75px 0 35px; color:var(--teal); font-size:2.35rem;">KNOWLEDGE GUARDIAN</h2>
-            <p style="text-align:center; font-size:1.5rem;">
+            <h2 style="text-align:center; margin:85px 0 40px; color:var(--teal); font-size:2.6rem;">KNOWLEDGE GUARDIAN</h2>
+            <p style="text-align:center; font-size:1.6rem;">
                 학문을 수호하고, 균형을 지키며, 더 높은 가치를 향해 비상합니다.
             </p>
         </div>
     </section>
 
-    <section id="history" style="background:#e0f0f0;">
+    <section id="history" style="background:#e8f4f4;">
         <h2 class="section-title">연혁</h2>
-        <div style="text-align:center; background:white; padding:65px; border-radius:20px; max-width:720px; margin:0 auto; box-shadow:0 10px 35px rgba(0,0,0,0.1);">
-            <h3 style="color:var(--teal);">2025년 6월 17일</h3>
-            <h2 style="font-size:2.5rem; margin:20px 0;">배움터지기 설립</h2>
-            <p style="font-size:1.2rem;">학문의 수호와 바른 인격 교육을 사명으로 새로운 배움의 터전을 열었습니다.</p>
+        <div style="text-align:center; background:white; padding:80px 40px; border-radius:24px; max-width:800px; margin:0 auto; box-shadow:0 15px 45px rgba(0,0,0,0.12);">
+            <h3 style="color:var(--teal); font-size:1.8rem;">2025년 6월 17일</h3>
+            <h2 style="font-size:2.8rem; margin:30px 0 20px;">배움터지기 설립</h2>
+            <p style="font-size:1.35rem;">학문의 수호와 바른 인격 교육을 사명으로 새로운 배움의 터전을 열었습니다.</p>
         </div>
     </section>
 
@@ -222,8 +215,8 @@
         <h2 class="section-title">주요 활동</h2>
         <div class="carousel" id="carousel">
             <div class="carousel-inner" id="carouselInner"></div>
-            <button onclick="prevSlide()" style="position:absolute; top:50%; left:15px; transform:translateY(-50%); background:rgba(0,102,102,0.7); color:white; border:none; width:55px; height:55px; border-radius:50%; font-size:2rem; z-index:10;">‹</button>
-            <button onclick="nextSlide()" style="position:absolute; top:50%; right:15px; transform:translateY(-50%); background:rgba(0,102,102,0.7); color:white; border:none; width:55px; height:55px; border-radius:50%; font-size:2rem; z-index:10;">›</button>
+            <button onclick="prevSlide()" style="position:absolute; top:50%; left:20px; transform:translateY(-50%); background:rgba(0,102,102,0.75); color:white; border:none; width:70px; height:70px; border-radius:50%; font-size:2.4rem; z-index:10;">‹</button>
+            <button onclick="nextSlide()" style="position:absolute; top:50%; right:20px; transform:translateY(-50%); background:rgba(0,102,102,0.75); color:white; border:none; width:70px; height:70px; border-radius:50%; font-size:2.4rem; z-index:10;">›</button>
         </div>
     </section>
 
@@ -231,30 +224,30 @@
         <h2 class="section-title">연결하기</h2>
         <div class="links-grid">
             <a href="https://smartstore.naver.com/baeumteojigi" target="_blank" class="link-card">
-                <i class="fas fa-store" style="font-size:3.6rem; color:var(--teal); margin-bottom:20px;"></i>
+                <i class="fas fa-store" style="font-size:3.8rem; color:var(--teal); margin-bottom:25px;"></i>
                 <h3>네이버 스마트스토어</h3>
             </a>
             <a href="https://www.youtube.com/@배움터지기" target="_blank" class="link-card">
-                <i class="fab fa-youtube" style="font-size:3.6rem; color:#ff0000; margin-bottom:20px;"></i>
+                <i class="fab fa-youtube" style="font-size:3.8rem; color:#ff0000; margin-bottom:25px;"></i>
                 <h3>YouTube</h3>
             </a>
             <a href="https://www.instagram.com/baeumteojigi" target="_blank" class="link-card">
-                <i class="fab fa-instagram" style="font-size:3.6rem; color:#E1306C; margin-bottom:20px;"></i>
+                <i class="fab fa-instagram" style="font-size:3.8rem; color:#E1306C; margin-bottom:25px;"></i>
                 <h3>Instagram</h3>
             </a>
         </div>
     </section>
 
-    <section id="inquiry" style="background:#e0f0f0;">
+    <section id="inquiry" style="background:#e8f4f4;">
         <h2 class="section-title">문의하기</h2>
         <div class="links-grid">
             <a href="https://pf.kakao.com/_HdLZX" target="_blank" class="link-card">
-                <i class="fas fa-comment-dots" style="font-size:3.5rem; color:#FFCD00; margin-bottom:20px;"></i>
+                <i class="fas fa-comment-dots" style="font-size:3.6rem; color:#FFCD00; margin-bottom:25px;"></i>
                 <h3>카카오톡 채널</h3>
                 <p>빠른 상담</p>
             </a>
             <a href="mailto:baeumteojigi@naver.com" class="link-card">
-                <i class="fas fa-envelope" style="font-size:3.5rem; color:var(--teal); margin-bottom:20px;"></i>
+                <i class="fas fa-envelope" style="font-size:3.6rem; color:var(--teal); margin-bottom:25px;"></i>
                 <h3>이메일 문의</h3>
                 <p>baeumteojigi@naver.com</p>
             </a>
@@ -264,7 +257,7 @@
     <footer>
         <p><strong>대표 : 유종경(劉鍾景)</strong></p>
         <p>배움터지기 | PROTECTED VALUE SYSTEM</p>
-        <p style="margin-top:25px;">© 2026 Knowledge Guardian. All Rights Reserved.</p>
+        <p style="margin-top:30px;">© 2026 Knowledge Guardian. All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -281,6 +274,7 @@
         function showSlide() { inner.style.transform = `translateX(-${current * 100}%)`; }
         function nextSlide() { current = (current + 1) % total; showSlide(); }
         function prevSlide() { current = (current - 1 + total) % total; showSlide(); }
+        
         setInterval(nextSlide, 5000);
     </script>
 </body>
