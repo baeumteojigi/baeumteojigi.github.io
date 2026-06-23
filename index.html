@@ -166,8 +166,8 @@
         }
 
         .logo {
-            width: min(680px, 86vw);
-            max-width: 86vw;
+            width: min(820px, 90vw);
+            max-width: 90vw;
             border: 20px solid rgba(192, 192, 192, 0.98);
             border-radius: 42px;
             box-shadow: 0 0 140px rgba(95, 143, 138, 0.88);
@@ -270,12 +270,12 @@
         }
 
         .identity-content {
-            max-width: 1460px;
+            max-width: 1500px;
             margin: 0 auto;
-            padding: 102px 72px;
+            padding: 112px 74px;
             color: #222;
             text-align: center;
-            background: rgba(255, 255, 255, 0.78);
+            background: rgba(255, 255, 255, 0.72);
             border-radius: 34px;
             box-shadow:
                 0 28px 96px rgba(0,0,0,0.14),
@@ -286,40 +286,40 @@
         .identity-content h3 {
             color: var(--teal-dark);
             font-family: 'Noto Serif KR', serif;
-            font-size: 3rem;
+            font-size: clamp(3.0rem, 2.8vw, 4.0rem);
             line-height: 1.2;
-            margin: 46px 0 16px;
+            margin: 52px 0 18px;
             text-align: center;
         }
 
         .identity-content p {
-            font-size: 1.28rem;
+            font-size: clamp(2.2rem, 2vw, 3.35rem);
             text-align: center;
-            line-height: 1.88;
+            line-height: 1.55;
             font-family: 'Gowun Batang', serif;
             color: #2a2a2a;
         }
 
         .identity-lead {
-            font-size: 1.42rem;
-            line-height: 1.96;
-            margin-bottom: 62px;
+            font-size: clamp(2.45rem, 2.25vw, 3.5rem);
+            line-height: 1.58;
+            margin-bottom: 64px;
             color: #2a2a2a;
         }
 
         .identity-tagline {
-            font-size: 2.35rem;
+            font-size: clamp(2.35rem, 2.15vw, 3rem);
             line-height: 1.15;
             font-weight: 900;
             color: var(--teal-dark);
-            margin: 82px 0 28px;
+            margin: 88px 0 28px;
             text-align: center;
             letter-spacing: 0.5px;
         }
 
         .identity-bottom {
-            font-size: 1.52rem;
-            line-height: 1.78;
+            font-size: clamp(2.0rem, 1.8vw, 2.75rem);
+            line-height: 1.58;
             text-align: center;
             color: #2d2d2d;
         }
@@ -458,7 +458,7 @@
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1.15fr;
-            gap: 28px;
+            gap: 22px;
             align-items: stretch;
             margin-top: 8px;
         }
@@ -468,10 +468,10 @@
             background: rgba(255,255,255,0.88);
             border-radius: 28px;
             box-shadow: 0 14px 38px rgba(0,0,0,0.08);
-            padding: 34px 30px;
+            padding: 28px 24px;
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 18px;
             backdrop-filter: blur(5px);
         }
 
@@ -495,81 +495,44 @@
         }
 
         .kakao-copy h3 {
-            font-size: 2.2rem;
+            font-size: 2.35rem;
             font-family: 'Noto Serif KR', serif;
             line-height: 1.2;
         }
 
         .kakao-copy p {
-            font-size: 1.28rem;
+            font-size: 1.35rem;
             font-family: 'Gowun Batang', serif;
             margin-top: 4px;
             color: #555;
         }
 
         .email-card {
-            justify-content: space-between;
+            justify-content: flex-start;
             gap: 18px;
-            border: none;
-            box-shadow: 0 14px 38px rgba(0,0,0,0.08);
         }
 
-        .email-wrap {
-            width: 100%;
+        .email-copy {
+            flex: 1 1 auto;
         }
 
         .email-label {
-            font-size: 1.48rem;
+            font-size: 2.35rem;
             font-weight: 900;
             color: var(--teal-dark);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            line-height: 1.2;
             font-family: 'Noto Serif KR', serif;
         }
 
-        .email-label i {
-            font-size: 1.35rem;
-            color: var(--teal-dark);
-        }
-
-        .email-row {
-            display: flex;
-            gap: 12px;
-            align-items: stretch;
-            flex-wrap: wrap;
-        }
-
-        .email-input {
-            flex: 1 1 360px;
-            font-size: 1.9rem;
-            padding: 18px 14px;
-            border-radius: 16px;
-            border: none;
-            background: transparent;
-            color: #222;
-            outline: none;
-            text-align: center;
-            user-select: all;
-            box-shadow: none;
-        }
-
-        .copy-btn {
-            flex: 0 0 auto;
-            font-size: 1.22rem;
+        .email-address {
+            font-size: 2.0rem;
             font-weight: 800;
-            padding: 16px 24px;
-            border-radius: 18px;
-            border: none;
-            background: var(--teal-dark);
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.10);
-        }
-
-        .copy-btn:hover {
-            background: #1f4f4b;
+            color: #222;
+            font-family: 'Gowun Batang', serif;
+            user-select: all;
+            cursor: text;
+            margin-top: 3px;
+            word-break: break-all;
         }
 
         footer {
@@ -687,7 +650,7 @@
 
             .kakao-card,
             .email-card {
-                padding: 26px 20px;
+                padding: 24px 18px;
             }
 
             .kakao-icon {
@@ -696,26 +659,26 @@
                 border-radius: 18px;
             }
 
-            .kakao-copy h3 {
+            .kakao-copy h3,
+            .email-label {
                 font-size: 1.45rem;
             }
 
-            .email-label {
-                font-size: 1.18rem;
-            }
-
-            .email-input {
-                font-size: 1.15rem;
-            }
-
-            .copy-btn {
-                font-size: 1.05rem;
+            .kakao-copy p,
+            .email-address {
+                font-size: 1.12rem;
             }
         }
 
         @media (max-width: 480px) {
             body {
                 font-size: 17px;
+                background-attachment: scroll;
+            }
+
+            body::before {
+                transform: none !important;
+                opacity: 0.08;
             }
 
             .nav-title {
@@ -724,6 +687,23 @@
 
             .nav-links a {
                 font-size: 0.98rem;
+            }
+
+            header {
+                padding: 138px 16px 84px;
+            }
+
+            .logo {
+                width: min(82vw, 620px);
+            }
+
+            h1 {
+                font-size: 2.95rem;
+                letter-spacing: 2px;
+                line-height: 1.08;
+                max-width: 100%;
+                padding: 0 6px;
+                word-break: keep-all;
             }
 
             .hero-text {
@@ -746,12 +726,14 @@
                 font-size: 1.42rem;
             }
 
-            .email-row {
-                flex-direction: column;
+            .kakao-card,
+            .email-card {
+                flex-direction: row;
+                align-items: center;
             }
 
-            .copy-btn {
-                width: 100%;
+            .email-address {
+                font-size: 1.05rem;
             }
         }
     </style>
@@ -867,13 +849,13 @@
                 </div>
             </a>
 
-            <div class="email-card">
-                <div class="email-wrap">
-                    <div class="email-label"><i class="fas fa-envelope"></i><span>이메일</span></div>
-                    <div class="email-row">
-                        <input id="emailAddress" class="email-input" type="text" value="baeumteojigi@naver.com" readonly>
-                        <button type="button" class="copy-btn" id="copyEmailBtn">복사</button>
-                    </div>
+            <div class="email-card" id="emailCard">
+                <div class="kakao-icon">
+                    <i class="fas fa-envelope" style="font-size:2.5rem; color:var(--teal-dark);"></i>
+                </div>
+                <div class="email-copy">
+                    <div class="email-label">이메일</div>
+                    <div class="email-address" id="emailAddressText">baeumteojigi@naver.com</div>
                 </div>
             </div>
         </div>
@@ -991,44 +973,31 @@
             resetInterval();
         });
 
-        const emailInput = document.getElementById('emailAddress');
-        const copyEmailBtn = document.getElementById('copyEmailBtn');
+        const emailCard = document.getElementById('emailCard');
+        const emailText = document.getElementById('emailAddressText');
 
-        emailInput.addEventListener('click', () => {
-            emailInput.select();
+        emailCard.addEventListener('click', () => {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(emailText);
+            selection.removeAllRanges();
+            selection.addRange(range);
         });
 
-        copyEmailBtn.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
+        const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (supportsFinePointer) {
+            window.addEventListener('pointermove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 48;
+                const y = (e.clientY / window.innerHeight - 0.5) * 48;
+                root.style.setProperty('--logo-x', `${x}px`);
+                root.style.setProperty('--logo-y', `${y}px`);
+            });
 
-            try {
-                await navigator.clipboard.writeText(email);
-                copyEmailBtn.textContent = '복사됨';
-                setTimeout(() => {
-                    copyEmailBtn.textContent = '복사';
-                }, 1400);
-            } catch (err) {
-                emailInput.focus();
-                emailInput.select();
-                document.execCommand('copy');
-                copyEmailBtn.textContent = '복사됨';
-                setTimeout(() => {
-                    copyEmailBtn.textContent = '복사';
-                }, 1400);
-            }
-        });
-
-        window.addEventListener('pointermove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 48;
-            const y = (e.clientY / window.innerHeight - 0.5) * 48;
-            root.style.setProperty('--logo-x', `${x}px`);
-            root.style.setProperty('--logo-y', `${y}px`);
-        });
-
-        window.addEventListener('pointerleave', () => {
-            root.style.setProperty('--logo-x', '0px');
-            root.style.setProperty('--logo-y', '0px');
-        });
+            window.addEventListener('pointerleave', () => {
+                root.style.setProperty('--logo-x', '0px');
+                root.style.setProperty('--logo-y', '0px');
+            });
+        }
     </script>
 </body>
 </html>
