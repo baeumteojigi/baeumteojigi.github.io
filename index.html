@@ -210,6 +210,11 @@
             text-align: center;
         }
 
+        .hero-phrase {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
         .hero-sub {
             font-size: clamp(2.35rem, 3.4vw, 3.1rem);
             font-weight: 800;
@@ -695,6 +700,7 @@
         @media (max-width: 480px) {
             body {
                 font-size: 17px;
+                background: linear-gradient(rgba(247, 247, 244, 0.92), rgba(247, 247, 244, 0.92));
                 background-attachment: scroll;
             }
 
@@ -735,17 +741,19 @@
             .hero-text {
                 font-size: 0.98rem;
                 line-height: 1.6;
-                max-width: 100%;
             }
 
             .hero-line {
                 display: block;
-                white-space: normal;
+                text-align: center;
+            }
+
+            .hero-phrase {
+                white-space: nowrap;
             }
 
             .hero-sub {
                 font-size: 1.18rem;
-                white-space: nowrap;
             }
 
             .section-title {
@@ -800,8 +808,8 @@
             <h1>PROTECTED VALUE SYSTEM</h1>
             <p class="hero-text">
                 <span class="hero-line">전통(傳統) 위에 세운 순수(純粹)와 지혜(智慧)</span>
-                <span class="hero-line">안정(安定)한 열린 배움터에서 창의(創意) 날개를 달아</span>
-                <span class="hero-line">최고 가치(價値)를 향해 도약(跳躍)합니다.</span>
+                <span class="hero-line">안정(安定)한 열린 배움터에서 <span class="hero-phrase">창의(創意) 날개를 달아</span></span>
+                <span class="hero-line">최고 가치(價值)를 향해 도약(跳躍)합니다.</span>
             </p>
             <p class="hero-sub"><span class="hero-line">수호(守護) · 균형(均衡) · 비상(飛翔)</span></p>
         </div>
