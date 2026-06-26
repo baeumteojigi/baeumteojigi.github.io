@@ -167,7 +167,7 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 14px;
       flex: 0 0 auto;
     }
 
@@ -179,6 +179,47 @@
       white-space: nowrap;
       line-height: 1;
       flex: 0 0 auto;
+    }
+
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-x,
+    .nav-naver {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 800;
+      line-height: 1;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease;
+      flex: 0 0 auto;
+    }
+
+    .nav-x {
+      color: rgba(255,255,255,0.95);
+      font-size: 1.05rem;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .nav-naver {
+      background: #fff;
+      color: #03c75a;
+      font-size: 1.05rem;
+      font-family: Arial, sans-serif;
+    }
+
+    .nav-x:hover,
+    .nav-naver:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
     }
 
     .nav-links {
@@ -202,21 +243,6 @@
       text-decoration: underline;
     }
 
-    .nav-x {
-      color: rgba(255,255,255,0.9);
-      font-size: 1.2rem;
-      font-weight: 700;
-      white-space: nowrap;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-    }
-
-    .nav-x:hover {
-      background: rgba(255,255,255,0.08);
-      text-decoration: none;
-    }
-
     header {
       min-height: 100vh;
       display: flex;
@@ -227,7 +253,9 @@
       padding: 160px 20px 100px;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(rgba(31, 58, 56, 0.68), rgba(31, 58, 56, 0.82)), url('https://picsum.photos/id/1015/1920/1080') center/cover;
+      background:
+        linear-gradient(rgba(31, 58, 56, 0.68), rgba(31, 58, 56, 0.82)),
+        url('https://picsum.photos/id/1015/1920/1080') center/cover;
       background-attachment: scroll;
     }
 
@@ -311,8 +339,9 @@
       max-width: 100%;
       border-radius: 0;
       color: white;
-      background: linear-gradient(180deg, rgba(41, 74, 71, 0.94), rgba(32, 56, 52, 0.97)),
-                  linear-gradient(135deg, rgba(95, 143, 138, 0.22), rgba(255, 255, 255, 0.02));
+      background:
+        linear-gradient(180deg, rgba(41, 74, 71, 0.94), rgba(32, 56, 52, 0.97)),
+        linear-gradient(135deg, rgba(95, 143, 138, 0.22), rgba(255, 255, 255, 0.02));
     }
 
     #history {
@@ -640,9 +669,29 @@
       }
     }
 
-    @media (max-width: 768px) {
+    /* Phone: 이전에 괜찮았던 버전의 흐름 유지 */
+    @media (max-width: 700px) {
       nav {
-        padding: 16px 0;
+        padding: 14px 0;
+      }
+
+      .nav-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-left {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .nav-title {
+        font-size: 1.4rem;
+      }
+
+      .nav-links a {
+        font-size: 0.98rem;
       }
 
       section {
@@ -652,32 +701,35 @@
       }
 
       .logo {
-        width: min(86vw, 760px);
-        border-width: 16px;
-        border-radius: 32px;
+        width: min(82vw, 650px);
       }
 
       h1 {
-        font-size: 2.75rem;
-        letter-spacing: 1px;
-        line-height: 1.0;
-        margin: 0 0 14px;
-        word-break: keep-all;
-        padding: 0 6px;
+        font-size: 1.45rem;
+        letter-spacing: 0.4px;
+        line-height: 1.05;
+        margin: 0 0 10px;
+        max-width: 100%;
+        padding: 0 2px;
+        white-space: normal;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.5);
       }
 
       .hero-text {
-        font-size: 1.06rem;
-        line-height: 1.64;
-        margin: 18px auto 16px;
+        font-size: 0.98rem;
+        line-height: 1.58;
+        margin: 14px auto 12px;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.45);
       }
 
       .hero-sub {
-        font-size: 1.28rem;
+        font-size: 1.12rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.45);
       }
 
       .section-title {
-        margin-bottom: 62px;
+        font-size: 2.35rem;
+        margin-bottom: 52px;
       }
 
       .identity-content {
@@ -693,7 +745,7 @@
       }
 
       .identity-content h3 {
-        font-size: 1.85rem;
+        font-size: 1.58rem;
       }
 
       .identity-tagline {
@@ -738,17 +790,15 @@
         padding: 40px 22px;
       }
 
-      .nav-title {
-        font-size: 1.58rem;
-      }
-
-      .nav-links a {
-        font-size: 1.08rem;
+      .link-card h3 {
+        font-size: 1.42rem;
       }
 
       .kakao-card,
       .email-card {
         padding: 24px 18px;
+        flex-direction: row;
+        align-items: center;
       }
 
       .kakao-icon {
@@ -764,98 +814,6 @@
 
       .kakao-copy p,
       .email-address {
-        font-size: 1.12rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      body {
-        font-size: 17px;
-        background:
-          linear-gradient(rgba(247, 247, 244, 0.92), rgba(247, 247, 244, 0.92)),
-          url('배움터지기%20상표.jpg') center center no-repeat;
-        background-attachment: scroll;
-      }
-
-      nav {
-        padding: 14px 0;
-      }
-
-      .nav-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .nav-left {
-        justify-content: center;
-        width: 100%;
-      }
-
-      .nav-title {
-        font-size: 1.4rem;
-      }
-
-      .nav-links a {
-        font-size: 0.98rem;
-      }
-
-      header {
-        padding: 126px 16px 72px;
-        background-attachment: scroll;
-      }
-
-      .logo {
-        width: min(82vw, 650px);
-      }
-
-      h1 {
-        font-size: 1.35rem;
-        letter-spacing: 0px;
-        line-height: 1.0;
-        margin: 0 0 10px;
-        max-width: 100%;
-        padding: 0 2px;
-      }
-
-      .hero-text {
-        font-size: 0.96rem;
-        line-height: 1.55;
-        margin: 14px auto 12px;
-      }
-
-      .hero-line {
-        display: block;
-        text-align: center;
-      }
-
-      .hero-phrase {
-        white-space: nowrap;
-      }
-
-      .hero-sub {
-        font-size: 1.12rem;
-      }
-
-      .section-title {
-        font-size: 2.35rem;
-      }
-
-      .identity-content h3 {
-        font-size: 1.58rem;
-      }
-
-      .link-card h3 {
-        font-size: 1.42rem;
-      }
-
-      .kakao-card,
-      .email-card {
-        flex-direction: row;
-        align-items: center;
-      }
-
-      .email-address {
         font-size: 1.05rem;
       }
 
@@ -867,74 +825,88 @@
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
       }
-    }
 
-    /* 태블릿/터치 기기: 깜빡임 방지 핵심 */
-    @media (hover: none), (pointer: coarse) {
-      body {
-        background-image: none !important;
-        background-attachment: scroll !important;
+      .nav-socials {
+        gap: 6px;
       }
 
-      body::before,
-      body::after {
-        display: none !important;
-      }
-
-      header {
-        background-image: none !important;
-        background: linear-gradient(rgba(31, 58, 56, 0.90), rgba(31, 58, 56, 0.94));
-        background-attachment: scroll !important;
-      }
-
-      nav {
-        position: sticky;
-        top: 0;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      }
-
-      .identity-content,
-      .history-card,
-      .link-card,
-      .kakao-card,
-      .email-card {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+      .nav-x,
+      .nav-naver {
+        width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
       }
     }
 
-    html.touch-device body {
+    /* Tablet: 큰 세로 화면에서 깜빡임 방지 */
+    html.device-tablet body {
       background-image: none !important;
       background-attachment: scroll !important;
+      background:
+        linear-gradient(rgba(247, 247, 244, 0.92), rgba(247, 247, 244, 0.92)) !important;
     }
 
-    html.touch-device body::before,
-    html.touch-device body::after {
+    html.device-tablet body::before,
+    html.device-tablet body::after {
       display: none !important;
     }
 
-    html.touch-device header {
+    html.device-tablet header {
       background-image: none !important;
-      background: linear-gradient(rgba(31, 58, 56, 0.90), rgba(31, 58, 56, 0.94));
+      background: linear-gradient(rgba(31, 58, 56, 0.90), rgba(31, 58, 56, 0.96)) !important;
       background-attachment: scroll !important;
     }
 
-    html.touch-device nav {
+    html.device-tablet nav {
       position: sticky;
       top: 0;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     }
 
-    html.touch-device .identity-content,
-    html.touch-device .history-card,
-    html.touch-device .link-card,
-    html.touch-device .kakao-card,
-    html.touch-device .email-card {
+    html.device-tablet .identity-content,
+    html.device-tablet .history-card,
+    html.device-tablet .link-card,
+    html.device-tablet .kakao-card,
+    html.device-tablet .email-card {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
+    }
+
+    /* Desktop only: 원래 분위기 유지 */
+    html.device-desktop body {
+      background:
+        linear-gradient(rgba(247, 247, 244, 0.88), rgba(247, 247, 244, 0.88)),
+        url('배움터지기%20상표.jpg') center center fixed !important;
+      background-size: 2300px !important;
+      background-repeat: no-repeat !important;
+      background-position: center center !important;
+    }
+
+    html.device-desktop body::before {
+      display: block !important;
+    }
+
+    html.device-desktop body::after {
+      display: block !important;
+    }
+
+    html.device-desktop header {
+      background:
+        linear-gradient(rgba(31, 58, 56, 0.68), rgba(31, 58, 56, 0.82)),
+        url('https://picsum.photos/id/1015/1920/1080') center/cover !important;
+    }
+
+    html.device-desktop header,
+    html.device-desktop nav,
+    html.device-desktop .identity-content,
+    html.device-desktop .history-card,
+    html.device-desktop .link-card,
+    html.device-desktop .kakao-card,
+    html.device-desktop .email-card {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -956,7 +928,10 @@
     <div class="nav-container">
       <div class="nav-left">
         <a href="#top" class="nav-title">배움터지기</a>
-        <a class="nav-x" href="https://x.com/baeumteojigi" target="_blank" rel="noopener noreferrer" aria-label="배움터지기 X">X</a>
+        <div class="nav-socials">
+          <a class="nav-x" href="https://x.com/baeumteojigi" target="_blank" rel="noopener noreferrer" aria-label="배움터지기 X">X</a>
+          <a class="nav-naver" href="https://blog.naver.com/baeumteojigi" target="_blank" rel="noopener noreferrer" aria-label="배움터지기 네이버 블로그">N</a>
+        </div>
       </div>
       <div class="nav-links">
         <a href="#identity">정체성</a>
@@ -1090,13 +1065,27 @@
     const inner = document.getElementById('carouselInner');
     const carousel = document.getElementById('carousel');
 
-    const isTouchLike =
-      window.matchMedia('(hover: none), (pointer: coarse)').matches ||
-      navigator.maxTouchPoints > 0;
+    function setDeviceMode() {
+      root.classList.remove('device-desktop', 'device-tablet', 'device-phone');
 
-    if (isTouchLike) {
-      document.documentElement.classList.add('touch-device');
+      const width = window.innerWidth;
+      const coarse = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+      const fine = window.matchMedia('(pointer: fine)').matches && !coarse;
+
+      if (fine && width >= 1025) {
+        root.classList.add('device-desktop');
+      } else if (coarse && width <= 700) {
+        root.classList.add('device-phone');
+      } else if (coarse) {
+        root.classList.add('device-tablet');
+      } else {
+        root.classList.add('device-desktop');
+      }
     }
+
+    setDeviceMode();
+    window.addEventListener('resize', setDeviceMode);
+    window.addEventListener('orientationchange', setDeviceMode);
 
     const slideNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const slideCount = slideNumbers.length;
@@ -1186,6 +1175,7 @@
     window.addEventListener('load', () => {
       showSlide();
       resetInterval();
+      updateCarouselHeight();
     });
 
     const emailCard = document.getElementById('emailCard');
@@ -1201,7 +1191,7 @@
 
     const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    if (supportsFinePointer && !isTouchLike) {
+    if (supportsFinePointer && root.classList.contains('device-desktop')) {
       window.addEventListener('pointermove', (e) => {
         const x = (e.clientX / window.innerWidth - 0.5) * 48;
         const y = (e.clientY / window.innerHeight - 0.5) * 48;
