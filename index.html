@@ -867,6 +867,7 @@
         linear-gradient(rgba(31, 58, 56, 0.78), rgba(31, 58, 56, 0.90)),
         url('https://picsum.photos/id/1015/1920/1080') center/cover !important;
       background-attachment: scroll !important;
+      background-color: #254e4b !important;
     }
 
     html.device-phone h1 {
@@ -906,6 +907,7 @@
       background: linear-gradient(180deg, #3e6a67 0%, #2c5a57 50%, #254e4b 100%) !important;
       background-image: none !important;
       background-attachment: scroll !important;
+      background-color: #254e4b !important;
     }
 
     html.device-tablet nav {
@@ -962,6 +964,50 @@
     html.device-tablet .carousel-item img {
       object-fit: contain;
       background: rgba(255,255,255,0.72);
+    }
+
+    /* 카카오톡 인앱 브라우저 전용 안정화 */
+    html.inapp-kakao body {
+      background:
+        linear-gradient(rgba(247, 247, 244, 0.93), rgba(247, 247, 244, 0.93)) !important;
+      background-image: none !important;
+      background-attachment: scroll !important;
+      background-color: #eef2ee !important;
+    }
+
+    html.inapp-kakao body::before,
+    html.inapp-kakao body::after {
+      display: none !important;
+    }
+
+    html.inapp-kakao header {
+      background: linear-gradient(rgba(31, 58, 56, 0.84), rgba(31, 58, 56, 0.92)) !important;
+      background-image: none !important;
+      background-attachment: scroll !important;
+      background-color: #254e4b !important;
+    }
+
+    html.inapp-kakao h1 {
+      white-space: normal;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.35);
+    }
+
+    html.inapp-kakao .hero-text,
+    html.inapp-kakao .hero-sub {
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+
+    html.inapp-kakao .identity-content,
+    html.inapp-kakao .history-card,
+    html.inapp-kakao .link-card,
+    html.inapp-kakao .kakao-card,
+    html.inapp-kakao .email-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    html.inapp-kakao .carousel {
+      transition: none !important;
     }
 
     /* 데스크톱 */
@@ -1063,7 +1109,7 @@
 
       <h2 class="identity-tagline">KNOWLEDGE GUARDIAN</h2>
       <p class="identity-bottom">
-        <span class="term">학문(學問)</span>을 <span class="term">수호(守護)</span>하고, <span class="term">균형(均衡)</span>을 지키며, 더 높은 <span class="term">가치(價値)</span>를 향해 <span class="term">비상(飛翔)</span>합니다.
+        <span class="term">학문(學問)</span>을 <span class="term">수호(守護)</span>하고, <span class="term">균형(均衡)</span>을 지키며, 더 높은 <span class="term">가치(價值)</span>를 향해 <span class="term">비상(飛翔)</span>합니다.
       </p>
     </div>
   </section>
@@ -1143,6 +1189,11 @@
     const root = document.documentElement;
     const inner = document.getElementById('carouselInner');
     const carousel = document.getElementById('carousel');
+
+    const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
+    if (isKakaoInApp) {
+      root.classList.add('inapp-kakao');
+    }
 
     function setDeviceMode() {
       root.classList.remove('device-desktop', 'device-tablet', 'device-phone');
