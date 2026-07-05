@@ -11,7 +11,7 @@
 
 <!-- SEO -->
 <meta name="description" content="배움터지기는 전통(傳統) 위에 세운 순수(純粹)와 지혜(智慧)를 바탕으로, 박물관과 다양한 배움터에서 배움을 사랑하는 이들과 수업을 이어 갑니다. 정서(情緒)가 안정(安定)한 상태에서 탐구(探究)하고, 지식·기술·태도(知識·技術·態度)를 거쳐 각자 탁월(卓越)함으로 나아가는 배움. 우리는 학문(學問)을 수호(守護)하고, 균형(均衡) 있는 성장을 지향(志向)하며, 창의(創意) 날개로 더 높은 가치(價値)를 향해 비상(飛翔)합니다.">
-<meta name="keywords" content="배움터지기, 유종경, 교육, 유아, 초등학생, 역사, 박물관, 유아교육, 초등교육, 유치원, 어린이, 초등학교, 학문, 학교, 탐구, 배움터, 수업, 전통, 진보">
+<meta name="keywords" content="배움터지기, 유종경, 교육, 유아, 초등학생, 역사, 박물관, 유아교육, 초등교육">
 <meta name="author" content="유종경">
 <link rel="canonical" href="https://baeumteojigi.github.io/">
 <meta name="robots" content="index, follow">
@@ -1192,30 +1192,58 @@ const carousel = document.getElementById('carousel');
 
 const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
 if (isKakaoInApp) {
-root.classList.add('inapp-kakao');
+  root.classList.add('inapp-kakao');
+}
+
+const DEVICE_HYSTERESIS = 40; // 태블릿↔데스크톱 경계 부근에서 클래스가 반복 전환되는 것을 막는 여유값(px)
+
+function computeDeviceMode(width, coarse, fine) {
+  if (width <= 768) return 'device-phone';
+  if (coarse && width <= 1400) return 'device-tablet';
+  return 'device-desktop';
+}
+
+function getCurrentDeviceMode() {
+  if (root.classList.contains('device-phone')) return 'device-phone';
+  if (root.classList.contains('device-tablet')) return 'device-tablet';
+  if (root.classList.contains('device-desktop')) return 'device-desktop';
+  return null;
 }
 
 function setDeviceMode() {
-root.classList.remove('device-desktop', 'device-tablet', 'device-phone');
+  const width = window.innerWidth;
+  const coarse = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  const fine = window.matchMedia('(pointer: fine)').matches && !coarse;
 
-const width = window.innerWidth;
-const coarse = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
-const fine = window.matchMedia('(pointer: fine)').matches && !coarse;
+  const current = getCurrentDeviceMode();
+  let next = computeDeviceMode(width, coarse, fine);
 
-if (width <= 768) {
-root.classList.add('device-phone');
-} else if (coarse && width <= 1400) {
-root.classList.add('device-tablet');
-} else if (fine) {
-root.classList.add('device-desktop');
-} else {
-root.classList.add('device-desktop');
+  // 회전/툴바 표시 변화로 innerWidth가 1400px 경계 부근에서 미세하게
+  // 오르내릴 때 태블릿↔데스크톱 클래스가 반복 전환(깜빡임)되는 것을 방지
+  if (current === 'device-tablet' && next === 'device-desktop' && width <= 1400 + DEVICE_HYSTERESIS) {
+    next = 'device-tablet';
+  } else if (current === 'device-desktop' && next === 'device-tablet' && width >= 1400 - DEVICE_HYSTERESIS) {
+    next = 'device-desktop';
+  }
+
+  if (next === current) return;
+
+  root.classList.remove('device-desktop', 'device-tablet', 'device-phone');
+  root.classList.add(next);
 }
+
+let deviceModeRAF = null;
+function scheduleDeviceModeUpdate() {
+  if (deviceModeRAF) cancelAnimationFrame(deviceModeRAF);
+  deviceModeRAF = requestAnimationFrame(() => {
+    setDeviceMode();
+    updateCarouselHeight();
+  });
 }
 
 setDeviceMode();
-window.addEventListener('resize', setDeviceMode);
-window.addEventListener('orientationchange', setDeviceMode);
+window.addEventListener('resize', scheduleDeviceModeUpdate);
+window.addEventListener('orientationchange', scheduleDeviceModeUpdate);
 
 const slideNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const slideCount = slideNumbers.length;
@@ -1224,124 +1252,122 @@ let current = 0;
 let intervalId = null;
 
 function updateCarouselHeight() {
-if (root.classList.contains('device-tablet')) {
-const fixedHeight = Math.min(Math.max(Math.round(window.innerWidth * 0.58), 420), 760);
-carousel.style.height = `${fixedHeight}px`;
-return;
-}
+  if (root.classList.contains('device-tablet')) {
+    const fixedHeight = Math.min(Math.max(Math.round(window.innerWidth * 0.58), 420), 760);
+    carousel.style.height = `${fixedHeight}px`;
+    return;
+  }
 
-const currentItem = inner.children[current];
-if (!currentItem) return;
+  const currentItem = inner.children[current];
+  if (!currentItem) return;
 
-const img = currentItem.querySelector('img');
-if (!img) {
-const fallback = currentItem.querySelector('div');
-if (fallback) {
-carousel.style.height = `${fallback.getBoundingClientRect().height}px`;
-}
-return;
-}
+  const img = currentItem.querySelector('img');
+  if (!img) {
+    const fallback = currentItem.querySelector('div');
+    if (fallback) {
+      carousel.style.height = `${fallback.getBoundingClientRect().height}px`;
+    }
+    return;
+  }
 
-const applyHeight = () => {
-const rect = img.getBoundingClientRect();
-if (rect.height > 0) {
-carousel.style.height = `${Math.ceil(rect.height)}px`;
-}
-};
+  const applyHeight = () => {
+    const rect = img.getBoundingClientRect();
+    if (rect.height > 0) {
+      carousel.style.height = `${Math.ceil(rect.height)}px`;
+    }
+  };
 
-if (img.complete && img.naturalWidth > 0) {
-requestAnimationFrame(applyHeight);
-} else {
-img.addEventListener('load', applyHeight, { once: true });
-img.addEventListener('error', applyHeight, { once: true });
-}
+  if (img.complete && img.naturalWidth > 0) {
+    requestAnimationFrame(applyHeight);
+  } else {
+    img.addEventListener('load', applyHeight, { once: true });
+    img.addEventListener('error', applyHeight, { once: true });
+  }
 }
 
 function showSlide() {
-inner.style.transform = `translateX(-${current * 100}%)`;
-updateCarouselHeight();
+  inner.style.transform = `translateX(-${current * 100}%)`;
+  updateCarouselHeight();
 }
 
 function resetInterval() {
-if (intervalId) clearInterval(intervalId);
-intervalId = setInterval(nextSlide, 5000);
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(nextSlide, 5000);
 }
 
 function nextSlide() {
-current = (current + 1) % slideCount;
-showSlide();
-resetInterval();
+  current = (current + 1) % slideCount;
+  showSlide();
+  resetInterval();
 }
 
 function prevSlide() {
-current = (current - 1 + slideCount) % slideCount;
-showSlide();
-resetInterval();
+  current = (current - 1 + slideCount) % slideCount;
+  showSlide();
+  resetInterval();
 }
 
 slideNumbers.forEach((num) => {
-const div = document.createElement('div');
-div.className = 'carousel-item';
+  const div = document.createElement('div');
+  div.className = 'carousel-item';
 
-const img = document.createElement('img');
-img.src = `활동${num}.jpg`;
-img.alt = `배움터지기 활동 ${num}`;
-img.loading = 'eager';
-img.decoding = 'async';
+  const img = document.createElement('img');
+  img.src = `활동${num}.jpg`;
+  img.alt = `배움터지기 활동 ${num}`;
+  img.loading = 'eager';
+  img.decoding = 'async';
 
-img.addEventListener('load', () => {
-if (num - 1 === current) {
-requestAnimationFrame(updateCarouselHeight);
-}
+  img.addEventListener('load', () => {
+    if (num - 1 === current) {
+      requestAnimationFrame(updateCarouselHeight);
+    }
+  });
+
+  img.addEventListener('error', () => {
+    div.innerHTML = `<div style="width:100%; padding:72px 24px; text-align:center; font-size:1.4rem; color:#555; background:#f8f9f9;">활동 ${num} 이미지를 불러오지 못했습니다.</div>`;
+    if (num - 1 === current) {
+      requestAnimationFrame(updateCarouselHeight);
+    }
+  });
+
+  div.appendChild(img);
+  inner.appendChild(div);
 });
-
-img.addEventListener('error', () => {
-div.innerHTML = `<div style="width:100%; padding:72px 24px; text-align:center; font-size:1.4rem; color:#555; background:#f8f9f9;">활동 ${num} 이미지를 불러오지 못했습니다.</div>`;
-if (num - 1 === current) {
-requestAnimationFrame(updateCarouselHeight);
-}
-});
-
-div.appendChild(img);
-inner.appendChild(div);
-});
-
-window.addEventListener('resize', updateCarouselHeight);
 
 window.addEventListener('load', () => {
-showSlide();
-resetInterval();
-updateCarouselHeight();
+  showSlide();
+  resetInterval();
+  updateCarouselHeight();
 });
 
 const emailCard = document.getElementById('emailCard');
 const emailText = document.getElementById('emailAddressText');
 
 emailCard.addEventListener('click', () => {
-const selection = window.getSelection();
-const range = document.createRange();
-range.selectNodeContents(emailText);
-selection.removeAllRanges();
-selection.addRange(range);
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(emailText);
+  selection.removeAllRanges();
+  selection.addRange(range);
 });
 
 const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 if (supportsFinePointer && root.classList.contains('device-desktop')) {
-window.addEventListener('pointermove', (e) => {
-const x = (e.clientX / window.innerWidth - 0.5) * 48;
-const y = (e.clientY / window.innerHeight - 0.5) * 48;
-root.style.setProperty('--logo-x', `${x}px`);
-root.style.setProperty('--logo-y', `${y}px`);
-});
+  window.addEventListener('pointermove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 48;
+    const y = (e.clientY / window.innerHeight - 0.5) * 48;
+    root.style.setProperty('--logo-x', `${x}px`);
+    root.style.setProperty('--logo-y', `${y}px`);
+  });
 
-window.addEventListener('pointerleave', () => {
-root.style.setProperty('--logo-x', '0px');
-root.style.setProperty('--logo-y', '0px');
-});
+  window.addEventListener('pointerleave', () => {
+    root.style.setProperty('--logo-x', '0px');
+    root.style.setProperty('--logo-y', '0px');
+  });
 } else {
-root.style.setProperty('--logo-x', '0px');
-root.style.setProperty('--logo-y', '0px');
+  root.style.setProperty('--logo-x', '0px');
+  root.style.setProperty('--logo-y', '0px');
 }
 </script>
 </body>
