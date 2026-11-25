@@ -89,31 +89,31 @@ body>nav{position:sticky;top:0;z-index:1000;border-top:5px solid var(--green);bo
 .nav-links a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:16px;font-weight:700;color:var(--ink)}
 .nav-links a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px;color:var(--green)}
 
-header{position:relative;isolation:isolate;background:linear-gradient(90deg,#f0f8f4 0%,#f0f8f4 42%,#fff 42%,#fff 100%);border-bottom:1px solid var(--line);padding:86px 0 94px}
-header>div{width:min(1160px,calc(100% - 96px));margin:auto;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);grid-template-rows:auto auto auto;column-gap:70px;align-content:center;align-items:center;position:relative}
-.logo{grid-column:1;grid-row:1/4;width:100%;max-width:440px;justify-self:center;align-self:center;object-fit:contain;border:1px solid var(--line);border-radius:10px;box-shadow:14px 14px 0 var(--mint);background:white}
-header h1{grid-column:2;font-size:clamp(36px,4.5vw,60px);line-height:1.06;letter-spacing:-.055em;font-weight:900;max-width:620px;margin:0 0 28px;color:var(--ink);overflow-wrap:normal;word-break:normal;text-wrap:balance}
-.hero-text{grid-column:2;font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(20px,1.75vw,24px);line-height:1.8;color:#294f4c;margin:0 0 28px}
+header{position:relative;background:linear-gradient(180deg,#f0f8f4 0%,#fff 100%);border-bottom:1px solid var(--line);padding:64px 0 72px;text-align:center}
+header>div{width:min(1160px,calc(100% - 96px));margin:auto;display:flex;flex-direction:column;align-items:center;position:relative}
+.logo{width:min(320px,100%);margin:0 auto 38px;object-fit:contain;border:1px solid var(--line);border-radius:10px;box-shadow:10px 10px 0 var(--mint);background:white}
+header h1{font-size:clamp(36px,4.5vw,60px);line-height:1.06;letter-spacing:-.055em;font-weight:900;max-width:1080px;margin:0 auto 28px;color:var(--ink);overflow-wrap:normal;word-break:normal;text-wrap:balance;text-align:center}
+.hero-text{max-width:960px;text-align:center;font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(20px,1.75vw,24px);line-height:1.8;color:#294f4c;margin:0 auto 28px}
 .hero-line{display:block}
-.hero-sub{grid-column:2;justify-self:start;padding:11px 18px;border-left:4px solid var(--gold);background:var(--paper-2);font-size:18px;font-weight:700;letter-spacing:.015em;color:var(--green);line-height:1.65}
+.hero-sub{max-width:100%;align-self:center;padding:11px 18px;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:6px;background:var(--paper-2);text-align:center;font-size:18px;font-weight:700;letter-spacing:.015em;color:var(--green);line-height:1.65}
 
 section{width:min(1160px,calc(100% - 96px));margin:0 auto;padding:88px 0;border-bottom:1px solid var(--line)}
-.section-title{font-size:36px;font-weight:800;line-height:1.3;letter-spacing:-.045em;margin:0 0 38px;color:var(--ink)}
+.section-title{text-align:center;font-size:36px;font-weight:800;line-height:1.3;letter-spacing:-.045em;margin:0 0 38px;color:var(--ink)}
 #identity>.section-title{font-size:16px;letter-spacing:.14em;color:var(--green);margin-bottom:28px}
-.identity-content{display:grid;grid-template-columns:220px minmax(0,1fr);column-gap:36px}
-.identity-lead{grid-column:1/-1;font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(22px,2.1vw,27px);line-height:1.8;max-width:950px;margin:0 0 44px;color:var(--ink)}
-.identity-content>h3{grid-column:1;font-size:22px;font-weight:800;line-height:1.6;letter-spacing:-.035em;padding:26px 0;border-top:1px solid var(--line);color:var(--green)}
-.identity-content>h3+p{grid-column:2;padding:26px 0;border-top:1px solid var(--line);font-size:20px;line-height:1.8;color:#36505b}
-.identity-tagline{grid-column:1/-1;margin:34px 0 0;padding:28px 30px 8px;background:var(--sky);border-radius:8px 8px 0 0;font-size:24px;font-weight:900;line-height:1.35;letter-spacing:-.025em;color:var(--ink)}
-.identity-bottom{grid-column:1/-1;padding:0 30px 28px;background:var(--sky);border-radius:0 0 8px 8px;font-size:20px;line-height:1.8;color:var(--ink)}
+.identity-content{max-width:960px;margin-inline:auto;text-align:center}
+.identity-lead{font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(22px,2.1vw,27px);line-height:1.8;max-width:950px;margin:0 auto 44px;color:var(--ink);text-wrap:pretty}
+.identity-content>h3{max-width:860px;margin-inline:auto;font-size:22px;font-weight:800;line-height:1.6;letter-spacing:-.035em;padding:30px 0 12px;border-top:1px solid var(--line);color:var(--green);text-align:center}
+.identity-content>h3+p{max-width:860px;margin:0 auto;padding:0 0 30px;font-size:20px;line-height:1.8;color:#36505b;text-align:center;text-wrap:pretty}
+.identity-tagline{text-align:center;margin:34px 0 0;padding:28px 30px 8px;background:var(--sky);border-radius:8px 8px 0 0;font-size:24px;font-weight:900;line-height:1.35;letter-spacing:-.025em;color:var(--ink)}
+.identity-bottom{text-align:center;text-wrap:pretty;padding:0 30px 28px;background:var(--sky);border-radius:0 0 8px 8px;font-size:20px;line-height:1.8;color:var(--ink)}
 
-.history-card{position:relative;display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.3fr);gap:12px 40px;padding:40px 44px;border:1px solid var(--line);border-left:6px solid var(--green);border-radius:6px;background:var(--paper-2)}
-.history-card h3{grid-column:1;grid-row:1/3;align-self:start;font-size:20px;font-weight:700;color:var(--green);line-height:1.5;padding-top:7px;font-variant-numeric:tabular-nums}
-.history-card h2{grid-column:2;font-family:'Noto Serif KR',serif;font-size:30px;font-weight:700;line-height:1.5;letter-spacing:-.05em}
-.history-card p{grid-column:2;font-size:20px;line-height:1.8;color:var(--muted)}
+.history-card{position:relative;max-width:960px;margin-inline:auto;padding:40px 44px;border:1px solid var(--line);border-top:6px solid var(--green);border-radius:6px;background:var(--paper-2);text-align:center}
+.history-card h3{font-size:20px;font-weight:700;color:var(--green);line-height:1.5;margin-bottom:14px;font-variant-numeric:tabular-nums}
+.history-card h2{margin-bottom:14px;font-family:'Noto Serif KR',serif;font-size:30px;font-weight:700;line-height:1.5;letter-spacing:-.05em}
+.history-card p{max-width:760px;margin-inline:auto;text-wrap:pretty;font-size:20px;line-height:1.8;color:var(--muted)}
 
 .carousel-frame{width:100%;max-width:960px;margin:auto}
-.carousel-controls{display:flex;justify-content:flex-end;margin-top:12px}
+.carousel-controls{display:flex;justify-content:center;margin-top:12px}
 .carousel-toggle{min-height:44px;padding:9px 16px;border:1px solid var(--green);border-radius:6px;background:white;color:var(--green);font-size:16px;line-height:1.5;font-weight:700}
 .carousel-toggle:hover{background:var(--mint)}
 .carousel{position:relative;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--paper-2);transition:height .35s ease}
@@ -129,7 +129,7 @@ html.device-tablet .carousel-item img{object-fit:contain}
 html.inapp-kakao .carousel{transition:none}
 
 .links-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.link-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;min-width:0;min-height:206px;padding:30px;border:1px solid var(--line);border-radius:8px;background:white;transition:border-color .2s ease,background .2s ease,transform .2s ease}
+.link-card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0;min-height:206px;padding:30px;border:1px solid var(--line);border-radius:8px;background:white;transition:border-color .2s ease,background .2s ease,transform .2s ease}
 .link-card:nth-child(2){background:#f1f8fc}
 .link-card:nth-child(3){background:#f5faf1}
 .link-card:hover{background:var(--mint);border-color:var(--green);transform:translateY(-3px)}
@@ -137,24 +137,24 @@ html.inapp-kakao .carousel{transition:none}
 .link-card:nth-child(2)>i{color:var(--blue)!important}
 .link-card h3{font-size:20px;line-height:1.5;letter-spacing:-.035em;font-weight:700}
 .contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-.kakao-card,.email-card{display:flex;align-items:center;gap:20px;min-width:0;padding:30px;border:1px solid var(--line);border-radius:8px;background:var(--paper-2)}
-.kakao-card:hover{border-color:var(--green);background:var(--mint)}
-.kakao-icon{display:flex;align-items:center;justify-content:center;flex:0 0 58px;height:58px;border-radius:50%;background:var(--gold)}
+.kakao-card,.email-card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;min-width:0;padding:30px;border:1px solid var(--line);border-radius:8px;background:var(--paper-2)}
+.kakao-card:hover,.email-card:hover{border-color:var(--green);background:var(--mint)}
+.kakao-icon{display:flex;align-items:center;justify-content:center;flex:0 0 58px;width:58px;height:58px;border-radius:50%;background:var(--gold)}
 .kakao-icon>i{font-size:26px!important;color:var(--ink)!important}
 .email-card .kakao-icon{background:var(--sky)}
-.kakao-copy,.email-copy{min-width:0;flex:1}
+.kakao-copy,.email-copy{min-width:0;max-width:100%}
 .kakao-copy h3,.email-label{font-size:20px;font-weight:700;line-height:1.5;letter-spacing:-.03em;color:var(--ink)}
 .kakao-copy p{font-size:18px;line-height:1.8;margin-top:5px;color:var(--muted)}
-.email-address{font-size:18px;line-height:1.8;margin-top:5px;color:var(--green);font-weight:500;overflow-wrap:anywhere;word-break:normal;user-select:all;cursor:text}
+.email-address{font-size:18px;line-height:1.8;margin-top:5px;color:var(--green);font-weight:500;overflow-wrap:anywhere;word-break:normal;user-select:all;cursor:pointer}
 footer{padding:45px 24px 40px;background:var(--green);color:#fff;text-align:center;font-size:16px;line-height:1.8;margin-top:0}
 footer p:first-child{font-size:18px;margin-bottom:6px}
 footer p:last-child{color:#e0ede5;margin-top:20px!important}
 
 @media(max-width:1000px){
   .nav-container{width:calc(100% - 48px);gap:16px}.nav-left{gap:14px}.nav-links{gap:15px}.nav-title{font-size:24px}
-  header{padding:64px 0 72px}header>div{width:calc(100% - 64px);column-gap:38px;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+  header{padding:54px 0 64px}header>div{width:calc(100% - 64px)}
   header h1{font-size:40px}.hero-text{font-size:20px}.hero-sub{font-size:18px}
-  section{width:calc(100% - 64px);padding:68px 0}.identity-content{grid-template-columns:180px minmax(0,1fr);column-gap:28px}
+  section{width:calc(100% - 64px);padding:68px 0}
   .contact-grid{grid-template-columns:1fr}.link-card{padding:24px}.link-card h3{font-size:20px}
 }
 @media(max-width:720px){
@@ -162,32 +162,25 @@ footer p:last-child{color:#e0ede5;margin-top:20px!important}
   .nav-container{width:calc(100% - 36px);min-height:0;display:block;padding:12px 0 5px}.nav-left{justify-content:space-between;gap:12px}.nav-title{font-size:24px}
   .nav-x,.nav-naver{width:44px;height:44px}.nav-links{justify-content:space-between;gap:4px;margin-top:5px}.nav-links a{font-size:16px;min-width:44px;min-height:44px}
   header{padding:32px 0 40px;background:linear-gradient(180deg,#f0f8f4 0%,#fff 90%)}
-  header>div{width:calc(100% - 40px);display:flex;flex-direction:column;align-items:flex-start;gap:0}
-  .logo{width:min(250px,86%);max-width:100%;margin:0 auto 30px;box-shadow:9px 9px 0 var(--mint);align-self:center}
-  header h1{font-size:clamp(32px,7.4vw,45px);line-height:1.13;max-width:570px;margin:0 0 22px;text-wrap:balance}
+  header>div{width:calc(100% - 40px);align-items:center;gap:0}
+  .logo{width:min(250px,86%);max-width:100%;margin:0 auto 30px;box-shadow:9px 9px 0 var(--mint)}
+  header h1{font-size:clamp(32px,7.4vw,45px);line-height:1.13;max-width:570px;margin:0 auto 22px;text-wrap:balance}
   .hero-text{font-size:20px;line-height:1.8;margin-bottom:22px;overflow-wrap:normal;line-break:strict;text-wrap:pretty}.hero-sub{font-size:18px;padding:10px 12px}
   .hero-text .hero-phrase{white-space:normal}
   .hero-text .hero-line{text-wrap:balance}
   section{width:calc(100% - 40px);padding:52px 0}.section-title{font-size:30px;margin-bottom:28px}
   #identity>.section-title{font-size:16px;letter-spacing:.1em}
-  .identity-content{display:block}.identity-lead{font-size:22px;line-height:1.8;margin-bottom:28px}
+  .identity-lead{font-size:22px;line-height:1.8;margin-bottom:28px}
   .identity-content>h3{font-size:22px;padding:23px 0 9px}.identity-content>h3+p{font-size:20px;line-height:1.8;border-top:0;padding:0 0 25px}
   .identity-tagline{margin-top:6px;padding:24px 22px 9px;font-size:22px;overflow-wrap:normal;word-break:normal}.identity-bottom{font-size:20px;padding:0 22px 24px}
-  .history-card{display:block;padding:28px 24px}.history-card h3{font-size:18px;padding:0;margin-bottom:14px}.history-card h2{font-size:27px;margin-bottom:14px}.history-card p{font-size:20px}
+  .history-card{padding:28px 24px}.history-card h3{font-size:18px;padding:0;margin-bottom:14px}.history-card h2{font-size:27px;margin-bottom:14px}.history-card p{font-size:20px}
   .carousel{height:clamp(260px,70vw,400px)!important;transition:none}
   .carousel-inner,.carousel-item,.carousel-item img{height:100%}
   .carousel-item img{object-fit:contain}
   .carousel button{width:44px;height:44px;font-size:28px}.carousel .prev{left:10px}.carousel .next{right:10px}
-  .links-grid{grid-template-columns:1fr;gap:14px}.link-card{min-height:110px;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:24px;padding:25px}.link-card>i{flex:0 0 38px;text-align:center;margin-bottom:0!important;font-size:30px!important}.link-card h3{font-size:20px}
-  .contact-grid{gap:14px}.kakao-card,.email-card{padding:24px 20px;gap:16px}.kakao-icon{flex-basis:48px;height:48px}.kakao-copy h3,.email-label{font-size:20px}.email-address{font-size:18px}
+  .links-grid{grid-template-columns:1fr;gap:14px}.link-card{min-height:140px;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:25px}.link-card>i{text-align:center;margin-bottom:0!important;font-size:30px!important}.link-card h3{font-size:20px}
+  .contact-grid{gap:14px}.kakao-card,.email-card{padding:24px 20px;gap:16px}.kakao-icon{flex-basis:48px;width:48px;height:48px}.kakao-copy h3,.email-label{font-size:20px}.email-address{font-size:18px}
   footer{font-size:16px;padding:36px 20px}
-}
-@media(max-width:480px){
-  .email-card{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px 16px}
-  .email-card .kakao-icon{grid-column:1;grid-row:1}
-  .email-copy{display:contents}
-  .email-label{grid-column:2;grid-row:1}
-  .email-address{grid-column:1/-1;margin-top:0}
 }
 @media(max-width:360px){
   .nav-container{width:calc(100% - 28px)}.nav-title{font-size:22px}.nav-socials{gap:5px}
@@ -196,7 +189,6 @@ footer p:last-child{color:#e0ede5;margin-top:20px!important}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 @media print{body{font-size:11pt;color:#000}body>nav,.carousel button{display:none}header,section{width:100%;padding:20px 0;background:#fff;break-inside:avoid}header>div{width:100%;gap:20px}.logo{box-shadow:none;max-width:250px}.section-title{font-size:22pt}.identity-content p,.hero-text{font-size:12pt}footer{background:white;color:#000}}
-
 </style>
 </head>
 
@@ -320,7 +312,7 @@ footer p:last-child{color:#e0ede5;margin-top:20px!important}
 </div>
 </a>
 
-<div class="email-card" id="emailCard">
+<a class="email-card" id="emailCard" href="mailto:baeumteojigi@Gmail.com">
 <div class="kakao-icon">
 <i class="fas fa-envelope" style="font-size:2.5rem; color:var(--teal-dark);"></i>
 </div>
@@ -328,7 +320,7 @@ footer p:last-child{color:#e0ede5;margin-top:20px!important}
 <div class="email-label">이메일</div>
 <div class="email-address" id="emailAddressText">baeumteojigi@Gmail.com</div>
 </div>
-</div>
+</a>
 </div>
 </section>
 
@@ -342,34 +334,27 @@ footer p:last-child{color:#e0ede5;margin-top:20px!important}
 const root = document.documentElement;
 const inner = document.getElementById('carouselInner');
 const carousel = document.getElementById('carousel');
-
 const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
 if (isKakaoInApp) {
   root.classList.add('inapp-kakao');
 }
-
 const DEVICE_HYSTERESIS = 40; // 태블릿↔데스크톱 경계 부근에서 클래스가 반복 전환되는 것을 막는 여유값(px)
-
 function computeDeviceMode(width, coarse) {
   if (width <= 768) return 'device-phone';
   if (coarse && width <= 1400) return 'device-tablet';
   return 'device-desktop';
 }
-
 function getCurrentDeviceMode() {
   if (root.classList.contains('device-phone')) return 'device-phone';
   if (root.classList.contains('device-tablet')) return 'device-tablet';
   if (root.classList.contains('device-desktop')) return 'device-desktop';
   return null;
 }
-
 function setDeviceMode() {
   const width = window.innerWidth;
   const coarse = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
-
   const current = getCurrentDeviceMode();
   let next = computeDeviceMode(width, coarse);
-
   // 회전/툴바 표시 변화로 innerWidth가 1400px 경계 부근에서 미세하게
   // 오르내릴 때 태블릿↔데스크톱 클래스가 반복 전환(깜빡임)되는 것을 방지
   if (current === 'device-tablet' && next === 'device-desktop' && width <= 1400 + DEVICE_HYSTERESIS) {
@@ -377,13 +362,10 @@ function setDeviceMode() {
   } else if (current === 'device-desktop' && next === 'device-tablet' && width >= 1400 - DEVICE_HYSTERESIS) {
     next = 'device-desktop';
   }
-
   if (next === current) return;
-
   root.classList.remove('device-desktop', 'device-tablet', 'device-phone');
   root.classList.add(next);
 }
-
 let deviceModeRAF = null;
 function scheduleDeviceModeUpdate() {
   if (deviceModeRAF) cancelAnimationFrame(deviceModeRAF);
@@ -392,46 +374,38 @@ function scheduleDeviceModeUpdate() {
     updateCarouselHeight();
   });
 }
-
 setDeviceMode();
 window.addEventListener('resize', scheduleDeviceModeUpdate);
 window.addEventListener('orientationchange', scheduleDeviceModeUpdate);
-
 const slideNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const slideCount = slideNumbers.length;
-
 let current = 0;
 let intervalId = null;
+let galleryVisible = !('IntersectionObserver' in window);
+let slideRequest = 0;
+let slideLoading = false;
+const slideLoads = new Map();
 const carouselToggle = document.getElementById('carouselToggle');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let autoPlayRequested = !reducedMotion.matches;
-
 function updateCarouselHeight() {
   if (root.classList.contains('device-tablet')) {
     const fixedHeight = Math.min(Math.max(Math.round(window.innerWidth * 0.58), 420), 760);
     carousel.style.height = `${fixedHeight}px`;
     return;
   }
-
   const currentItem = inner.children[current];
   if (!currentItem) return;
-
   const img = currentItem.querySelector('img');
   if (!img) {
     const fallback = currentItem.querySelector('div');
-    if (fallback) {
-      carousel.style.height = `${fallback.getBoundingClientRect().height}px`;
-    }
+    if (fallback) carousel.style.height = `${fallback.getBoundingClientRect().height}px`;
     return;
   }
-
   const applyHeight = () => {
     const rect = img.getBoundingClientRect();
-    if (rect.height > 0) {
-      carousel.style.height = `${Math.ceil(rect.height)}px`;
-    }
+    if (rect.height > 0) carousel.style.height = `${Math.ceil(rect.height)}px`;
   };
-
   if (img.complete && img.naturalWidth > 0) {
     requestAnimationFrame(applyHeight);
   } else {
@@ -439,94 +413,104 @@ function updateCarouselHeight() {
     img.addEventListener('error', applyHeight, { once: true });
   }
 }
-
+function prepareSlide(index) {
+  const img = inner.children[index]?.querySelector('img');
+  if (!img || (img.complete && img.naturalWidth > 0)) return Promise.resolve();
+  if (slideLoads.has(index)) return slideLoads.get(index);
+  const ready = new Promise((resolve) => {
+    const finish = () => {
+      img.removeEventListener('load', finish);
+      img.removeEventListener('error', finish);
+      resolve();
+    };
+    img.addEventListener('load', finish, { once: true });
+    img.addEventListener('error', finish, { once: true });
+    img.loading = 'eager';
+    if (img.complete && img.naturalWidth > 0) finish();
+  });
+  slideLoads.set(index, ready);
+  return ready;
+}
+function preloadNextSlide() {
+  if (galleryVisible && !document.hidden) prepareSlide((current + 1) % slideCount);
+}
 function showSlide() {
   inner.style.transform = `translateX(-${current * 100}%)`;
   updateCarouselHeight();
+  preloadNextSlide();
 }
-
 function updateAutoplayControl() {
   carouselToggle.textContent = autoPlayRequested ? '자동 넘김 일시정지' : '자동 넘김 재생';
 }
-
 function resetInterval() {
   if (intervalId !== null) clearInterval(intervalId);
   intervalId = null;
-  if (autoPlayRequested && !document.hidden) {
+  if (autoPlayRequested && !document.hidden && galleryVisible && !slideLoading) {
     intervalId = setInterval(nextSlide, 5000);
   }
   updateAutoplayControl();
 }
-
 carouselToggle.addEventListener('click', () => {
   autoPlayRequested = !autoPlayRequested;
   resetInterval();
 });
-
 reducedMotion.addEventListener('change', (event) => {
   if (event.matches) autoPlayRequested = false;
   resetInterval();
 });
-
-document.addEventListener('visibilitychange', resetInterval);
+document.addEventListener('visibilitychange', () => {
+  resetInterval();
+  preloadNextSlide();
+});
 updateAutoplayControl();
-
-function nextSlide() {
-  current = (current + 1) % slideCount;
+async function moveSlide(direction) {
+  const target = (current + direction + slideCount) % slideCount;
+  const request = ++slideRequest;
+  slideLoading = true;
+  resetInterval();
+  await prepareSlide(target);
+  if (request !== slideRequest) return;
+  current = target;
+  slideLoading = false;
   showSlide();
   resetInterval();
 }
-
-function prevSlide() {
-  current = (current - 1 + slideCount) % slideCount;
-  showSlide();
-  resetInterval();
-}
-
+function nextSlide() { return moveSlide(1); }
+function prevSlide() { return moveSlide(-1); }
 slideNumbers.forEach((num) => {
   const div = document.createElement('div');
   div.className = 'carousel-item';
-
   const img = document.createElement('img');
+  img.loading = num === 1 ? 'eager' : 'lazy';
+  img.decoding = 'async';
   img.src = `활동${num}.jpg`;
   img.alt = `배움터지기 활동 ${num}`;
-  img.loading = 'eager';
-  img.decoding = 'async';
-
   img.addEventListener('load', () => {
-    if (num - 1 === current) {
-      requestAnimationFrame(updateCarouselHeight);
-    }
+    if (num - 1 === current) requestAnimationFrame(updateCarouselHeight);
   });
-
   img.addEventListener('error', () => {
     div.innerHTML = `<div style="width:100%; padding:72px 24px; text-align:center; font-size:1.4rem; color:#555; background:#f8f9f9;">활동 ${num} 이미지를 불러오지 못했습니다.</div>`;
-    if (num - 1 === current) {
-      requestAnimationFrame(updateCarouselHeight);
-    }
+    if (num - 1 === current) requestAnimationFrame(updateCarouselHeight);
   });
-
   div.appendChild(img);
   inner.appendChild(div);
 });
-
+if ('IntersectionObserver' in window) {
+  const galleryObserver = new IntersectionObserver((entries) => {
+    galleryVisible = entries[0].isIntersecting;
+    if (galleryVisible) {
+      prepareSlide(current);
+      preloadNextSlide();
+    }
+    resetInterval();
+  });
+  galleryObserver.observe(carousel);
+}
 window.addEventListener('load', () => {
   showSlide();
   resetInterval();
   updateCarouselHeight();
 });
-
-const emailCard = document.getElementById('emailCard');
-const emailText = document.getElementById('emailAddressText');
-
-emailCard.addEventListener('click', () => {
-  const selection = window.getSelection();
-  const range = document.createRange();
-  range.selectNodeContents(emailText);
-  selection.removeAllRanges();
-  selection.addRange(range);
-});
-
 </script>
 </body>
 </html>
