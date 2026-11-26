@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf6e9">
+  <meta name="description" content="모모와 함께 종이, 투명 페트병, 캔, 일반 쓰레기를 구분하는 유아 분리배출 놀이입니다.">
+  <link rel="canonical" href="https://baeumteojigi.github.io/tools/recycling-classroom/">
+  <title>분리배출 교실 | 배움터지기</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      color: #203b32;
+      background: #fbf6e9;
+      --ink: #203b32;
+      --muted: #52675d;
+      --green: #16664a;
+      --cream: #fffdf7;
+      --line: #e6dcc6;
+      --focus: #8b3d3e;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 74% 1%, #fffdf5 0, transparent 54%), #fbf6e9;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; cursor: pointer; touch-action: manipulation; }
+    button:disabled { cursor: default; }
+    a { color: var(--green); text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    .shell { width: min(1184px, calc(100% - 56px)); margin-inline: auto; }
+    .masthead {
+      min-height: 68px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-size: .95rem;
+      font-weight: 850;
+      text-decoration: none;
+      letter-spacing: -.045em;
+    }
+    .brand-mark {
+      inline-size: 28px;
+      block-size: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px 9px 13px 9px;
+      color: white;
+      background: #23694d;
+      font-size: 17px;
+      line-height: 1;
+    }
+    .guide-link { font-size: .88rem; font-weight: 700; }
+    .intro { padding-block: clamp(27px, 5vw, 53px) 23px; }
+    h1, h2, p { margin: 0; }
+    h1 {
+      font-size: clamp(2.65rem, 7.4vw, 5.15rem);
+      font-weight: 900;
+      line-height: 1.09;
+      letter-spacing: -.09em;
+      word-break: keep-all;
+    }
+    .intro p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2vw, 1.27rem);
+      font-weight: 650;
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+    .classroom { display: grid; grid-template-columns: minmax(0, 1.36fr) minmax(340px, 1fr); gap: 20px; align-items: stretch; }
+    .stage {
+      isolation: isolate;
+      position: relative;
+      min-width: 0;
+      min-height: clamp(465px, 49vw, 570px);
+      overflow: hidden;
+      border: 1px solid #d4d6bb;
+      border-radius: 29px;
+      background: #dbe8c8;
+      box-shadow: 0 10px 28px #51411d0c;
+    }
+    .stage-display { position: absolute; inset: 0; }
+    #scene, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #scene { display: block; }
+    .scene-fallback {
+      z-index: 1;
+      overflow: hidden;
+      background: linear-gradient(180deg, #e3edce 0%, #e5edcf 68%, #eac394 68.2%, #dbab75 100%);
+    }
+    .fallback-window {
+      position: absolute;
+      top: 11%;
+      left: 9%;
+      width: 25%;
+      height: 35%;
+      border: 7px solid #fff6d9;
+      border-radius: 50% 50% 12% 12% / 32% 32% 8% 8%;
+      background: radial-gradient(ellipse at 24% 82%, #82ba83 0 30%, transparent 31%),
+        radial-gradient(ellipse at 77% 85%, #94ca8b 0 38%, transparent 39%), #9eddeb;
+      box-shadow: 0 3px 0 #c4d2ac;
+    }
+    .fallback-window::before, .fallback-window::after {
+      position: absolute;
+      content: "";
+      background: #fff6d9;
+    }
+    .fallback-window::before { inset: 0 auto 0 48%; width: 5%; }
+    .fallback-window::after { inset: 48% 0 auto; height: 5%; }
+    .fallback-board {
+      position: absolute;
+      top: 13%;
+      right: 9%;
+      width: 47%;
+      height: 32%;
+      display: grid;
+      place-items: center;
+      border: clamp(6px, 1.2vw, 13px) solid #b57949;
+      border-radius: 13px;
+      color: #d1edc0;
+      background: #35694f;
+      box-shadow: 0 5px 0 #bdc9a4, inset 0 0 0 2px #22563e;
+      font: 700 clamp(2.2rem, 7.5vw, 6rem)/1 system-ui, sans-serif;
+    }
+    .fallback-table {
+      position: absolute;
+      right: 3%;
+      bottom: 24%;
+      width: 50%;
+      height: 12%;
+      border-top: 9px solid #a87145;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(90deg, transparent 8%, #b57d4c 8% 12%, transparent 12% 87%, #b57d4c 87% 91%, transparent 91%);
+    }
+    .fallback-momo {
+      position: absolute;
+      left: 15%;
+      bottom: 23%;
+      width: min(38%, 187px);
+      aspect-ratio: .92;
+      transform: rotate(-7deg);
+    }
+    .fallback-momo::before, .fallback-momo::after {
+      position: absolute;
+      content: "";
+    }
+    .fallback-momo::before {
+      inset: 49% 18% 0;
+      border-radius: 50% 50% 30% 30%;
+      background: #cb8850;
+      box-shadow: inset 0 -9px #a66c3d, 0 13px 15px #804e3440;
+    }
+    .fallback-face {
+      position: absolute;
+      inset: 8% 2% 25%;
+      border-radius: 46% 49% 53% 55%;
+      background: radial-gradient(circle at 23% 69%, #f1a686 0 8%, transparent 9%),
+        radial-gradient(circle at 79% 69%, #f1a686 0 8%, transparent 9%), #f6c18d;
+      box-shadow: inset 0 -7px #dba272;
+    }
+    .fallback-face::before {
+      position: absolute;
+      content: "";
+      left: 33%;
+      top: 49%;
+      width: 7%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #4a352c;
+      box-shadow: 2.25em 0 #4a352c;
+      font-size: clamp(10px, 2.3vw, 23px);
+    }
+    .fallback-face::after {
+      position: absolute;
+      content: "";
+      inset: 61% 40% 23%;
+      border: 3px solid #673a30;
+      border-width: 0 0 3px;
+      border-radius: 50%;
+    }
+    .fallback-momo::after {
+      inset: 0 48% auto 36%;
+      height: 23%;
+      border-radius: 90% 10% 94% 10%;
+      transform: rotate(-32deg);
+      background: #4f8955;
+      box-shadow: 0 -2px 0 #719c5d;
+    }
+    .stage-controls {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      left: 14px;
+      bottom: 14px;
+      right: 14px;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .stage-button, .restart-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 47px;
+      border: 1px solid #d9d6bd;
+      border-radius: 14px;
+      padding: 7px 12px;
+      background: #fffdf4;
+      color: var(--ink);
+      font-size: .87rem;
+      font-weight: 800;
+    }
+    .stage-button {
+      pointer-events: auto;
+      box-shadow: 0 3px 8px #443c1c22;
+    }
+    .stage-button:hover, .restart-button:hover { background: #f2f6e6; }
+    .stage-symbol { font-size: 1.25rem; line-height: 1; }
+    .activity {
+      min-width: 0;
+      padding: clamp(15px, 2vw, 25px);
+      border: 1px solid #ebdfc9;
+      border-radius: 29px;
+      background: var(--cream);
+      box-shadow: 0 10px 28px #51411d0c;
+    }
+    .status-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 42px; }
+    #progress { color: var(--green); font-size: .92rem; font-weight: 850; }
+    #progress-dots { display: flex; flex-wrap: wrap; gap: 6px; }
+    #progress-dots > * {
+      display: block;
+      width: 9px;
+      height: 9px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #dedbc9;
+    }
+    #progress-dots > :is(.done, .complete, .completed, [data-state="done"], [data-state="complete"], [data-state="correct"]) { background: #398663; }
+    #progress-dots > :is(.current, .active, [aria-current="step"], [data-state="current"], [data-state="active"]) { background: #ba7541; }
+    .status-main { display: grid; gap: 6px; }
+    #item-card {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      align-items: center;
+      gap: 13px;
+      min-height: 103px;
+      margin-top: 11px;
+      padding: 11px;
+      border-radius: 19px;
+      background: #fcf0d8;
+    }
+    #item-icon {
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      background: #fffaf0;
+      border-radius: 14px;
+      font: 400 2.6rem/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+    }
+    #item-name { font-size: clamp(1.48rem, 3vw, 2rem); font-weight: 900; line-height: 1.2; letter-spacing: -.07em; overflow-wrap: anywhere; }
+    #prompt { margin-top: 5px; color: #4e5846; font-size: .97rem; font-weight: 700; line-height: 1.46; word-break: keep-all; }
+    #hint { margin-top: 9px; color: #52675d; font-size: .86rem; line-height: 1.45; word-break: keep-all; }
+    #hint:empty { display: none; }
+    .bin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 15px; }
+    .bin {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 63px;
+      min-width: 0;
+      padding: 7px 9px;
+      border: 1px solid var(--bin-border);
+      border-radius: 14px;
+      color: var(--ink);
+      background: var(--bin-color);
+      box-shadow: 0 2px 0 var(--bin-border);
+      font-size: clamp(.89rem, 1.8vw, 1.05rem);
+      font-weight: 850;
+      line-height: 1.2;
+      text-align: left;
+      word-break: keep-all;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .bin:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 0 var(--bin-border); }
+    .bin:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+    .bin[data-bin="paper"] { --bin-color: #e7f1fd; --bin-border: #bbd2e9; }
+    .bin[data-bin="pet"] { --bin-color: #e5f3dc; --bin-border: #bfd7a9; }
+    .bin[data-bin="can"] { --bin-color: #fff1cf; --bin-border: #e6cf94; }
+    .bin[data-bin="general"] { --bin-color: #eee9f5; --bin-border: #d2c3e1; }
+    .bin:is(.correct, .is-correct, [data-state="correct"]) { outline: 3px solid #2a8056; outline-offset: -3px; }
+    .bin[data-state="retry"] { outline: 3px solid #9e5932; outline-offset: -3px; }
+    .bin-icon {
+      position: relative;
+      display: grid;
+      flex: 0 0 31px;
+      place-items: center;
+      width: 31px;
+      height: 34px;
+      border-radius: 8px;
+      background: #fffaf0d9;
+      font: 400 1.29rem/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+    }
+    .bin-icon-bottle::before, .bin-icon-bottle::after {
+      position: absolute;
+      content: "";
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .bin-icon-bottle::before {
+      top: 10px;
+      width: 13px;
+      height: 18px;
+      border: 2px solid #47785e;
+      border-radius: 6px 6px 4px 4px;
+      background: linear-gradient(180deg, transparent 40%, #b4ddc053 41% 65%, transparent 66%);
+    }
+    .bin-icon-bottle::after {
+      top: 6px;
+      width: 7px;
+      height: 6px;
+      border-radius: 2px 2px 0 0;
+      background: #47785e;
+    }
+    #feedback {
+      min-height: 46px;
+      margin: 12px 0 0;
+      color: #254e3c;
+      font-size: .92rem;
+      font-weight: 720;
+      line-height: 1.48;
+      word-break: keep-all;
+    }
+    #feedback[data-state="retry"] { color: #804c2b; }
+    .speech-caption { margin: 0 0 10px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+    .continue, .replay-button {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 9px 13px;
+      background: #206b4e;
+      color: #fff;
+      font-size: .99rem;
+      font-weight: 850;
+    }
+    .continue:hover, .replay-button:hover { background: #16543d; }
+    .noscript { margin-top: 12px; color: #86462b; }
+    #finish { display: grid; gap: 14px; }
+    #finish h2 { font-size: clamp(1.65rem, 4vw, 2.35rem); line-height: 1.16; letter-spacing: -.065em; }
+    #finish p { color: var(--muted); line-height: 1.5; }
+    .finish-mark {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      color: #265d43;
+      background: #e7f2db;
+      font-size: 1.9rem;
+    }
+    #learn-list { display: grid; gap: 6px; margin: 0; padding-left: 1.3em; color: #345445; font-size: .94rem; line-height: 1.45; }
+    #learn-list li::marker { color: #3c825f; }
+    .grownups { margin-block: 19px 42px; padding: 15px 0; border-block: 1px solid var(--line); }
+    .grownups summary { width: fit-content; color: #2a5c47; font-weight: 800; cursor: pointer; }
+    .grownups p { max-width: 74ch; margin-top: 10px; color: var(--muted); font-size: .92rem; line-height: 1.65; word-break: keep-all; }
+    .grownups ul { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 10px 0 0; padding: 0 0 0 1em; font-size: .88rem; }
+    @media (max-width: 880px) {
+      .classroom { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+      .stage { min-height: 0; aspect-ratio: 1.65; }
+      .activity { padding: 17px; }
+      #item-card { grid-template-columns: 72px minmax(0, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .shell { width: calc(100% - 28px); }
+      .masthead { min-height: 53px; }
+      .intro { padding-block: 23px 16px; }
+      .intro p { margin-top: 6px; }
+      .stage { aspect-ratio: auto; border-radius: 21px; }
+      .stage-display { position: relative; inset: auto; aspect-ratio: 1.53; }
+      .activity { padding: 12px; border-radius: 21px; }
+      .stage-controls { position: relative; inset: auto; padding: 8px; }
+      .stage-button { min-height: 43px; padding-inline: 9px; border-radius: 11px; }
+      .grownups { margin-top: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead shell">
+    <a class="wordmark" href="https://baeumteojigi.github.io/tools/" aria-label="배움터지기 무료 도구 목록">
+      <span class="brand-mark" aria-hidden="true">✦</span>
+      배움터지기
+    </a>
+    <a class="guide-link" href="#grownups">보호자·교사 안내</a>
+  </header>
+  <main class="shell">
+    <header class="intro">
+      <h1>분리배출 교실</h1>
+      <p>모모와 함께 물건이 들어갈 통을 찾아요.</p>
+    </header>
+    <div class="classroom">
+      <section class="stage" id="stage" aria-label="모모의 분리배출 교실">
+        <div class="stage-display">
+          <canvas id="scene" width="960" height="720" aria-hidden="true"></canvas>
+          <div class="scene-fallback" id="scene-fallback" aria-hidden="true">
+            <span class="fallback-window"></span>
+            <span class="fallback-board">♻</span>
+            <span class="fallback-table"></span>
+            <span class="fallback-momo"><span class="fallback-face"></span></span>
+          </div>
+        </div>
+        <div class="stage-controls">
+          <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span> 모모 목소리 듣기</button>
+          <button class="stage-button" id="turn" type="button"><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
+        </div>
+      </section>
+      <div class="activity">
+        <section id="lesson" aria-label="분리배출 놀이">
+          <div class="status-row">
+            <div class="status-main">
+              <p id="progress">첫 번째 문제</p>
+              <div id="progress-dots" aria-hidden="true"></div>
+            </div>
+            <button class="restart-button" id="restart" type="button" hidden>처음부터</button>
+          </div>
+          <div id="item-card">
+            <span id="item-icon" aria-hidden="true">📄</span>
+            <div>
+              <h2 id="item-name">깨끗한 종이</h2>
+              <p id="prompt">어느 통에 넣을까요?</p>
+            </div>
+          </div>
+          <p id="hint"></p>
+          <div class="bin-grid" id="bin-grid" role="group" aria-label="넣을 통 고르기">
+            <button class="bin" data-bin="paper" type="button"><span class="bin-icon" aria-hidden="true">📄</span><span>종이</span></button>
+            <button class="bin" data-bin="pet" type="button"><span class="bin-icon bin-icon-bottle" aria-hidden="true"></span><span>투명 페트병</span></button>
+            <button class="bin" data-bin="can" type="button"><span class="bin-icon" aria-hidden="true">🥫</span><span>캔</span></button>
+            <button class="bin" data-bin="general" type="button"><span class="bin-icon" aria-hidden="true">🗑</span><span>일반 쓰레기</span></button>
+          </div>
+          <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+          <button class="continue" id="next" type="button" hidden>다음 물건 보기</button>
+        </section>
+        <section id="finish" aria-labelledby="finish-title" hidden>
+          <span class="finish-mark" aria-hidden="true">★</span>
+          <h2 id="finish-title" tabindex="-1">모모 교실을 마쳤어요!</h2>
+          <p>우리 함께 배운 것을 다시 볼까요?</p>
+          <ul id="learn-list"></ul>
+          <button class="replay-button" id="replay" type="button">한 번 더 놀기</button>
+        </section>
+        <noscript><p class="noscript">이 놀이에는 브라우저에서 자바스크립트 실행이 필요해요.</p></noscript>
+      </div>
+    </div>
+    <details class="grownups" id="grownups">
+      <summary>보호자·교사 안내</summary>
+      <p>화면 속 물건으로 먼저 연습해요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤, 시·군·구의 분리배출 안내를 따라 주세요. 모모 목소리는 기기에 설치된 한국어 음성으로 들을 수 있어요.</p>
+      <ul>
+        <li><a href="https://www.law.go.kr/LSW/flDownload.do?flSeq=171464865">국가법령정보센터 품목별 분리배출 요령</a></li>
+        <li><a href="https://www.ddm.go.kr/www/contents.do?key=860">서울 동대문구 재활용품 분리배출</a></li>
+        <li><a href="https://www.ddm.go.kr/www/contents.do?key=858">서울 동대문구 일반 쓰레기 배출·수거</a></li>
+      </ul>
+    </details>
+  </main>
+  <script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("scene");
+  const stage = document.getElementById("stage");
+  const fallback = document.getElementById("scene-fallback");
+  const turn = document.getElementById("turn");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
+
+  function useFallback() {
+    canvas.hidden = true;
+    fallback.hidden = false;
+    turn.hidden = true;
+    stage.dataset.mode = "fallback";
+  }
+
+  if (!gl) {
+    useFallback();
+    return;
+  }
+
+  const vertex = [
+    "attribute vec3 aPosition, aNormal;",
+    "uniform mat4 uModel, uViewProjection;",
+    "uniform mat3 uNormal;",
+    "varying vec3 vNormal;",
+    "void main() {",
+    "  vec4 world = uModel * vec4(aPosition, 1.0);",
+    "  vNormal = normalize(uNormal * aNormal);",
+    "  gl_Position = uViewProjection * world;",
+    "}",
+  ].join("\n");
+  const fragment = [
+    "precision mediump float;",
+    "uniform vec3 uColor;",
+    "varying vec3 vNormal;",
+    "void main() {",
+    "  vec3 normal = normalize(vNormal);",
+    "  float glow = max(dot(normal, normalize(vec3(-0.55, 0.92, 0.72))), 0.0);",
+    "  float fill = 0.5 + 0.5 * normal.y;",
+    "  float light = 0.69 + 0.23 * glow + 0.09 * fill;",
+    "  vec3 color = uColor * light + 0.018 * vec3(1.0, 0.86, 0.76);",
+    "  gl_FragColor = vec4(color, 1.0);",
+    "}",
+  ].join("\n");
+
+  function shader(type, source) {
+    const result = gl.createShader(type);
+    gl.shaderSource(result, source);
+    gl.compileShader(result);
+    if (!gl.getShaderParameter(result, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(result));
+    }
+    return result;
+  }
+
+  let program;
+  try {
+    program = gl.createProgram();
+    gl.attachShader(program, shader(gl.VERTEX_SHADER, vertex));
+    gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragment));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  } catch (error) {
+    console.warn("3D 교실을 열 수 없습니다.", error);
+    useFallback();
+    return;
+  }
+
+  const position = gl.getAttribLocation(program, "aPosition");
+  const normal = gl.getAttribLocation(program, "aNormal");
+  const modelUniform = gl.getUniformLocation(program, "uModel");
+  const projectionUniform = gl.getUniformLocation(program, "uViewProjection");
+  const normalUniform = gl.getUniformLocation(program, "uNormal");
+  const colorUniform = gl.getUniformLocation(program, "uColor");
+  gl.useProgram(program);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enableVertexAttribArray(position);
+  gl.enableVertexAttribArray(normal);
+
+  const minus = (a, b) => a.map((n, i) => n - b[i]);
+  const dot = (a, b) => a.reduce((sum, n, i) => sum + n * b[i], 0);
+  const unit = (a) => a.map(n => n / Math.hypot(...a));
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const point = (x, y, z) => [x, y, z];
+
+  function multiply(a, b) {
+    const out = new Float32Array(16);
+    for (let c = 0; c < 4; c += 1) {
+      for (let r = 0; r < 4; r += 1) {
+        out[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+      }
+    }
+    return out;
+  }
+
+  function camera(eye, target, halfWidth, halfHeight) {
+    const z = unit(minus(eye, target));
+    const x = unit(cross([0, 1, 0], z));
+    const y = cross(z, x);
+    const view = [
+      x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0,
+      -dot(x, eye), -dot(y, eye), -dot(z, eye), 1,
+    ];
+    const ortho = [
+      1 / halfWidth, 0, 0, 0, 0, 1 / halfHeight, 0, 0,
+      0, 0, -2 / 40, 0, 0, 0, -1, 1,
+    ];
+    return multiply(ortho, view);
+  }
+
+  function model(x, y, z, sx, sy, sz, yaw, tilt) {
+    const c = Math.cos(yaw), s = Math.sin(yaw);
+    const a = Math.cos(tilt), b = Math.sin(tilt);
+    return new Float32Array([
+      c * a * sx, b * sx, -s * a * sx, 0,
+      -c * b * sy, a * sy, s * b * sy, 0,
+      s * sz, 0, c * sz, 0,
+      x, y, z, 1,
+    ]);
+  }
+
+  function mesh(data) {
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+    return { buffer, count: data.length / 6 };
+  }
+
+  function buildBox() {
+    const data = [];
+    const faces = [
+      [[0, 0, 1], [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]],
+      [[0, 0, -1], [1, -1, -1], [-1, -1, -1], [-1, 1, -1], [1, 1, -1]],
+      [[0, 1, 0], [-1, 1, 1], [1, 1, 1], [1, 1, -1], [-1, 1, -1]],
+      [[0, -1, 0], [-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]],
+      [[1, 0, 0], [1, -1, 1], [1, -1, -1], [1, 1, -1], [1, 1, 1]],
+      [[-1, 0, 0], [-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]],
+    ];
+    for (const [n, ...corners] of faces) {
+      for (const index of [0, 1, 2, 0, 2, 3]) data.push(...corners[index], ...n);
+    }
+    return mesh(data);
+  }
+
+  function buildSphere() {
+    const data = [];
+    const radial = 22;
+    const bands = 14;
+    function sample(ring, step) {
+      const lat = Math.PI * ring / bands;
+      const lon = 2 * Math.PI * step / radial;
+      return [Math.sin(lat) * Math.cos(lon), Math.cos(lat), Math.sin(lat) * Math.sin(lon)];
+    }
+    for (let ring = 0; ring < bands; ring += 1) {
+      for (let step = 0; step < radial; step += 1) {
+        const a = sample(ring, step), b = sample(ring + 1, step);
+        const c = sample(ring + 1, step + 1), d = sample(ring, step + 1);
+        for (const v of [a, b, c, a, c, d]) data.push(...v, ...v);
+      }
+    }
+    return mesh(data);
+  }
+
+  function buildCylinder() {
+    const data = [];
+    const print = (p, n) => data.push(...p, ...n);
+    const count = 28;
+    for (let step = 0; step < count; step += 1) {
+      const a = 2 * Math.PI * step / count, b = 2 * Math.PI * (step + 1) / count;
+      const n = [Math.cos(a), 0, Math.sin(a)], m = [Math.cos(b), 0, Math.sin(b)];
+      const bottom = [n[0], -1, n[2]], top = [n[0], 1, n[2]];
+      const nextBottom = [m[0], -1, m[2]], nextTop = [m[0], 1, m[2]];
+      print(bottom, n); print(top, n); print(nextTop, m);
+      print(bottom, n); print(nextTop, m); print(nextBottom, m);
+      for (const p of [[0, 1, 0], top, nextTop]) print(p, [0, 1, 0]);
+      for (const p of [[0, -1, 0], nextBottom, bottom]) print(p, [0, -1, 0]);
+    }
+    return mesh(data);
+  }
+
+  const shapes = { box: buildBox(), ball: buildSphere(), cylinder: buildCylinder() };
+  const colors = new Map();
+  function color(hex) {
+    if (!colors.has(hex)) {
+      const value = Number.parseInt(hex, 16);
+      colors.set(hex, [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255]);
+    }
+    return colors.get(hex);
+  }
+
+  function part(shape, x, y, z, sx, sy, sz, tone, yaw = 0, tilt = 0) {
+    const matrix = model(x, y, z, sx, sy, sz, yaw, tilt);
+    const normals = new Float32Array([
+      matrix[0]/(sx*sx), matrix[1]/(sx*sx), matrix[2]/(sx*sx),
+      matrix[4]/(sy*sy), matrix[5]/(sy*sy), matrix[6]/(sy*sy),
+      matrix[8]/(sz*sz), matrix[9]/(sz*sz), matrix[10]/(sz*sz),
+    ]);
+    return { mesh: shapes[shape], matrix, normals, tone: color(tone) };
+  }
+
+  const room = [];
+  function box(x, y, z, width, height, depth, tone, yaw = 0, tilt = 0) {
+    room.push(part("box", x, y, z, width/2, height/2, depth/2, tone, yaw, tilt));
+  }
+  const roomBall = (...args) => room.push(part("ball", ...args));
+  const roomCylinder = (...args) => room.push(part("cylinder", ...args));
+
+  // The window, low bookshelves and picture board take the scale of a classroom.
+  box(0, -.13, -.65, 12.5, .26, 10.5, "e8b98a");
+  const plankColors = ["efc69b", "e8b587", "f2c9a0", "eabb91"];
+  for (let i = 0; i < 11; i += 1) {
+    box(-5.75 + i * 1.15, -.007, -.65, 1.135, .025, 10.5, plankColors[i % plankColors.length]);
+  }
+  box(0, 2.55, -4.28, 12.3, 5.1, .24, "f7dfb9");
+  box(-5.63, 2.55, -1.73, .2, 5.1, 5.3, "e7b992");
+  box(0, .33, -4.12, 11.2, .65, .15, "d7e4bb");
+  box(-5.49, .33, -1.73, .12, .65, 5.28, "d1d9ab");
+  box(0, .62, -3.99, 11.25, .07, .12, "fff1cd");
+  box(-3.12, 3.16, -3.98, 2.85, 2.38, .2, "fff3d5");
+  box(-3.12, 3.16, -3.82, 2.56, 2.09, .075, "b4e3e7");
+  roomBall(-3.91, 3.66, -3.76, .34, .15, .025, "fff7de");
+  roomBall(-4.03, 3.69, -3.74, .14, .17, .03, "fff9e6");
+  roomBall(-3.22, 2.31, -3.74, 1.14, .23, .052, "99cfa5");
+  roomBall(-2.42, 2.33, -3.71, .54, .29, .05, "82be9e");
+  roomBall(-2.35, 3.61, -3.72, .24, .24, .035, "fff19c");
+  box(-3.12, 3.16, -3.64, .084, 2.1, .085, "fff6e2");
+  box(-3.12, 3.16, -3.64, 2.55, .07, .085, "fff6e2");
+  box(-3.12, 2.02, -3.64, 2.91, .12, .4, "dca976");
+  box(.92, 3.17, -3.99, 3.66, 1.96, .17, "bd8755");
+  box(.92, 3.17, -3.87, 3.39, 1.7, .09, "627c60");
+  // Chalk drawings and a small display of colored paper over the board.
+  for (let i = 0; i < 3; i += 1) {
+    const x = -.08 + i;
+    const tones = ["f6dc9d", "ebebc2", "cfebca"];
+    box(x, 3.1, -3.809, .43, .075, .025, tones[i]);
+    box(x, 2.97, -3.808, .31, .045, .024, tones[i]);
+    roomBall(x, 3.4, -3.81, .10, .10, .022, tones[i]);
+  }
+  for (let i = 0; i < 5; i += 1) {
+    box(.12 + i*.48, 4.63 - .12 * Math.sin(Math.PI*i/4), -3.91, .28, .29, .042,
+      ["e9a07b", "f0ca72", "a5b985", "a3cbd2", "d8acc9"][i], 0, (i-2)*.11);
+  }
+  // Birch reading shelf and a child-sized activity table linger beside the mat.
+  box(-3.54, 1.13, -2.75, 2.0, .14, .91, "ffe2af");
+  box(-3.54, .59, -2.75, 2.0, .11, .83, "d6a26f");
+  box(-3.54, .13, -2.75, 2.0, .13, .83, "d7a26d");
+  box(-4.48, .65, -2.75, .1, 1.03, .84, "e3b47c");
+  box(-2.60, .65, -2.75, .1, 1.03, .84, "e3b47c");
+  const bookColors = ["cf796a", "eeb650", "7ea895", "8fbdd1", "bd92b8", "ecd8a2"];
+  for (let i = 0; i < bookColors.length; i += 1) {
+    const high = .28 + i % 3 * .04;
+    box(-4.26 + i*.23, .65 + high/2, -2.64, .16, high, .41, bookColors[i], 0, i === 5 ? -.17 : 0);
+  }
+  box(-3.35, .38, -2.70, .78, .32, .54, "a4b68d");
+  box(-3.36, .39, -2.42, .21, .045, .018, "f1e8bc");
+  roomCylinder(-3.55, .52, -.05, .91, .08, .71, "ffe2b2");
+  for (const x of [-4.12,-2.98]) {
+    for (const z of [-.48,.32]) box(x, .25, z, .12, .5, .13, "c78d5a");
+  }
+  box(-3.68,.64,-.04,.4,.072,.27,"e8896b",.15);
+  box(-3.20,.67,-.16,.27,.12,.24,"77ae96",-.16);
+  // Planter and small sorting bins at the back of the classroom.
+  roomCylinder(4.14,.28,-3.22,.32,.27,.32,"e8a16e");
+  roomCylinder(4.14,.56,-3.22,.35,.056,.35,"f4b78a");
+  for (let j=0;j<5;j+=1) {
+    const x = 4.14 + (j-2)*.15;
+    roomBall(x, .91 + .14*(2-Math.abs(j-2)), -3.21+j*.045, .16,.42,.115,
+      j%2 ? "78ad71" : "8eb97a",0,(j-2)*-.28);
+  }
+  const destinations = ["paper", "pet", "can", "general"];
+  const binStart = 1.1;
+  const binSpacing = .64;
+  for (const [i, tones] of ["80bcbf", "8cbb86", "e8a875", "aa9aba"].entries()) {
+    const x = binStart + i * binSpacing;
+    box(x,.32,-2.16,.50,.63,.51,tones);
+    box(x,.65,-2.16,.56,.10,.56,tones);
+    box(x,.705,-2.11,.25,.013,.10,"38756a");
+    box(x,.39,-1.894,.21,.17,.017,"fff4d9");
+  }
+  roomCylinder(.06,.014,.73,3.13,.023,2.08,"90b9a2");
+  roomCylinder(.06,.038,.73,2.96,.015,1.94,"a6cdb4");
+  roomCylinder(.06,.057,.73,2.64,.015,1.69,"b9d7b4");
+  roomCylinder(-.36,.079,.93,.85,.009,.45,"a5c5a9");
+  roomCylinder(1.64,.078,1.1,.68,.008,.43,"a5c5a9");
+  roomCylinder(1.61,.17,1.12,.57,.09,.46,"eabf89");
+  roomCylinder(1.61,.272,1.12,.58,.045,.46,"fff0c9");
+
+  let chosen = "paper";
+  let reaction = "";
+  let reactionTime = -Infinity;
+  let targetAngle = .28;
+  let angle = targetAngle;
+  let started = 0;
+  let lastFrameAt = -Infinity;
+  let frameId = 0;
+  let drawn = false;
+
+  function mascot(seconds) {
+    const out = [];
+    const play = reduceMotion.matches ? 0 : seconds;
+    const elapsed = seconds - reactionTime;
+    const jump = !reduceMotion.matches && reaction === "correct" && elapsed >= 0 && elapsed < .8
+      ? .37 * Math.sin((elapsed / .8) * Math.PI) : 0;
+    const shake = !reduceMotion.matches && reaction === "retry" && elapsed >= 0 && elapsed < .66
+      ? Math.sin(elapsed * 27) * (.66 - elapsed) * .15 : 0;
+    const yaw = .28 + Math.sin(play * .55) * .07 + shake;
+    const pulse = .028 * Math.sin(play * 2.5);
+    function body(shape, x, y, z, sx, sy, sz, tone, tilt = 0) {
+      const size = 1.13;
+      const worldX = -.56 + size * (Math.cos(yaw) * x + Math.sin(yaw) * z);
+      const worldZ = .97 + size * (-Math.sin(yaw) * x + Math.cos(yaw) * z);
+      out.push(part(shape, worldX, y * size + jump + pulse, worldZ, sx * size, sy * size, sz * size, tone, yaw, tilt));
+    }
+    const ellipsoid = (...args) => body("ball", ...args);
+    const green = "91c67e";
+    ellipsoid(-.315,.25,.24,.29,.155,.335,"edb369",-.10);
+    ellipsoid(.315,.25,.24,.29,.155,.335,"edb369",.10);
+    ellipsoid(0,.83,.028,.58,.665,.49,green);
+    ellipsoid(0,.83,.386,.384,.41,.165,"ffebaa");
+    ellipsoid(-.57,1.02,.08,.17,.37,.17,"82b778",-.66);
+    const wave = Math.sin(play * 2.5) * .20 + (jump > 0 ? .45 : 0);
+    ellipsoid(.55,1.16,.06,.16,.38,.16,"8bbe77",-.77-wave);
+    ellipsoid(.77,1.38+wave*.20,.10,.155,.174,.152,"a1d087");
+    ellipsoid(-.72,.83,.13,.146,.17,.14,"a1d087");
+    ellipsoid(0,1.76,.067,.67,.576,.554,"a1d28a");
+    ellipsoid(0,1.69,.42,.53,.378,.254,"f8eaae");
+    const blink = !reduceMotion.matches && (play % 3.8) > 3.69;
+    for (const x of [-.22,.22]) {
+      ellipsoid(x,1.795,.617,.093,blink ? .014 : .121,.053,"304d45");
+      if (!blink) ellipsoid(x-.021,1.832,.661,.028,.031,.015,"fff9e9");
+      ellipsoid(x*1.72,1.608,.567,.092,.047,.035,"ee9e85",x*.53);
+    }
+    ellipsoid(0,1.547,.635,.116,.050 + jump*.11,.035,"835749");
+    ellipsoid(0,1.532,.657,.053,.023,.014,"e6a390");
+    ellipsoid(.005,2.298,.05,.065,.18,.055,"619866",.20);
+    ellipsoid(-.158,2.422,.047,.095,.229,.097,"82bd70",.66);
+    ellipsoid(.169,2.451,.035,.129,.266,.103,"9dcc77",-.83);
+    return out;
+  }
+
+  function object(seconds) {
+    const out = [];
+    const time = reduceMotion.matches ? 0 : seconds;
+    const yaw = .15 + time * .24;
+    const bob = .06 * Math.sin(time * 2.2);
+    const progress = reaction === "correct" ? (reduceMotion.matches ? 1 : Math.max(0, (seconds - reactionTime) / .86)) : 0;
+    if (progress >= 1) return out;
+    const targetX = binStart + destinations.indexOf(chosen) * binSpacing;
+    const lift = .95 * Math.sin(Math.PI * progress);
+    const size = 1 - .82 * progress * progress;
+    function item(shape, x, y, z, sx, sy, sz, tone, tilt = 0, extraYaw = 0) {
+      out.push(part(shape, 1.61 + (targetX - 1.61) * progress + size * (Math.cos(yaw)*x + Math.sin(yaw)*z),
+        .035 + (.625 * progress) + y * size + lift + bob,
+        1.12 - 3.28 * progress + size * (-Math.sin(yaw)*x + Math.cos(yaw)*z),
+        sx * size, sy * size, sz * size, tone, yaw + extraYaw, tilt));
+    }
+    if (chosen === "paper") {
+      item("box",0,.40,0,.342,.047,.25,"c8e0db",.06);
+      item("box",-.015,.455,.01,.323,.025,.237,"fff5d8",.08);
+      item("box",.02,.492,-.018,.301,.025,.215,"f8f5e7",.11);
+      for (let n=0;n<3;n+=1) item("box",.02,.530,-.11+n*.086,.197,.010,.015,"a7c4c5",.11);
+    } else if (chosen === "pet") {
+      item("cylinder",0,.61,0,.22,.28,.22,"9bd9e4");
+      item("ball",0,.891,0,.214,.13,.214,"acdee7");
+      item("cylinder",0,1.02,0,.097,.085,.097,"bde5ec");
+      item("cylinder",0,1.111,0,.117,.047,.117,"6ca387");
+      for (const y of [.42,.53,.63,.75]) item("cylinder",0,y,0,.226,.016,.226,"b8e7ed");
+      item("ball",-.107,.72,.174,.044,.128,.021,"e2f4ef",.1);
+    } else if (chosen === "can") {
+      item("cylinder",0,.623,0,.242,.286,.242,"e19178");
+      item("cylinder",0,.918,0,.249,.034,.249,"d5dade");
+      item("cylinder",0,.335,0,.249,.029,.249,"dbdbd6");
+      item("cylinder",0,.957,0,.112,.013,.063,"a1afb0");
+      item("ball",.012,.651,.229,.124,.16,.024,"ffe5ab",-.18);
+    } else {
+      item("ball",0,.52,0,.28,.23,.28,"e8e4d5");
+      item("ball",-.12,.61,.12,.15,.16,.19,"f8efe1",.35);
+      item("ball",.13,.58,.09,.159,.144,.178,"eee8d9",-.34);
+      item("ball",.05,.68,-.08,.174,.127,.13,"fcf6e9",.4);
+      item("ball",.132,.485,.20,.14,.116,.13,"d9d6c9",.44);
+    }
+    return out;
+  }
+
+  function render(now) {
+    if (!started) started = now;
+    const sec = (now - started) / 1000;
+    const dims = canvas.getBoundingClientRect();
+    if (!dims.width || !dims.height) return;
+    const dpr = Math.min(devicePixelRatio || 1, 1.6);
+    const width = Math.round(dims.width * dpr);
+    const height = Math.round(dims.height * dpr);
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    angle += (targetAngle - angle) * (reduceMotion.matches ? 1 : .095);
+    const aspect = width / height;
+    const halfHeight = Math.max(2.62, 3.9 / aspect);
+    const radius = 12.6;
+    const target = point(-.18, 1.79, -.38);
+    const eye = point(target[0] + Math.sin(angle) * radius, target[1] + 3.3, target[2] + Math.cos(angle) * radius);
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(.94, .85, .71, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.uniformMatrix4fv(projectionUniform, false, camera(eye, target, halfHeight * aspect, halfHeight));
+    for (const { mesh, matrix, normals, tone } of [...room, ...mascot(sec), ...object(sec)]) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.buffer);
+      gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 24, 0);
+      gl.vertexAttribPointer(normal, 3, gl.FLOAT, false, 24, 12);
+      gl.uniformMatrix4fv(modelUniform, false, matrix);
+      gl.uniformMatrix3fv(normalUniform, false, normals);
+      gl.uniform3fv(colorUniform, tone);
+      gl.drawArrays(gl.TRIANGLES, 0, mesh.count);
+    }
+    if (!drawn) {
+      drawn = true;
+      stage.dataset.mode = "3d";
+      canvas.dataset.rendered = "true";
+      fallback.hidden = true;
+    }
+  }
+
+  function draw(now) {
+    frameId = 0;
+    if (document.hidden) return;
+    if (reduceMotion.matches || now - lastFrameAt >= 25) {
+      render(now);
+      lastFrameAt = now;
+    }
+    if (!reduceMotion.matches) schedule();
+  }
+
+  function schedule() {
+    if (!frameId && !gl.isContextLost()) frameId = requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener("webglcontextlost", (event) => {
+    event.preventDefault();
+    cancelAnimationFrame(frameId);
+    frameId = 0;
+    useFallback();
+  });
+  addEventListener("resize", schedule);
+  document.addEventListener("visibilitychange", schedule);
+  reduceMotion.addEventListener("change", schedule);
+  window.classroomStage = {
+    setItem(key) { chosen = key; reaction = ""; canvas.dataset.item = key; schedule(); },
+    react(kind) { reaction = kind; reactionTime = (performance.now() - started) / 1000; schedule(); },
+    turn() { targetAngle = targetAngle > .3 ? -.23 : .45; canvas.dataset.angle = String(targetAngle); schedule(); },
+  };
+  schedule();
+})();
+</script>
+  <script>
+(() => {
+  "use strict";
+
+  const items = [
+    {
+      key: "paper",
+      icon: "📄",
+      name: "깨끗하고 마른 종이",
+      bin: "종이류",
+      prompt: "깨끗하고 마른 종이예요. 어느 통에 넣을까요?",
+      hint: "물이나 음식이 묻지 않았어요.",
+      answer: "맞아요! 깨끗하고 마른 종이는 종이류에 넣어요."
+    },
+    {
+      key: "pet",
+      icon: "💧",
+      name: "빈 투명 생수 페트병",
+      bin: "투명 페트병",
+      prompt: "빈 투명 생수 페트병이에요. 어느 통에 넣을까요?",
+      hint: "색이 없는 물병이에요. 비우고 라벨을 뗀 뒤 눌러서 뚜껑을 닫았어요.",
+      answer: "맞아요! 준비한 병은 투명 페트병 통에 따로 넣어요."
+    },
+    {
+      key: "can",
+      icon: "🥫",
+      name: "비우고 헹군 음료 캔",
+      bin: "캔류",
+      prompt: "비우고 헹군 음료 캔이에요. 어느 통에 넣을까요?",
+      hint: "속을 깨끗이 비운 금속 캔이에요.",
+      answer: "맞아요! 비우고 헹군 음료 캔은 캔류에 넣어요."
+    },
+    {
+      key: "general",
+      icon: "🧻",
+      name: "사용한 휴지",
+      bin: "일반쓰레기",
+      prompt: "한 번 사용한 휴지예요. 어느 통에 넣을까요?",
+      hint: "이미 코를 닦는 데 썼어요.",
+      answer: "맞아요! 쓴 휴지는 일반쓰레기통에 넣어요."
+    }
+  ];
+
+  function initialize() {
+    const get = (id) => document.getElementById(id);
+    const scene = get("scene");
+    const sceneFallback = get("scene-fallback");
+    const listen = get("listen");
+    const turn = get("turn");
+    const progress = get("progress");
+    const progressDots = get("progress-dots");
+    const itemIcon = get("item-icon");
+    const itemName = get("item-name");
+    const prompt = get("prompt");
+    const hint = get("hint");
+    const feedback = get("feedback");
+    const binGrid = get("bin-grid");
+    const next = get("next");
+    const restart = get("restart");
+    const lesson = get("lesson");
+    const finish = get("finish");
+    const learnList = get("learn-list");
+    const replay = get("replay");
+    const bins = Array.from(binGrid.querySelectorAll("[data-bin]"));
+
+    const note = document.createElement("p");
+    note.id = "speech-caption";
+    note.className = "speech-caption";
+    note.setAttribute("role", "status");
+    note.hidden = true;
+    hint.after(note);
+
+    const roundControls = [progress, progressDots, itemIcon, itemName, prompt, hint, feedback, note, binGrid, next];
+    const finishIsNested = lesson.contains(finish);
+    let round = 0;
+    let answered = false;
+    let speaking = null;
+
+    itemIcon.setAttribute("aria-hidden", "true");
+    progressDots.setAttribute("aria-hidden", "true");
+
+    function showNote(message = "") {
+      note.hidden = !message;
+      note.textContent = message;
+    }
+
+    function focusText(element) {
+      element.setAttribute("tabindex", "-1");
+      element.focus();
+    }
+
+    function reactToStage(method, ...args) {
+      const controller = window.classroomStage;
+      if (typeof controller?.[method] !== "function") return false;
+      try {
+        return controller[method](...args) !== false;
+      } catch {
+        return false;
+      }
+    }
+
+    function stopSpeaking() {
+      if (speaking) {
+        speaking = null;
+        window.speechSynthesis?.cancel?.();
+      }
+    }
+
+    function playVoice() {
+      stopSpeaking();
+      const item = items[round];
+      const message = feedback.textContent || (item.prompt + " " + item.hint);
+      const unavailable = "소리를 재생할 수 없어요. " + message;
+      const synthesis = window.speechSynthesis;
+      const VoiceMessage = window.SpeechSynthesisUtterance;
+      try {
+        const voices = synthesis?.getVoices?.() ?? [];
+        const localKoreanVoice = voices.find(
+          (voice) => voice.localService === true && /^ko(?:[-_]|$)/i.test(voice.lang)
+        );
+        if (!localKoreanVoice || typeof VoiceMessage !== "function" || typeof synthesis.speak !== "function") {
+          showNote(unavailable);
+          return;
+        }
+
+        showNote();
+        const utterance = new VoiceMessage(message);
+        utterance.voice = localKoreanVoice;
+        utterance.lang = localKoreanVoice.lang;
+        utterance.rate = 0.88;
+        utterance.onend = () => {
+          if (speaking === utterance) speaking = null;
+        };
+        utterance.onerror = () => {
+          if (speaking !== utterance) return;
+          speaking = null;
+          showNote(unavailable);
+        };
+        speaking = utterance;
+        synthesis.speak(utterance);
+      } catch {
+        speaking = null;
+        showNote(unavailable);
+      }
+    }
+
+    function drawRound(moveFocus = false) {
+      stopSpeaking();
+      const item = items[round];
+      answered = false;
+      finish.hidden = true;
+      lesson.hidden = false;
+      listen.hidden = false;
+      roundControls.forEach((element) => { element.hidden = false; });
+      restart.hidden = round === 0;
+      showNote();
+
+      scene.dataset.item = item.key;
+      if (sceneFallback) sceneFallback.dataset.item = item.key;
+      itemIcon.textContent = item.icon;
+      itemName.textContent = item.name;
+      prompt.textContent = item.prompt;
+      hint.textContent = item.hint;
+      progress.textContent = (round + 1) + "/" + items.length;
+      progress.setAttribute("aria-label", "물건 " + items.length + "개 중 " + (round + 1) + "번째");
+      progressDots.replaceChildren(...items.map((_, index) => {
+        const dot = document.createElement("span");
+        const state = index < round ? "done" : index === round ? "current" : "upcoming";
+        dot.className = "progress-dot is-" + state;
+        dot.dataset.state = state;
+        return dot;
+      }));
+
+      feedback.textContent = "";
+      delete feedback.dataset.state;
+      next.textContent = round === items.length - 1 ? "다 정리했어요" : "다음 물건";
+      next.hidden = true;
+      bins.forEach((button) => {
+        button.disabled = false;
+        delete button.dataset.state;
+      });
+
+      reactToStage("setItem", item.key);
+      if (moveFocus) focusText(prompt);
+    }
+
+    function chooseBin(button) {
+      if (answered) return;
+      stopSpeaking();
+      showNote();
+      const item = items[round];
+      const correct = button.dataset.bin === item.key;
+      bins.forEach((bin) => { delete bin.dataset.state; });
+      button.dataset.state = correct ? "correct" : "retry";
+      feedback.dataset.state = button.dataset.state;
+
+      if (correct) {
+        answered = true;
+        feedback.textContent = item.answer;
+        next.hidden = false;
+        next.focus();
+        bins.forEach((bin) => { bin.disabled = true; });
+        reactToStage("react", "correct");
+        return;
+      }
+
+      feedback.textContent = "한 번 더 생각해 봐요. " + item.hint;
+      reactToStage("react", "retry");
+    }
+
+    function finishLesson() {
+      stopSpeaking();
+      listen.hidden = true;
+      if (finishIsNested) {
+        roundControls.forEach((element) => { element.hidden = true; });
+      } else {
+        lesson.hidden = true;
+      }
+
+      learnList.replaceChildren(...items.map((item) => {
+        const row = document.createElement("li");
+        const icon = document.createElement("span");
+        icon.setAttribute("aria-hidden", "true");
+        icon.textContent = item.icon + " ";
+        row.append(icon, item.name + " → " + item.bin);
+        return row;
+      }));
+      finish.hidden = false;
+      focusText(finish.querySelector("h1, h2") || replay);
+    }
+
+    function reset() {
+      round = 0;
+      drawRound(true);
+    }
+
+    bins.forEach((bin) => bin.addEventListener("click", () => chooseBin(bin)));
+    listen.addEventListener("click", playVoice);
+    turn.addEventListener("click", () => {
+      if (!reactToStage("turn")) showNote("그림을 보고 물건을 살펴봐요.");
+    });
+    next.addEventListener("click", () => {
+      if (!answered) return;
+      if (round === items.length - 1) {
+        finishLesson();
+      } else {
+        round += 1;
+        drawRound(true);
+      }
+    });
+    restart.addEventListener("click", reset);
+    replay.addEventListener("click", reset);
+    drawRound();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  } else {
+    initialize();
+  }
+})();
+</script>
+</body>
+</html>

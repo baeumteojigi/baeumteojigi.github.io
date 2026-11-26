@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17664e">
-  <meta name="description" content="배움터지기의 무료 도구. AI가 정리한 주장과 원출처를 대조하고, 연구실 인수인계 문안과 회신 근거를 확인하세요.">
+  <meta name="description" content="배움터지기의 무료 도구. AI 원출처 대조, 연구실 인수인계, 모모와 함께하는 유아 분리배출 교실을 만나 보세요.">
   <link rel="canonical" href="https://baeumteojigi.github.io/tools/">
   <title>배움터지기 무료 도구</title>
   <style>
@@ -137,6 +137,7 @@
     }
 
     .tool.handoff { --accent: var(--ink); --tile: var(--sky); }
+    .tool.classroom { --accent: #80503b; --tile: #faebcb; }
 
     .tool-icon {
       display: grid;
@@ -177,6 +178,7 @@
     .action:hover { background: var(--tile, var(--mint)); }
     .action.primary:hover { background: #0e4535; }
     .handoff .action.primary:hover { background: #102f42; }
+    .classroom .action.primary:hover { background: #5e372a; }
 
     .samples {
       margin-top: clamp(3rem, 7vw, 5rem);
@@ -210,6 +212,9 @@
 
     .site-footer a { text-underline-offset: .25em; }
 
+    @media (min-width: 56rem) {
+      .tool-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
     @media (max-width: 44rem) {
       .tool-list, .sample-grid { grid-template-columns: minmax(0, 1fr); }
     }
@@ -234,8 +239,8 @@
     <header class="hero">
       <div class="shell">
         <h1>배움터지기 <span>무료 도구</span></h1>
-        <p class="lead">AI가 정리한 근거를 원문과 대조하고, 다음 담당이 이어받을 업무의 기록을 남기세요.</p>
-        <p class="usage">두 도구는 로그인 없이 열 수 있고, 입력은 현재 브라우저에서 처리합니다. AI 정리가 필요하면 공개 자료를 기존에 쓰는 AI에 직접 보내고, 받은 답변을 도구에 붙여넣으세요.</p>
+        <p class="lead">자료를 검수하고 업무를 넘기거나, 모모와 함께 분리배출을 배워 보세요.</p>
+        <p class="usage">로그인 없이 브라우저에서 이용할 수 있습니다. 원출처 대조에 쓸 AI 답변은 평소 쓰는 AI에서 가져옵니다.</p>
       </div>
     </header>
 
@@ -257,6 +262,16 @@
         <div class="actions">
           <a class="action primary" href="./research-handoff/" aria-label="연구실 인수인계 열기">열기</a>
           <a class="action" href="./research-handoff/index.html" download="연구실_인수인계.html" aria-label="연구실 인수인계 HTML 내려받기">HTML 내려받기</a>
+        </div>
+      </article>
+
+      <article class="tool classroom" aria-labelledby="recycling-title">
+        <span class="tool-icon" aria-hidden="true">♻</span>
+        <h2 id="recycling-title">분리배출 교실</h2>
+        <p>3D 캐릭터 모모와 유치원 교실에서 종이, 투명 페트병, 캔, 사용한 휴지를 어느 통에 넣는지 익혀요.</p>
+        <div class="actions">
+          <a class="action primary" href="./recycling-classroom/" aria-label="분리배출 교실 열기">열기</a>
+          <a class="action" href="./recycling-classroom/index.html" download="분리배출_교실.html" aria-label="분리배출 교실 HTML 내려받기">HTML 내려받기</a>
         </div>
       </article>
     </section>
