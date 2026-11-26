@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 원출처 대조</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, "Malgun Gothic", sans-serif; color: #152635; background: #edf2f2; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.55; }
+    header { background: #143338; color: #fff; }
+    .page { width: min(100% - 2rem, 72rem); margin: auto; }
+    header .page { padding: 2.1rem 0 2.4rem; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -.045em; }
+    header p { color: #c8dedf; margin-top: .35rem; }
+    main { padding: 1.4rem 0 3rem; }
+    section, .notice { background: #fff; border: 1px solid #d1dfdf; border-radius: .8rem; padding: 1.2rem; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+    h2 { font-size: 1.2rem; letter-spacing: -.025em; }
+    h3 { font-size: 1.04rem; overflow-wrap: anywhere; }
+    .notice, .wide, #output { margin-top: 1rem; }
+    .notice { padding-block: .7rem; background: #e4efee; }
+    label { display: block; font-weight: 650; margin-top: .7rem; }
+    input, textarea, select, button { font: inherit; }
+    input, textarea, select { border: 1px solid #8da5a5; border-radius: .42rem; color: inherit; background: #fff; padding: .55rem .7rem; }
+    input, textarea { display: block; width: 100%; }
+    textarea { resize: vertical; min-height: 6rem; }
+    #prompt, #ai-result { font-family: ui-monospace, Consolas, monospace; font-size: .91rem; min-height: 9rem; }
+    button { cursor: pointer; padding: .48rem .82rem; border: 1px solid #0f6661; border-radius: .5rem; background: #0f6661; color: white; font-weight: 650; }
+    button.secondary { color: #145852; background: #fff; }
+    button:disabled { opacity: .5; cursor: default; }
+    :focus-visible { outline: .2rem solid #1259ad; outline-offset: .17rem; }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: .55rem; margin-top: .85rem; }
+    .section-head, .source-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
+    .source, article { border: 1px solid #d1dfdf; border-radius: .6rem; padding: .8rem; margin-top: .8rem; min-width: 0; }
+    .muted, .note { color: #485e66; font-size: .92rem; }
+    .note, .evidence { margin-top: .5rem; overflow-wrap: anywhere; }
+    a { color: #0a625b; text-underline-offset: .18em; }
+    .evidence { padding: .55rem .7rem; background: #f0f6f4; border-left: .22rem solid #3a8274; border-radius: .25rem; }
+    .missing { background: #fff2e3; border-color: #9f541b; }
+    .evidence p + p { margin-top: .25rem; }
+    blockquote { margin: .25rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+    details { margin-top: .35rem; font-size: .92rem; }
+    summary { cursor: pointer; }
+    .verdict { margin-top: .7rem; }
+    .verdict label { margin: 0 0 .25rem; }
+    #status[data-error="true"] { color: #842e17; background: #fff0e6; }
+    [hidden] { display: none !important; }
+    @media (max-width: 47rem) { .grid { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="page">
+      <a style="color:inherit" href="https://baeumteojigi.github.io/tools/">배움터지기 무료 도구</a>
+      <h1>AI 원출처 대조</h1>
+      <p>AI가 정리한 주장과 실제 원문을 나란히 확인하고, 검수 결과를 저장합니다.</p>
+    </div>
+  </header>
+  <main class="page">
+    <div class="grid">
+      <section aria-labelledby="source-heading">
+        <div class="section-head">
+          <h2 id="source-heading">공개 원출처</h2>
+          <button type="button" id="example" class="secondary">체험 예시 불러오기</button>
+        </div>
+        <p id="example-note" class="muted" hidden>가상 자료와 응답으로 만든 체험 예시</p>
+        <label for="topic">검토할 질문</label>
+        <input id="topic" maxlength="400" placeholder="예. 문 닫는 시간과 마지막 입장 시간은 어떻게 다른가?">
+        <div id="sources"></div>
+        <div class="actions">
+          <button type="button" id="add-source" class="secondary">출처 추가</button>
+          <button type="button" id="make-prompt">AI 요청문 만들기</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="ai-heading">
+        <h2 id="ai-heading">AI 정리와 가져오기</h2>
+        <p class="muted">공개 자료만 평소 사용하는 AI 서비스에 보내고, 받은 JSON 답변을 아래에 붙여넣으세요. 이 도구는 입력 자료를 자동 전송하지 않습니다.</p>
+        <div id="prompt-panel" hidden>
+          <label for="prompt">AI에 보낼 요청문</label>
+          <textarea id="prompt" readonly spellcheck="false"></textarea>
+          <div class="actions"><button type="button" id="copy" class="secondary">요청문 복사</button></div>
+        </div>
+        <label for="ai-result">AI 답변(JSON)</label>
+        <textarea id="ai-result" maxlength="100000" spellcheck="false" placeholder='{"claims":[{"claim":"…","note":"…","evidence":[]}]}'></textarea>
+        <div class="actions"><button type="button" id="load-review">원문과 대조</button></div>
+      </section>
+    </div>
+
+    <p id="status" class="notice" role="status" aria-live="polite">원출처와 AI 답변을 넣거나 체험 예시를 불러오세요.</p>
+
+    <section id="output" aria-labelledby="review-heading" hidden>
+      <div class="section-head">
+        <h2 id="review-heading" tabindex="-1">검수 결과</h2>
+        <button type="button" id="download" class="secondary">검수 기록 내려받기</button>
+      </div>
+      <p class="muted">인용문이 입력한 발췌에 있는지 자동으로 확인합니다. 주장과 인용의 관계, 계산, 예외는 사람이 판단합니다.</p>
+      <div id="decisions"></div>
+    </section>
+  </main>
+
+  <template id="source-template">
+    <div class="source">
+      <div class="source-head">
+        <h3></h3>
+        <button type="button" class="secondary remove">삭제</button>
+      </div>
+      <label>출처 이름<input class="source-title" maxlength="180"></label>
+      <label>원문 주소(HTTPS)<input class="source-url" type="url" maxlength="1500" placeholder="https://"></label>
+      <label>공개 원문 발췌<textarea class="source-text" maxlength="6000"></textarea></label>
+    </div>
+  </template>
+
+  <script id="example-data" type="application/json">
+{
+  "topic": "가상 자료관의 마지막 입장은 언제일까요?",
+  "sources": [
+    {
+      "id": "A",
+      "title": "가상 자료관 일반 운영 안내",
+      "url": "https://baeumteojigi.github.io/tools/#sample-facility",
+      "text": "일반 금요일 운영 종료 21:00\n겨울 토요일·일요일 운영 종료 18:00\n마지막 입장은 운영 종료 1시간 전입니다."
+    },
+    {
+      "id": "B",
+      "title": "가상 자료관 특별 운영일 공지",
+      "url": "https://baeumteojigi.github.io/tools/#sample-calendar",
+      "text": "특별 운영일에는 별도 공지의 운영 시간을 적용합니다.\n예시 안내에는 공휴일 금요일의 특별 운영 시간이 없습니다."
+    }
+  ],
+  "response": {
+    "claims": [
+      {
+        "claim": "일반 금요일 마지막 입장은 20:00이다.",
+        "note": "운영 종료 21:00에서 한 시간을 뺀 예제입니다.",
+        "evidence": [
+          {
+            "sourceId": "A",
+            "quote": "일반 금요일 운영 종료 21:00"
+          },
+          {
+            "sourceId": "A",
+            "quote": "마지막 입장은 운영 종료 1시간 전입니다."
+          }
+        ]
+      },
+      {
+        "claim": "겨울 토요일과 일요일 마지막 입장은 17:00이다.",
+        "note": "운영 종료 18:00에서 한 시간을 뺀 예제입니다.",
+        "evidence": [
+          {
+            "sourceId": "A",
+            "quote": "겨울 토요일·일요일 운영 종료 18:00"
+          },
+          {
+            "sourceId": "A",
+            "quote": "마지막 입장은 운영 종료 1시간 전입니다."
+          }
+        ]
+      },
+      {
+        "claim": "공휴일인 금요일의 마지막 입장 시각은 확인이 필요하다.",
+        "note": "특별 공지가 없는 날짜의 운영 시각은 단정할 수 없습니다.",
+        "evidence": [
+          {
+            "sourceId": "B",
+            "quote": "예시 안내에는 공휴일 금요일의 특별 운영 시간이 없습니다."
+          }
+        ]
+      }
+    ]
+  }
+}
+  </script>
+  <script>
+    "use strict";
+
+    const byId = (id) => document.getElementById(id);
+    const sourcesBox = byId("sources");
+    const example = JSON.parse(byId("example-data").textContent);
+    const verdicts = { waiting: "판정 대기", confirmed: "근거 확인", "needs-review": "보완 필요" };
+    const sourceLimit = 12;
+    let nextSource = 0;
+    let review = null;
+
+    function status(message, error = false) {
+      byId("status").textContent = message;
+      byId("status").dataset.error = String(error);
+    }
+
+    function invalidateReview() {
+      review = null;
+      byId("example-note").hidden = true;
+      byId("decisions").replaceChildren();
+      byId("output").hidden = true;
+      status("입력이 바뀌었습니다. 원문과 다시 대조하세요.");
+    }
+
+    function invalidateSources() {
+      byId("prompt-panel").hidden = true;
+      invalidateReview();
+    }
+
+    function appendSource(data = {}) {
+      if (sourcesBox.children.length === sourceLimit) {
+        status("한 번에 원출처를 12곳까지 대조할 수 있습니다.", true);
+        return;
+      }
+      const row = byId("source-template").content.firstElementChild.cloneNode(true);
+      nextSource += 1;
+      row.dataset.id = data.id ?? (nextSource <= 26 ? String.fromCharCode(64 + nextSource) : "S" + nextSource);
+      row.querySelector("h3").textContent = "출처 " + row.dataset.id;
+      row.querySelector(".source-title").value = data.title ?? "";
+      row.querySelector(".source-url").value = data.url ?? "";
+      row.querySelector(".source-text").value = data.text ?? "";
+      row.querySelector(".remove").setAttribute("aria-label", "출처 " + row.dataset.id + " 삭제");
+      row.querySelector(".remove").addEventListener("click", () => {
+        row.remove();
+        invalidateSources();
+      });
+      sourcesBox.append(row);
+    }
+
+    function collectInputs() {
+      const topic = byId("topic").value.trim();
+      if (!topic) throw new Error("검토할 질문을 적어 주세요.");
+      const sources = Array.from(sourcesBox.children, (row) => {
+        const id = row.dataset.id;
+        const title = row.querySelector(".source-title").value.trim();
+        const urlText = row.querySelector(".source-url").value.trim();
+        const text = row.querySelector(".source-text").value.trim();
+        if (!title || !urlText || !text) throw new Error("출처 " + id + "의 이름·주소·발췌를 모두 입력하세요.");
+        let url;
+        try { url = new URL(urlText); } catch { throw new Error("출처 " + id + "의 주소를 확인하세요."); }
+        if (url.protocol !== "https:" || url.username || url.password) {
+          throw new Error("출처 " + id + "에는 공개 HTTPS 주소를 입력하세요.");
+        }
+        return { id, title, url: url.href, text };
+      });
+      if (!sources.length) throw new Error("원출처를 한 곳 이상 추가하세요.");
+      return { topic, sources };
+    }
+
+    function parseResponse(raw) {
+      const trimmed = raw.trim();
+      const block = trimmed.match(/^\x60{3}(?:json)?\s*([\s\S]+?)\s*\x60{3}$/i);
+      let input;
+      try { input = JSON.parse(block ? block[1] : trimmed); } catch {
+        throw new Error("AI 답변 전체를 올바른 JSON으로 붙여넣으세요.");
+      }
+      if (!Array.isArray(input?.claims) || input.claims.length < 1 || input.claims.length > 30) {
+        throw new Error("AI 답변에는 1개 이상 30개 이하의 claims 항목이 필요합니다.");
+      }
+      return input.claims.map((item, index) => {
+        if (!item || typeof item.claim !== "string" || !item.claim.trim() || item.claim.length > 1000 ||
+            typeof item.note !== "string" || item.note.length > 1600 ||
+            !Array.isArray(item.evidence) || item.evidence.length > 8) {
+          throw new Error((index + 1) + "번째 항목의 claim, note, evidence를 확인하세요.");
+        }
+        for (const proof of item.evidence) {
+          if (!proof || typeof proof.sourceId !== "string" || !proof.sourceId.trim() ||
+              typeof proof.quote !== "string" || !proof.quote.trim() || proof.quote.length > 1200) {
+            throw new Error((index + 1) + "번째 항목에는 출처 ID와 빈칸이 아닌 인용문이 필요합니다.");
+          }
+        }
+        return item;
+      });
+    }
+
+    function normalized(text) {
+      return text.normalize("NFC").replace(/\s+/gu, " ").trim();
+    }
+
+    function element(tag, value, style) {
+      const node = document.createElement(tag);
+      if (value !== undefined) node.textContent = value;
+      if (style) node.className = style;
+      return node;
+    }
+
+    function renderReview() {
+      const container = byId("decisions");
+      container.replaceChildren();
+      for (const [index, item] of review.claims.entries()) {
+        const card = element("article");
+        card.append(element("h3", item.claim));
+        if (item.note) card.append(element("p", item.note, "note"));
+        if (!item.evidence.length) card.append(element("p", "AI가 댄 인용 근거가 없습니다.", "evidence missing"));
+        for (const proof of item.evidence) {
+          const matchLabel = proof.found ? "원문에 있음" : proof.source ? "발췌에서 찾지 못함" : "등록되지 않은 출처";
+          const line = element("div", undefined, proof.found ? "evidence" : "evidence missing");
+          line.append(element("p", matchLabel));
+          if (proof.source) {
+            const link = element("a", proof.source.id + " · " + proof.source.title);
+            link.href = proof.source.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            line.append(link);
+          } else {
+            line.append(element("p", "출처 ID " + proof.sourceId));
+          }
+          line.append(element("blockquote", proof.quote));
+          if (proof.source) {
+            const excerpt = element("details");
+            excerpt.append(element("summary", "입력한 원문 발췌 펼치기"), element("blockquote", proof.source.text));
+            line.append(excerpt);
+          }
+          card.append(line);
+        }
+        const verdictBox = element("div", undefined, "verdict");
+        const label = element("label", "사람의 판정");
+        const select = element("select");
+        select.id = "verdict-" + index;
+        label.htmlFor = select.id;
+        for (const [value, title] of Object.entries(verdicts)) {
+          const option = element("option", title);
+          option.value = value;
+          option.disabled = value === "confirmed" && !item.hasEvidence;
+          select.append(option);
+        }
+        select.addEventListener("change", () => {
+          if (select.value === "confirmed" && !item.hasEvidence) select.value = "waiting";
+          item.verdict = select.value;
+          showCounts();
+        });
+        const memo = element("input");
+        memo.id = "memo-" + index;
+        memo.maxLength = 600;
+        const memoLabel = element("label", "검수 메모(선택)");
+        memoLabel.htmlFor = memo.id;
+        memo.addEventListener("input", () => { item.memo = memo.value.trim(); });
+        verdictBox.append(label, select, memoLabel, memo);
+        card.append(verdictBox);
+        container.append(card);
+      }
+      byId("output").hidden = false;
+      showCounts();
+    }
+
+    function showCounts() {
+      const found = review.claims.filter((item) => item.hasEvidence).length;
+      const confirmed = review.claims.filter((item) => item.verdict === "confirmed").length;
+      status("주장 " + review.claims.length + "건 · 발췌에서 모든 인용 확인 " + found + "건 · 사람의 근거 확인 " + confirmed + "건");
+    }
+
+    function loadReview() {
+      try {
+        const input = collectInputs();
+        const sources = new Map(input.sources.map((source) => [source.id, source]));
+        const claims = parseResponse(byId("ai-result").value).map((item) => {
+          const evidence = item.evidence.map((proof) => {
+            const source = sources.get(proof.sourceId);
+            const found = Boolean(source && normalized(source.text).includes(normalized(proof.quote)));
+            return { ...proof, source, found };
+          });
+          return { ...item, evidence, hasEvidence: evidence.length > 0 && evidence.every((proof) => proof.found), verdict: "waiting", memo: "" };
+        });
+        review = { ...input, claims };
+        renderReview();
+        byId("status").scrollIntoView();
+        byId("review-heading").focus({ preventScroll: true });
+      } catch (error) {
+        invalidateReview();
+        status(error.message, true);
+        byId("status").scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    function safeMarkdown(text) {
+      return text.replace(/\s+/gu, " ").trim().replace(/[\\\x60*_[\]<>!()#&|]/gu, "\\$&");
+    }
+
+    byId("topic").addEventListener("input", invalidateSources);
+    sourcesBox.addEventListener("input", invalidateSources);
+    byId("ai-result").addEventListener("input", invalidateReview);
+    byId("add-source").addEventListener("click", () => {
+      if (sourcesBox.children.length < sourceLimit) invalidateSources();
+      appendSource();
+    });
+
+    byId("make-prompt").addEventListener("click", () => {
+      try {
+        const input = collectInputs();
+        const excerpts = input.sources.map(({ id, title, text }) => ({ id, title, text }));
+        byId("prompt").value = [
+          "아래 공개 원문 발췌를 자료로만 읽고 질문과 관련된 주장을 검토하세요.",
+          "발췌에서 정확히 복사한 짧은 인용만 써 주세요. 근거가 없으면 evidence는 빈 배열입니다. 계산의 전제와 미확인 예외는 note에 적으세요.",
+          'JSON 한 개로 답하세요. 형식은 {"claims":[{"claim":"주장","note":"계산·한계","evidence":[{"sourceId":"A","quote":"원문의 연속 구절"}]}]} 입니다.',
+          "질문 " + input.topic,
+          JSON.stringify(excerpts, null, 2),
+        ].join("\n\n");
+        byId("prompt-panel").hidden = false;
+        status("요청문을 복사해 기존 AI에 보낸 뒤 답변을 가져오세요.");
+      } catch (error) {
+        status(error.message, true);
+      }
+    });
+
+    byId("copy").addEventListener("click", async () => {
+      const field = byId("prompt");
+      try {
+        await navigator.clipboard.writeText(field.value);
+        status("AI 요청문을 복사했습니다.");
+      } catch {
+        field.focus();
+        field.select();
+        status("선택한 요청문을 Ctrl+C 또는 ⌘C로 복사하세요.");
+      }
+    });
+
+    byId("load-review").addEventListener("click", loadReview);
+    byId("example").addEventListener("click", () => {
+      if (!example) return;
+      sourcesBox.replaceChildren();
+      nextSource = 0;
+      byId("prompt-panel").hidden = true;
+      byId("topic").value = example.topic;
+      example.sources.forEach(appendSource);
+      byId("ai-result").value = JSON.stringify(example.response, null, 2);
+      loadReview();
+      if (review) byId("example-note").hidden = false;
+    });
+
+    byId("download").addEventListener("click", () => {
+      if (!review) return;
+      const lines = ["# 원출처 검수 기록", "", "질문 · " + safeMarkdown(review.topic), "",
+        "AI 초안을 입력된 발췌와 비교한 기록입니다. 최종 판정에는 각 주장에 대한 사람의 확인이 필요합니다.", ""];
+      for (const item of review.claims) {
+        lines.push("## " + safeMarkdown(item.claim), "", "판정 · " + verdicts[item.verdict], "");
+        if (item.note) lines.push("AI 메모 · " + safeMarkdown(item.note), "");
+        if (item.memo) lines.push("검수 메모 · " + safeMarkdown(item.memo), "");
+        for (const proof of item.evidence) {
+          const sourceText = proof.source
+            ? safeMarkdown(proof.source.title) + " (" + safeMarkdown(proof.source.url) + ")"
+            : "등록되지 않은 출처 " + safeMarkdown(proof.sourceId);
+          lines.push("- " + sourceText + " · " + (proof.found ? "발췌와 일치" : "발췌 확인 필요") + " · " + safeMarkdown(proof.quote));
+        }
+        if (!item.evidence.length) lines.push("- 인용 근거 없음");
+        lines.push("");
+      }
+      const url = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" }));
+      const link = element("a");
+      link.href = url;
+      link.download = "source-review.md";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    appendSource();
+  </script>
+</body>
+</html>

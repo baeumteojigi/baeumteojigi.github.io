@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>연구실 인수인계</title>
+  <style>
+    :root { color-scheme: light; color: #172735; background: #eef2f3; font-family: system-ui, "Malgun Gothic", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.55; }
+    header { color: white; background: #163446; }
+    .page { width: min(100% - 2rem, 70rem); margin: auto; }
+    header .page { padding: 1.7rem 0 2rem; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.55rem); letter-spacing: -.04em; }
+    header p { margin-top: .3rem; color: #d6e7ef; }
+    main { padding: 1.25rem 0 3rem; }
+    .grid, .pair { display: grid; gap: .9rem; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    section { background: white; border: 1px solid #ccd9df; border-radius: .75rem; padding: 1.1rem; min-width: 0; }
+    h2 { font-size: 1.2rem; margin-bottom: .35rem; }
+    h3 { font-size: 1rem; margin-top: .65rem; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .75rem 0; }
+    .status { border-radius: .5rem; background: #deebee; padding: .65rem .8rem; margin: .8rem 0; }
+    .status[data-error="true"] { background: #fff0e5; color: #8b361c; }
+    label:not(.file-button) { display: block; margin-top: .6rem; font-weight: 650; }
+    input, textarea, button { font: inherit; }
+    input:not([type=file]), textarea { display: block; width: 100%; min-width: 0; border: 1px solid #849ba7; border-radius: .4rem; padding: .4rem .55rem; }
+    textarea { resize: vertical; min-height: 3.7rem; }
+    #message, #reply { min-height: 8rem; font-family: ui-monospace, Consolas, monospace; font-size: .88rem; }
+    button, .file-button { cursor: pointer; background: #16636c; color: white; padding: .45rem .7rem; border: 1px solid #16636c; border-radius: .45rem; font: inherit; font-weight: 650; }
+    .secondary, .file-button { background: white; color: #155762; }
+    button:disabled { cursor: default; opacity: .55; }
+    :focus-visible, .file-button:focus-within { outline: .18rem solid #115bb0; outline-offset: .15rem; }
+    .muted { color: #4b6370; font-size: .9rem; }
+    .hidden-file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    #received { margin-top: 1rem; padding: .85rem; background: #edf5f2; border-left: .25rem solid #2c7969; border-radius: .25rem; }
+    #fingerprint, #received p, #received a, #source-link { overflow-wrap: anywhere; }
+    #received p { margin-top: .4rem; white-space: pre-wrap; }
+    a { color: #155762; text-underline-offset: .16em; }
+    [hidden] { display: none !important; }
+    @media (max-width: 46rem) { .grid { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 27rem) { .pair { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="page">
+      <a style="color:inherit" href="https://baeumteojigi.github.io/tools/">배움터지기 무료 도구</a>
+      <h1>연구실 인수인계</h1>
+      <p>지금까지 한 일, 받을 담당, 다음 행동을 한 파일로 넘기고 실제 회신을 이어 기록합니다.</p>
+    </div>
+  </header>
+  <main class="page">
+    <div class="actions">
+      <button type="button" id="example" class="secondary">체험 인계 예시 열기</button>
+      <label class="file-button">저장한 인계 파일 열기<input type="file" id="import-file" class="hidden-file" accept=".json,application/json"></label>
+    </div>
+    <p id="status" role="status" aria-live="polite" class="status">업무를 적어 인계서를 만들거나 저장한 파일을 여세요.</p>
+    <div class="grid">
+      <section aria-labelledby="prepare-title">
+        <h2 id="prepare-title">인계서 작성</h2>
+        <form id="handoff-form">
+          <div class="pair">
+            <div><label for="taskId">기존 작업 ID</label><input id="taskId" maxlength="60" placeholder="DEMO-001"></div>
+            <div><label for="revision">인계 판본</label><input id="revision" type="number" min="1" max="99999" step="1" value="1"></div>
+          </div>
+          <label for="title">업무 제목</label><input id="title" maxlength="160">
+          <div class="pair">
+            <div><label for="sender">보내는 담당</label><input id="sender" maxlength="100"></div>
+            <div><label for="recipient">받는 담당</label><input id="recipient" maxlength="100"></div>
+          </div>
+          <label for="sourceUrl">원본 또는 결과물 링크</label><input id="sourceUrl" type="url" maxlength="1500" placeholder="https://">
+          <label for="current">지금까지 한 일</label><textarea id="current" maxlength="3000"></textarea>
+          <label for="next">받는 담당의 첫 행동</label><textarea id="next" maxlength="2000"></textarea>
+          <label for="doneWhen">이 단계의 확인 기준</label><textarea id="doneWhen" maxlength="2000"></textarea>
+          <label for="blockers">막힌 일이나 범위(선택)</label><textarea id="blockers" maxlength="2000"></textarea>
+          <div class="actions"><button type="submit" id="prepare">인계서 만들기</button></div>
+        </form>
+      </section>
+      <section aria-labelledby="receive-title">
+        <h2 id="receive-title">전달과 수신 회신</h2>
+        <p class="muted">보낼 문안을 복사해 실제 대화에 전달하세요. 받은 답변을 가져오면 담당·작업 ID·판본과 인계서 지문(SHA-256)을 대조합니다.</p>
+        <div id="prepared" hidden>
+          <p class="muted" id="fingerprint"></p>
+          <p><a id="source-link" target="_blank" rel="noopener noreferrer">인계 자료 열기</a></p>
+          <label for="message">보낼 인계 문안</label>
+          <textarea id="message" readonly spellcheck="false"></textarea>
+          <div class="actions"><button type="button" id="copy" class="secondary">보낼 문안 복사</button></div>
+          <label for="reply">받은 회신(JSON)</label>
+          <textarea id="reply" maxlength="30000" spellcheck="false"></textarea>
+          <label for="receipt-url">회신 활동 링크(선택)</label>
+          <input id="receipt-url" type="url" maxlength="1500" placeholder="https://">
+          <div class="actions">
+            <button type="button" id="accept">회신 대조·기록</button>
+            <button type="button" id="download" class="secondary">인계 파일 저장</button>
+          </div>
+          <div id="received" hidden>
+            <h3 id="receipt-title"></h3>
+            <p id="receipt-action"></p>
+            <p id="receipt-result"></p>
+            <p><a id="receipt-link" target="_blank" rel="noopener noreferrer" hidden>회신이 남은 대화나 활동 열기</a></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="application/json" id="example-data">
+{
+  "format": "team-board-handoff",
+  "schema": 1,
+  "handoff": {
+    "taskId": "DEMO-001",
+    "revision": 1,
+    "title": "가상 자료관 안내표 인수",
+    "sender": "자료 정리 담당",
+    "recipient": "다음 검수 담당",
+    "sourceUrl": "https://baeumteojigi.github.io/tools/#sample-facility",
+    "current": "가상 자료관의 일반 운영표와 별도 운영일 공지를 모았습니다.",
+    "next": "일반 금요일의 마지막 입장 시각을 계산하고 예외를 확인합니다.",
+    "doneWhen": "일반 운영 시각, 계산 근거, 특별 운영일 추가 확인 조건을 적습니다.",
+    "blockers": "공휴일 금요일에는 특별 운영 공지를 추가로 확인해야 합니다."
+  },
+  "sha256": "7167504cfd7d68d3aa6d2274410360a43d7c4dc35877cb6369aee2de4b000432",
+  "receipt": {
+    "taskId": "DEMO-001",
+    "revision": 1,
+    "sha256": "7167504cfd7d68d3aa6d2274410360a43d7c4dc35877cb6369aee2de4b000432",
+    "recipient": "다음 검수 담당",
+    "status": "accepted",
+    "firstAction": "공개된 체험용 안내에서 종료 시각과 입장 규칙을 읽었습니다.",
+    "result": "가상 일반 금요일은 21:00에서 1시간을 빼 20:00입니다. 특별 운영일은 공지를 다시 확인합니다."
+  },
+  "evidenceUrl": ""
+}
+  </script>
+  <script>
+    "use strict";
+    const byId = (id) => document.getElementById(id);
+    const fields = [
+      ["taskId", 60, "작업 ID"], ["revision", 0, "판본"], ["title", 160, "업무 제목"],
+      ["sender", 100, "보내는 담당"], ["recipient", 100, "받는 담당"], ["sourceUrl", 1500, "원본 링크"],
+      ["current", 3000, "지금까지 한 일"], ["next", 2000, "첫 행동"], ["doneWhen", 2000, "확인 기준"],
+      ["blockers", 2000, "막힌 일"],
+    ];
+    const example = JSON.parse(byId("example-data").textContent);
+    const format = "team-board-handoff";
+    const maxFileBytes = 262144;
+    let generation = 0;
+    let state = null;
+
+    function status(message, error = false) {
+      byId("status").textContent = message;
+      byId("status").dataset.error = String(error);
+    }
+
+    function text(value, max, label, optional = false) {
+      if (typeof value !== "string" || value.length > max || (!optional && !value.trim())) {
+        throw new Error(label + "을(를) 확인하세요.");
+      }
+      return value.trim();
+    }
+
+    function httpsAddress(address) {
+      let parsed;
+      try { parsed = new URL(address); } catch { throw new Error("HTTPS 링크를 확인하세요."); }
+      if (parsed.protocol !== "https:" || parsed.username || parsed.password) throw new Error("HTTPS 링크를 입력하세요.");
+      return address;
+    }
+
+    function normalizeHandoff(raw) {
+      const handoff = Object.fromEntries(fields.map(([id, max, label]) =>
+        [id, id === "revision" ? raw?.[id] : text(raw?.[id], max, label, id === "blockers")]));
+      if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,59}$/.test(handoff.taskId)) {
+        throw new Error("작업 ID는 영문·숫자로 시작하고 점·밑줄·하이픈을 사용할 수 있습니다.");
+      }
+      if (!Number.isInteger(handoff.revision) || handoff.revision < 1 || handoff.revision > 99999) {
+        throw new Error("판본에는 1~99999 사이의 정수를 입력하세요.");
+      }
+      httpsAddress(handoff.sourceUrl);
+      return handoff;
+    }
+
+    async function fingerprint(handoff) {
+      if (!globalThis.crypto?.subtle) throw new Error("이 브라우저에서 지문을 계산할 수 없습니다. Chrome이나 Edge에서 파일을 여세요.");
+      const raw = new TextEncoder().encode(JSON.stringify(handoff));
+      return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", raw)),
+        (byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    function receiptIdentity(packet) {
+      const { taskId, revision, recipient } = packet.handoff;
+      return { taskId, revision, sha256: packet.sha256, recipient };
+    }
+
+    function normalizeReceipt(input, packet) {
+      for (const [key, value] of Object.entries(receiptIdentity(packet))) {
+        if (input?.[key] !== value) throw new Error("회신의 작업 ID, 판본, 지문 또는 받을 담당이 인계서와 다릅니다.");
+      }
+      if (!["accepted", "blocked"].includes(input.status)) throw new Error("회신에 accepted 또는 blocked를 넣어 주세요.");
+      return {
+        ...receiptIdentity(packet), status: input.status,
+        firstAction: text(input.firstAction, 3000, "실제로 한 첫 행동"),
+        result: text(input.result, 5000, "결과 또는 장애"),
+      };
+    }
+
+    function parseReply(raw) {
+      const content = raw.trim();
+      const fenced = content.match(/^\x60{3}(?:json)?\s*([\s\S]+?)\s*\x60{3}$/i);
+      try { return JSON.parse(fenced ? fenced[1] : content); } catch {
+        throw new Error("실제로 받은 JSON 회신을 그대로 붙여넣으세요.");
+      }
+    }
+
+    function receivedView() {
+      const receipt = state?.receipt;
+      byId("received").hidden = !receipt;
+      if (!receipt) return;
+      const label = receipt.status === "accepted" ? "인수 회신 기록됨" : "인수 장애 회신 기록됨";
+      byId("receipt-title").textContent = label;
+      byId("receipt-action").textContent = "실제 첫 행동 · " + receipt.firstAction;
+      byId("receipt-result").textContent = "회신 결과 · " + receipt.result;
+      byId("receipt-link").hidden = !state.evidenceUrl;
+      if (state.evidenceUrl) byId("receipt-link").href = state.evidenceUrl;
+      status(label + " · 입력한 회신이 이 인계서와 일치합니다. 업무 완료는 팀의 실제 작업 기록을 확인하세요.");
+    }
+
+    function showPacket(packet) {
+      state = packet;
+      const { handoff, receipt } = packet;
+      for (const [id] of fields) byId(id).value = handoff[id];
+      byId("fingerprint").textContent = "판본 " + handoff.revision + " · SHA-256 " + packet.sha256;
+      byId("source-link").href = handoff.sourceUrl;
+      byId("message").value = [
+        "인수인계 · " + handoff.title, "작업 ID " + handoff.taskId, "판본 " + handoff.revision,
+        "보내는 담당 " + handoff.sender, "받는 담당 " + handoff.recipient, "SHA-256 " + packet.sha256,
+        "자료 " + handoff.sourceUrl, "지금까지 한 일 " + handoff.current, "첫 행동 " + handoff.next,
+        "확인 기준 " + handoff.doneWhen, "범위·막힌 일 " + (handoff.blockers || "기록 없음"), "",
+        "자료를 확인하고 실제로 한 첫 행동과 결과를 JSON으로 답해 주세요. 수신한 ID·판본·지문·받는 담당을 그대로 쓰세요. 인수했으면 accepted, 막혔으면 blocked입니다.",
+        JSON.stringify({ ...receiptIdentity(packet), status: "accepted", firstAction: "", result: "" }, null, 2),
+      ].join("\n");
+      byId("reply").value = receipt ? JSON.stringify(receipt, null, 2) : "";
+      byId("receipt-url").value = packet.evidenceUrl;
+      byId("prepared").hidden = false;
+      status("인계서 준비됨 · 실제 수신 회신을 가져오면 대조할 수 있습니다.");
+      receivedView();
+    }
+
+    async function loadPacket(rawInput, attempt) {
+      if (rawInput?.format !== format || rawInput.schema !== 1) throw new Error("이 도구로 저장한 인계 파일을 열어 주세요.");
+      const handoff = normalizeHandoff(rawInput.handoff);
+      const sha256 = await fingerprint(handoff);
+      if (sha256 !== rawInput.sha256) throw new Error("인계 파일 내용이 지문과 다릅니다. 최신 파일을 확인하세요.");
+      const packet = { format, schema: 1, handoff, sha256, receipt: null, evidenceUrl: "" };
+      if (rawInput.receipt !== null) {
+        packet.receipt = normalizeReceipt(rawInput.receipt, packet);
+        if (rawInput.evidenceUrl) packet.evidenceUrl = httpsAddress(text(rawInput.evidenceUrl, 1500, "회신 활동 링크"));
+      }
+      if (attempt === generation) showPacket(packet);
+    }
+
+    byId("handoff-form").addEventListener("input", () => {
+      generation += 1;
+      state = null;
+      byId("prepared").hidden = true;
+      status("인계 내용 편집 중 · 수정한 판본으로 인계서를 만들어 주세요.");
+    });
+
+    byId("handoff-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const attempt = ++generation;
+      try {
+        const handoff = normalizeHandoff(Object.fromEntries(fields.map(([id]) =>
+          [id, id === "revision" ? byId(id).valueAsNumber : byId(id).value])));
+        const sha256 = await fingerprint(handoff);
+        if (attempt !== generation) return;
+        if (state?.sha256 === sha256) return;
+        showPacket({ format, schema: 1, handoff, sha256, receipt: null, evidenceUrl: "" });
+      } catch (error) {
+        if (attempt === generation) status(error.message, true);
+      }
+    });
+
+    byId("import-file").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      event.target.value = "";
+      const attempt = ++generation;
+      try {
+        if (file.size > maxFileBytes) throw new Error("인계 파일은 256KB 이하여야 합니다.");
+        await loadPacket(JSON.parse(await file.text()), attempt);
+      } catch (error) {
+        if (attempt === generation) status(error instanceof SyntaxError ? "인계 파일이 올바른 JSON 형식이 아닙니다." : error.message, true);
+      }
+    });
+
+    byId("example").addEventListener("click", async () => {
+      const attempt = ++generation;
+      try {
+        await loadPacket(example, attempt);
+        if (attempt === generation) {
+          status("가상 인계서와 체험용 회신을 불러왔습니다. 새 인계는 내 작업 내용을 입력해 작성하세요.");
+        }
+      } catch (error) {
+        if (attempt === generation) status(error.message, true);
+      }
+    });
+
+    byId("copy").addEventListener("click", async () => {
+      const message = byId("message");
+      const before = state;
+      try {
+        await navigator.clipboard.writeText(message.value);
+        if (before === state) status("문안을 복사했습니다. 실제 대화에서 보내고 받은 회신을 가져오세요.");
+      } catch {
+        if (before !== state) return;
+        message.focus();
+        message.select();
+        status("선택된 문안을 Ctrl+C 또는 ⌘C로 복사하세요.");
+      }
+    });
+
+    byId("accept").addEventListener("click", () => {
+      if (!state) return;
+      try {
+        const receipt = normalizeReceipt(parseReply(byId("reply").value), state);
+        const link = byId("receipt-url").value.trim();
+        state.evidenceUrl = link ? httpsAddress(link) : "";
+        state.receipt = receipt;
+        receivedView();
+      } catch (error) {
+        status(error.message, true);
+      }
+    });
+
+    byId("download").addEventListener("click", () => {
+      if (!state) return;
+      const url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2) + "\n"], { type: "application/json;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = state.handoff.taskId + "-handoff-v" + state.handoff.revision + ".json";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  </script>
+</body>
+</html>

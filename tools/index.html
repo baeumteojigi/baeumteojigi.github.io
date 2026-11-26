@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17664e">
+  <meta name="description" content="배움터지기의 무료 도구. AI가 정리한 주장과 원출처를 대조하고, 연구실 인수인계 문안과 회신 근거를 확인하세요.">
+  <link rel="canonical" href="https://baeumteojigi.github.io/tools/">
+  <title>배움터지기 무료 도구</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --green: #17664e;
+      --ink: #153d56;
+      --muted: #49616b;
+      --rule: #ccdcd6;
+      --paper: #fff;
+      --canvas: #f6faf8;
+      --mint: #e6f3ed;
+      --sky: #eaf4fa;
+      --focus: #1d6599;
+      --embed: min(70rem, calc(100% - 3rem));
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { line-height: 1.25; letter-spacing: -.04em; }
+
+    .shell { width: var(--embed); margin-inline: auto; }
+
+    .skip-link {
+      position: absolute;
+      z-index: 2;
+      top: .65rem;
+      left: .65rem;
+      padding: .65rem 1rem;
+      border-radius: .3rem;
+      color: var(--paper);
+      background: var(--ink);
+      transform: translateY(-150%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .site-header {
+      border-top: .28rem solid var(--green);
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+
+    .site-nav {
+      display: flex;
+      min-height: 4.2rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .wordmark {
+      gap: .72rem;
+      color: var(--green);
+      font-weight: 850;
+      font-size: 1.25rem;
+      letter-spacing: -.06em;
+    }
+
+    .wordmark::before {
+      width: .8rem;
+      height: .8rem;
+      content: "";
+      border: .16rem solid currentColor;
+      border-radius: .16rem .16rem .16rem 0;
+      transform: rotate(-12deg);
+    }
+
+    .site-nav .samples-link { color: var(--muted); font-size: .94rem; font-weight: 700; }
+    .samples-link:hover { text-decoration: underline; text-underline-offset: .25em; }
+
+    .hero {
+      padding: clamp(3rem, 8vw, 6rem) 0 clamp(3.2rem, 8vw, 5.7rem);
+      border-bottom: 1px solid var(--rule);
+      background:
+        radial-gradient(ellipse at 100% 0%, #fdf8df 0%, transparent 44%),
+        linear-gradient(115deg, #e4f1e8, #f5faf7 65%);
+    }
+
+    .hero h1 {
+      max-width: 14em;
+      margin-bottom: 1rem;
+      font-size: clamp(2.5rem, 7.3vw, 5rem);
+      font-weight: 850;
+      line-height: 1.04;
+      letter-spacing: -.073em;
+      text-wrap: balance;
+    }
+
+    .hero h1 span { color: var(--green); }
+    .hero .lead { max-width: 42rem; font-size: clamp(1.05rem, 2.3vw, 1.36rem); font-weight: 600; }
+    .hero .usage { max-width: 43rem; margin-top: .8rem; color: var(--muted); }
+
+    .tool-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.2rem;
+      margin-top: clamp(1.5rem, 5vw, 3rem);
+    }
+
+    .tool {
+      display: flex;
+      flex-direction: column;
+      padding: clamp(1.25rem, 3.4vw, 2.2rem);
+      border: 1px solid var(--rule);
+      border-top: .25rem solid var(--accent, var(--green));
+      border-radius: .75rem;
+      background: var(--paper);
+      box-shadow: 0 .3rem 1rem #153d560a;
+    }
+
+    .tool.handoff { --accent: var(--ink); --tile: var(--sky); }
+
+    .tool-icon {
+      display: grid;
+      width: 2.85rem;
+      height: 2.85rem;
+      place-items: center;
+      margin-bottom: 1.1rem;
+      border-radius: .55rem;
+      color: var(--accent, var(--green));
+      background: var(--tile, var(--mint));
+      font-family: system-ui, sans-serif;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .tool h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-bottom: .55rem; }
+    .tool > p { margin-bottom: 1.45rem; color: var(--muted); }
+
+    .actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: .6rem; }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      padding: .48rem .88rem;
+      border: 1px solid var(--accent, var(--green));
+      border-radius: .38rem;
+      color: var(--accent, var(--green));
+      background: var(--paper);
+      font-size: .92rem;
+      font-weight: 750;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .action.primary { color: var(--paper); background: var(--accent, var(--green)); }
+    .action:hover { background: var(--tile, var(--mint)); }
+    .action.primary:hover { background: #0e4535; }
+    .handoff .action.primary:hover { background: #102f42; }
+
+    .samples {
+      margin-top: clamp(3rem, 7vw, 5rem);
+      padding-top: 1.6rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .samples h2 { margin-bottom: .5rem; font-size: clamp(1.38rem, 3vw, 1.72rem); }
+    .samples > p { margin-bottom: 1.15rem; color: var(--muted); }
+    .sample-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .95rem; }
+
+    .sample {
+      padding: 1.1rem 1.15rem;
+      scroll-margin-top: 1rem;
+      border: 1px solid var(--rule);
+      border-radius: .55rem;
+      background: var(--paper);
+    }
+
+    .sample:target { outline: 2px solid var(--green); outline-offset: 3px; }
+    .sample h3 { font-size: 1rem; color: var(--green); }
+    .sample p { margin-top: .55rem; font-size: .96rem; }
+
+    .site-footer {
+      margin-top: clamp(2.5rem, 7vw, 4.6rem);
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .site-footer a { text-underline-offset: .25em; }
+
+    @media (max-width: 44rem) {
+      .tool-list, .sample-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (max-width: 24rem) {
+      :root { --embed: min(70rem, calc(100% - 2rem)); }
+      .hero h1 { font-size: 2.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#tools">도구 목록으로 바로 가기</a>
+
+  <header class="site-header">
+    <nav class="site-nav shell" aria-label="사이트 탐색">
+      <a class="wordmark" href="../">배움터지기</a>
+      <a class="samples-link" href="#samples">연습용 자료</a>
+    </nav>
+  </header>
+
+  <main>
+    <header class="hero">
+      <div class="shell">
+        <h1>배움터지기 <span>무료 도구</span></h1>
+        <p class="lead">AI가 정리한 근거를 원문과 대조하고, 다음 담당이 이어받을 업무의 기록을 남기세요.</p>
+        <p class="usage">두 도구는 로그인 없이 열 수 있고, 입력은 현재 브라우저에서 처리합니다. AI 정리가 필요하면 공개 자료를 기존에 쓰는 AI에 직접 보내고, 받은 답변을 도구에 붙여넣으세요.</p>
+      </div>
+    </header>
+
+    <section class="tool-list shell" id="tools" aria-label="무료 도구 목록" tabindex="-1">
+      <article class="tool" aria-labelledby="source-title">
+        <span class="tool-icon" aria-hidden="true">≋</span>
+        <h2 id="source-title">AI 원출처 대조</h2>
+        <p>AI가 든 인용이 입력한 발췌에 있는지 살펴보고, 주장에 맞는 근거인지 직접 판단해 검수 기록을 내려받습니다.</p>
+        <div class="actions">
+          <a class="action primary" href="./ai-source-review/" aria-label="AI 원출처 대조 열기">열기</a>
+          <a class="action" href="./ai-source-review/index.html" download="AI_원출처_대조.html" aria-label="AI 원출처 대조 HTML 내려받기">HTML 내려받기</a>
+        </div>
+      </article>
+
+      <article class="tool handoff" aria-labelledby="handoff-title">
+        <span class="tool-icon" aria-hidden="true">⇄</span>
+        <h2 id="handoff-title">연구실 인수인계</h2>
+        <p>맡길 일과 판본, 다음 행동을 인계서로 만듭니다. 실제 대화에서 받은 회신을 가져와 작업 번호와 판본을 대조합니다.</p>
+        <div class="actions">
+          <a class="action primary" href="./research-handoff/" aria-label="연구실 인수인계 열기">열기</a>
+          <a class="action" href="./research-handoff/index.html" download="연구실_인수인계.html" aria-label="연구실 인수인계 HTML 내려받기">HTML 내려받기</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="samples shell" id="samples" aria-labelledby="samples-title">
+      <h2 id="samples-title">연습용 공개 자료</h2>
+      <p>아래 안내 두 건은 모두 도구 연습을 위해 만든 가상 자료입니다. 원출처 대조 도구에 주소와 문장을 넣어 연습할 수 있습니다.</p>
+      <div class="sample-grid">
+        <article class="sample" id="sample-facility" aria-labelledby="sample-facility-title">
+          <h3 id="sample-facility-title">가상 시설 운영 안내</h3>
+          <p>일반 금요일 운영 종료 21:00</p>
+          <p>겨울 토요일·일요일 운영 종료 18:00</p>
+          <p>마지막 입장은 운영 종료 1시간 전입니다.</p>
+        </article>
+
+        <article class="sample" id="sample-calendar" aria-labelledby="sample-calendar-title">
+          <h3 id="sample-calendar-title">가상 특별 운영 안내</h3>
+          <p>특별 운영일에는 별도 공지의 운영 시간을 적용합니다.</p>
+          <p>예시 안내에는 공휴일 금요일의 특별 운영 시간이 없습니다.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell"><a href="../">배움터지기 첫 화면</a></div>
+  </footer>
+</body>
+</html>

@@ -6,4 +6,13 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://baeumteojigi.github.io/tools/</loc>
+  </url>
+  <url>
+    <loc>https://baeumteojigi.github.io/tools/ai-source-review/</loc>
+  </url>
+  <url>
+    <loc>https://baeumteojigi.github.io/tools/research-handoff/</loc>
+  </url>
 </urlset>
