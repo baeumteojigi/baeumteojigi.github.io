@@ -79,19 +79,17 @@
       line-height: 1.5;
       word-break: keep-all;
     }
-    .classroom { display: grid; grid-template-columns: minmax(0, 1.36fr) minmax(340px, 1fr); gap: 20px; align-items: stretch; }
     .stage {
       isolation: isolate;
       position: relative;
       min-width: 0;
-      min-height: clamp(465px, 49vw, 570px);
       overflow: hidden;
       border: 1px solid #d4d6bb;
       border-radius: 29px;
       background: #dbe8c8;
       box-shadow: 0 10px 28px #51411d0c;
     }
-    .stage-display { position: absolute; inset: 0; }
+    .stage-display { position: relative; width: 100%; min-width: 0; aspect-ratio: 1.86; max-height: 63vh; min-height: 330px; }
     #scene, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
     #scene { display: block; }
     .object-target {
@@ -119,7 +117,7 @@
     .stage:is([data-sorting], [data-sorted]) .object-target { visibility: hidden; }
     .object-picture { font: 400 clamp(1.75rem, 5vw, 3.15rem)/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif; }
     .stage[data-mode="3d"] .object-picture { display: none; }
-    .stage[data-mode="fallback"] .object-target { left: 69%; top: 62%; background: #fff4cd; }
+    .stage[data-mode="fallback"] .object-target { left: 69%; top: 56%; background: #fff4cd; }
     .scene-fallback {
       z-index: 1;
       overflow: hidden;
@@ -227,7 +225,7 @@
       position: absolute;
       display: none;
       left: 39%;
-      top: 58%;
+      top: 53%;
       width: 22%;
       height: clamp(11px, 2.5vw, 23px);
       border-radius: 99px;
@@ -237,15 +235,13 @@
     }
     .stage[data-guide] .fallback-point { display: block; }
     .stage-controls {
-      position: absolute;
-      z-index: 2;
       display: flex;
       flex-wrap: wrap;
-      left: 14px;
-      bottom: 14px;
-      right: 14px;
+      align-items: center;
       gap: 8px;
-      pointer-events: none;
+      padding: 10px 14px;
+      border-top: 1px solid #d4d6bb;
+      background: #e7efd6;
     }
     .stage-button, .restart-button {
       display: inline-flex;
@@ -262,18 +258,15 @@
       font-weight: 800;
     }
     .stage-button {
-      pointer-events: auto;
-      box-shadow: 0 3px 8px #443c1c22;
+      box-shadow: 0 2px 4px #443c1c18;
     }
     .stage-button:hover, .restart-button:hover { background: #f2f6e6; }
     .stage-symbol { font-size: 1.25rem; line-height: 1; }
     .activity {
       min-width: 0;
       padding: clamp(15px, 2vw, 25px);
-      border: 1px solid #ebdfc9;
-      border-radius: 29px;
+      border-top: 1px solid #d4d6bb;
       background: var(--cream);
-      box-shadow: 0 10px 28px #51411d0c;
     }
     .status-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 42px; }
     #progress { color: var(--green); font-size: .92rem; font-weight: 850; }
@@ -326,7 +319,14 @@
     }
     #hint { margin-top: 9px; color: #52675d; font-size: .86rem; line-height: 1.45; word-break: keep-all; }
     #hint:empty { display: none; }
-    .bin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 15px; }
+    .bin-grid {
+      position: absolute;
+      z-index: 2;
+      inset: auto 4% 5%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(4px, 1vw, 12px);
+    }
     .bin {
       display: flex;
       align-items: center;
@@ -392,6 +392,61 @@
       border-top: 1px solid #ede2d0;
       padding-top: 12px;
     }
+    .bin-label {
+      display: grid;
+      justify-items: center;
+      gap: 3px;
+      width: 100%;
+      text-align: center;
+      font-size: clamp(.69rem, 2.6vw, 1rem);
+    }
+    .stage[data-mode="3d"] .bin-grid { inset: 0; display: block; pointer-events: none; }
+    .stage[data-mode="3d"] .bin {
+      position: absolute;
+      left: var(--bin-x);
+      top: var(--bin-y);
+      width: var(--bin-width);
+      height: var(--bin-height);
+      display: block;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 12%;
+      background: transparent;
+      box-shadow: none;
+      transform: none;
+      pointer-events: auto;
+    }
+    .stage[data-mode="3d"] .bin:hover:not(:disabled),
+    .stage[data-mode="3d"] .bin:active:not(:disabled) {
+      transform: none;
+      box-shadow: none;
+      outline: 3px solid #fff3a4;
+      outline-offset: 1px;
+    }
+    .stage[data-mode="3d"] .bin[data-state="retry"] { outline: 3px solid #9e5932; outline-offset: 1px; }
+    .stage[data-mode="3d"] .bin[data-guide] { outline: 3px solid #fff3a4; outline-offset: 1px; }
+    .stage[data-mode="3d"] .bin:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+    .stage[data-mode="3d"] .bin-label {
+      position: absolute;
+      top: var(--label-y);
+      left: var(--label-x);
+      width: 94%;
+      gap: 2px;
+      transform: translate(-50%, -50%);
+      color: #19372b;
+      line-height: 1.06;
+      font-size: clamp(.67rem, 1.67vw, 1.14rem);
+      pointer-events: none;
+    }
+    .stage[data-mode="3d"] .bin-icon {
+      width: clamp(16px, 2.15vw, 28px);
+      height: clamp(16px, 2.25vw, 28px);
+      background: transparent;
+      font-size: clamp(.85rem, 2vw, 1.45rem);
+    }
+    .stage[data-mode="3d"] .bin-icon-bottle::before { top: 18%; width: 48%; height: 77%; }
+    .stage[data-mode="3d"] .bin-icon-bottle::after { top: 0; width: 25%; height: 30%; }
     .speech-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
     .speech-button, .speech-prepare {
       min-width: 0;
@@ -481,7 +536,7 @@
       font-size: .99rem;
       font-weight: 850;
     }
-    .continue { margin-top: 12px; }
+    .continue { width: auto; margin-left: auto; padding-inline: 18px; }
     .continue:hover, .replay-button:hover { background: #16543d; }
     .noscript { margin-top: 12px; color: #86462b; }
     #finish { display: grid; gap: 14px; }
@@ -504,8 +559,6 @@
     .grownups p { max-width: 74ch; margin-top: 10px; color: var(--muted); font-size: .92rem; line-height: 1.65; word-break: keep-all; }
     .grownups ul { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 10px 0 0; padding: 0 0 0 1em; font-size: .88rem; }
     @media (max-width: 880px) {
-      .classroom { grid-template-columns: minmax(0, 1fr); gap: 13px; }
-      .stage { min-height: 0; aspect-ratio: 1.65; }
       .activity { padding: 17px; }
       #item-card { grid-template-columns: 72px minmax(0, 1fr); }
     }
@@ -514,11 +567,21 @@
       .masthead { min-height: 53px; }
       .intro { padding-block: 23px 16px; }
       .intro p { margin-top: 6px; }
-      .stage { aspect-ratio: auto; border-radius: 21px; }
-      .stage-display { position: relative; inset: auto; aspect-ratio: 1.53; }
-      .activity { padding: 12px; border-radius: 21px; }
-      .stage-controls { position: relative; inset: auto; padding: 8px; }
+      .stage { border-radius: 21px; }
+      .stage-display { aspect-ratio: 1.20; max-height: none; min-height: 265px; }
+      .activity { padding: 12px; }
+      .stage-controls { padding: 8px; }
       .stage-button { min-height: 43px; padding-inline: 9px; border-radius: 11px; }
+      .continue { min-height: 43px; margin-left: 0; }
+      .stage[data-mode="3d"] .bin-label {
+        grid-template-columns: auto auto;
+        align-items: center;
+        width: max-content;
+        max-width: 100%;
+        font-size: .64rem;
+      }
+      .stage[data-mode="3d"] .bin-label > :last-child { max-width: 3.3em; }
+      .stage[data-mode="3d"] .bin-icon { width: 12px; height: 13px; font-size: .71rem; }
       .grownups { margin-top: 15px; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -537,30 +600,47 @@
   <main class="shell">
     <header class="intro">
       <h1>분리배출 교실</h1>
-      <p>물건을 누르면 모모가 알려 줘요. 들어갈 통을 찾아봐요.</p>
+      <p>교실 속 물건을 눌러 보고, 들어갈 통을 직접 골라요.</p>
     </header>
-    <div class="classroom">
-      <section class="stage" id="stage" aria-label="모모의 분리배출 교실">
-        <div class="stage-display">
-          <canvas id="scene" width="960" height="720" aria-hidden="true"></canvas>
-          <div class="scene-fallback" id="scene-fallback" aria-hidden="true">
-            <span class="fallback-window"></span>
-            <span class="fallback-board">♻</span>
-            <span class="fallback-table"></span>
-            <span class="fallback-point"></span>
-            <span class="fallback-momo"><span class="fallback-face"></span></span>
-          </div>
-          <button class="object-target" id="object-target" type="button" aria-label="이 물건 어디에 버리는지 듣기">
-            <span class="object-picture" id="object-picture" aria-hidden="true">📄</span>
-          </button>
+    <section class="stage" id="stage" aria-label="모모와 함께하는 분리배출 교실">
+      <div class="stage-display">
+        <canvas id="scene" width="960" height="720" aria-hidden="true"></canvas>
+        <div class="scene-fallback" id="scene-fallback" aria-hidden="true">
+          <span class="fallback-window"></span>
+          <span class="fallback-board">♻</span>
+          <span class="fallback-table"></span>
+          <span class="fallback-point"></span>
+          <span class="fallback-momo"><span class="fallback-face"></span></span>
         </div>
-        <div class="stage-controls">
-          <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span><span id="listen-label">모모가 알려 줘요</span></button>
-          <button class="stage-button" id="turn" type="button"><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
+        <button class="object-target" id="object-target" type="button" aria-label="이 물건 어디에 버리는지 듣기">
+          <span class="object-picture" id="object-picture" aria-hidden="true">📄</span>
+        </button>
+        <div class="bin-grid" id="bin-grid" role="group" aria-label="교실 속에서 넣을 통 고르기">
+          <button class="bin" data-bin="paper" type="button" aria-label="종이 통"><span class="bin-label"><span class="bin-icon" aria-hidden="true">📄</span><span>종이</span></span></button>
+          <button class="bin" data-bin="pet" type="button" aria-label="투명 페트병 통"><span class="bin-label"><span class="bin-icon bin-icon-bottle" aria-hidden="true"></span><span>투명 페트병</span></span></button>
+          <button class="bin" data-bin="can" type="button" aria-label="캔 통"><span class="bin-label"><span class="bin-icon" aria-hidden="true">🥫</span><span>캔</span></span></button>
+          <button class="bin" data-bin="general" type="button" aria-label="일반 쓰레기통"><span class="bin-label"><span class="bin-icon" aria-hidden="true">🗑</span><span>일반 쓰레기</span></span></button>
         </div>
-      </section>
+      </div>
+      <div class="stage-controls">
+        <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span><span id="listen-label">모모가 알려 줘요</span></button>
+        <button class="stage-button" id="turn" type="button"><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
+        <button class="continue" id="next" type="button" hidden>다음 물건</button>
+      </div>
       <div class="activity">
         <section id="lesson" aria-label="분리배출 놀이">
+          <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+          <div class="speech-controls" id="speech-controls" role="group" aria-label="말로 고르기">
+            <div class="speech-actions">
+              <button class="speech-button" id="speech-start" type="button" aria-pressed="false" aria-describedby="speech-status" disabled>
+                <span class="speech-mic" aria-hidden="true"><span></span></span>
+                <span id="speech-label">말로 고르기</span>
+              </button>
+              <button class="speech-prepare" id="speech-prepare" type="button" hidden>한국어 음성 인식 준비</button>
+            </div>
+            <p class="speech-example" id="speech-write" hidden>“종이”, “페트병”, “캔”, “일반 쓰레기” 중 하나만 말해요.</p>
+            <p id="speech-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          </div>
           <div class="status-row">
             <div class="status-main">
               <p id="progress">첫 번째 문제</p>
@@ -577,25 +657,6 @@
             </div>
           </div>
           <p id="hint"></p>
-          <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
-          <div class="bin-grid" id="bin-grid" role="group" aria-label="넣을 통 고르기">
-            <button class="bin" data-bin="paper" type="button"><span class="bin-icon" aria-hidden="true">📄</span><span>종이</span></button>
-            <button class="bin" data-bin="pet" type="button"><span class="bin-icon bin-icon-bottle" aria-hidden="true"></span><span>투명 페트병</span></button>
-            <button class="bin" data-bin="can" type="button"><span class="bin-icon" aria-hidden="true">🥫</span><span>캔</span></button>
-            <button class="bin" data-bin="general" type="button"><span class="bin-icon" aria-hidden="true">🗑</span><span>일반 쓰레기</span></button>
-          </div>
-          <div class="speech-controls" id="speech-controls" role="group" aria-label="말로 고르기">
-            <div class="speech-actions">
-              <button class="speech-button" id="speech-start" type="button" aria-pressed="false" aria-describedby="speech-status" disabled>
-                <span class="speech-mic" aria-hidden="true"><span></span></span>
-                <span id="speech-label">말로 고르기</span>
-              </button>
-              <button class="speech-prepare" id="speech-prepare" type="button" hidden>한국어 음성 인식 준비</button>
-            </div>
-            <p class="speech-example" id="speech-write" hidden>“종이”, “페트병”, “캔”, “일반 쓰레기” 중 하나만 말해요.</p>
-            <p id="speech-status" role="status" aria-live="polite" aria-atomic="true"></p>
-          </div>
-          <button class="continue" id="next" type="button" hidden>다음 물건 보기</button>
         </section>
         <section id="finish" aria-labelledby="finish-title" hidden>
           <span class="finish-mark" aria-hidden="true">★</span>
@@ -606,10 +667,10 @@
         </section>
         <noscript><p class="noscript">이 놀이에는 브라우저에서 자바스크립트 실행이 필요해요.</p></noscript>
       </div>
-    </div>
+    </section>
     <details class="grownups" id="grownups">
       <summary>보호자·교사 안내</summary>
-      <p>교실에서 물건을 누르거나 ‘모모가 알려 줘요’를 눌러 보세요. 모모가 물건을 가리키고 어느 통에 넣는지와 그 이유를 알려 줘요. 기기에 한국어 음성이 있으면 목소리로도 들을 수 있어요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤 시·군·구 안내를 따라 주세요.</p>
+      <p>교실에서 물건을 눌러 설명을 듣고, 앞에 놓인 통을 직접 골라요. 모모가 물건을 가리키고 어느 통에 넣는지와 그 이유를 알려 줘요. 기기에 한국어 음성이 있으면 목소리로도 들을 수 있어요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤 시·군·구 안내를 따라 주세요.</p>
       <p>말로 고르기는 지원하는 브라우저에서 음성을 이 기기 안에서 인식해요. 이 도구는 마이크 음성과 인식한 말을 외부로 보내거나 저장하지 않아요. 처음에는 보호자가 ‘한국어 음성 인식 준비’를 눌러 인식 자료를 한 번 내려받아야 할 수 있어요. 자료 준비가 어렵거나 마이크를 쓰지 않을 때는 화면에서 통을 골라 계속 놀 수 있어요.</p>
       <ul>
         <li><a href="https://www.law.go.kr/flDownload.do?bylClsCd=200201&amp;flSeq=160907851">국가법령정보센터 품목별 분리배출 요령</a></li>
@@ -626,6 +687,7 @@
   const stage = document.getElementById("stage");
   const fallback = document.getElementById("scene-fallback");
   const objectTarget = document.getElementById("object-target");
+  const binButtons = Array.from(document.querySelectorAll("#bin-grid [data-bin]"));
   const turn = document.getElementById("turn");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
@@ -885,7 +947,7 @@
   }
   box(-3.68,.64,-.04,.4,.072,.27,"e8896b",.15);
   box(-3.20,.67,-.16,.27,.12,.24,"77ae96",-.16);
-  // Planter and small sorting bins at the back of the classroom.
+  // Planter at the back and the four working bins along the front of the room.
   roomCylinder(4.14,.28,-3.22,.32,.27,.32,"e8a16e");
   roomCylinder(4.14,.56,-3.22,.35,.056,.35,"f4b78a");
   for (let j=0;j<5;j+=1) {
@@ -893,35 +955,48 @@
     roomBall(x, .91 + .14*(2-Math.abs(j-2)), -3.21+j*.045, .16,.42,.115,
       j%2 ? "78ad71" : "8eb97a",0,(j-2)*-.28);
   }
-  const destinations = ["paper", "pet", "can", "general"];
-  const binStart = 1.1;
-  const binSpacing = .64;
+  const binZ = 2.8;
+  const binWidth = 1.30;
+  const binHeight = 1.04;
+  const binDepth = .84;
+  const bins = binButtons.map((button, index) => ({
+    button,
+    x: (index - (binButtons.length - 1) / 2) * 1.62,
+    tone: ["8bbecf", "9dc58d", "e6aa76", "ab9abc"][index]
+  }));
+  const binsByKey = new Map(bins.map((bin) => [bin.button.dataset.bin, bin]));
   const itemX = 1.61;
   const itemZ = 1.12;
+  const itemRise = .90;
   const itemHeights = { paper: .49, pet: .73, can: .66, general: .61 };
   const pointTime = .8;
   const sortTime = .86;
-  for (const [i, tones] of ["80bcbf", "8cbb86", "e8a875", "aa9aba"].entries()) {
-    const x = binStart + i * binSpacing;
-    box(x,.32,-2.16,.50,.63,.51,tones);
-    box(x,.65,-2.16,.56,.10,.56,tones);
-    box(x,.705,-2.11,.25,.013,.10,"38756a");
-    box(x,.39,-1.894,.21,.17,.017,"fff4d9");
+  for (const { x, tone } of bins) {
+    roomCylinder(x, .020, binZ + .05, .68, .014, .42, "b58a62");
+    box(x, .41, binZ, binWidth - .1, .80, binDepth - .08, tone);
+    box(x, .811, binZ, binWidth - .13, .022, binDepth - .1, "53655a");
+    for (const side of [-1, 1]) {
+      box(x, .912, binZ + side * .36, binWidth, .256, .12, tone);
+      box(x + side * .58, .912, binZ, .14, .256, binDepth - .24, tone);
+    }
+    box(x, .485, binZ + .391, 1.12, .69, .035, "fff1d6");
   }
   roomCylinder(.06,.014,.73,3.13,.023,2.08,"90b9a2");
   roomCylinder(.06,.038,.73,2.96,.015,1.94,"a6cdb4");
   roomCylinder(.06,.057,.73,2.64,.015,1.69,"b9d7b4");
   roomCylinder(-.36,.079,.93,.85,.009,.45,"a5c5a9");
   roomCylinder(1.64,.078,1.1,.68,.008,.43,"a5c5a9");
-  roomCylinder(1.61,.17,1.12,.57,.09,.46,"eabf89");
-  roomCylinder(1.61,.272,1.12,.58,.045,.46,"fff0c9");
+  roomCylinder(itemX,.46,itemZ,.35,.40,.30,"cd9e68");
+  roomCylinder(itemX,.16 + itemRise,itemZ,.57,.10,.46,"eabf89");
+  roomCylinder(itemX,.272 + itemRise,itemZ,.58,.045,.46,"fff0c9");
 
   let chosen = "paper";
   let reaction = "";
   let reactionElapsed = 0;
   let reactionFrameAt = 0;
-  let targetAngle = .28;
+  let targetAngle = .14;
   let angle = targetAngle;
+  let previousLayout = "";
   let started = 0;
   let lastFrameAt = -Infinity;
   let frameId = 0;
@@ -955,8 +1030,8 @@
     ellipsoid(-.57,1.02,.08,.17,.37,.17,"82b778",-.66);
     const wave = Math.sin(play * 2.5) * .20 + (jump > 0 ? .45 : 0);
     if (pointing) {
-      const shoulder = worldPoint(.46, 1.21, .09);
-      const aim = unit(minus(point(itemX, itemHeights[chosen], itemZ), shoulder));
+      const shoulder = worldPoint(.46, 1.28, .09);
+      const aim = unit(minus(point(itemX, itemRise + itemHeights[chosen], itemZ), shoulder));
       const armYaw = Math.atan2(-aim[2], aim[0]);
       const armTilt = -Math.atan2(Math.hypot(aim[0], aim[2]), aim[1]);
       const alongArm = (length) => shoulder.map((position, i) => position + length * aim[i]);
@@ -990,13 +1065,13 @@
     const yaw = .15 + time * .24;
     const bob = .06 * Math.sin(time * 2.2);
     if (progress >= 1) return out;
-    const targetX = binStart + destinations.indexOf(chosen) * binSpacing;
+    const targetX = binsByKey.get(chosen).x;
     const lift = .95 * Math.sin(Math.PI * progress);
     const size = 1 - .82 * progress * progress;
     function item(shape, x, y, z, sx, sy, sz, tone, tilt = 0, extraYaw = 0) {
       out.push(part(shape, itemX + (targetX - itemX) * progress + size * (Math.cos(yaw)*x + Math.sin(yaw)*z),
-        .035 + (.625 * progress) + y * size + lift + bob,
-        itemZ + (-2.16 - itemZ) * progress + size * (-Math.sin(yaw)*x + Math.cos(yaw)*z),
+        .035 + itemRise - .15 * progress + y * size + lift + bob * (1 - progress),
+        itemZ + (binZ - itemZ) * progress + size * (-Math.sin(yaw)*x + Math.cos(yaw)*z),
         sx * size, sy * size, sz * size, tone, yaw + extraYaw, tilt));
     }
     if (chosen === "paper") {
@@ -1028,22 +1103,52 @@
   }
 
   function binHighlight() {
-    const x = binStart + destinations.indexOf(chosen) * binSpacing;
+    const x = binsByKey.get(chosen).x;
     const tone = "fff1a2";
+    const y = binHeight + .006;
     return [
-      part("box", x, .709, -1.901, .27, .014, .021, tone),
-      part("box", x, .709, -2.419, .27, .014, .021, tone),
-      part("box", x - .259, .709, -2.16, .021, .014, .27, tone),
-      part("box", x + .259, .709, -2.16, .021, .014, .27, tone)
+      part("box", x, y, binZ - .388, .63, .015, .025, tone),
+      part("box", x, y, binZ + .388, .63, .015, .025, tone),
+      part("box", x - .617, y, binZ, .025, .015, .38, tone),
+      part("box", x + .617, y, binZ, .025, .015, .38, tone)
     ];
   }
 
-  function placeObjectTarget(projection) {
-    const y = itemHeights[chosen];
-    const xClip = projection[0] * itemX + projection[4] * y + projection[8] * itemZ + projection[12];
-    const yClip = projection[1] * itemX + projection[5] * y + projection[9] * itemZ + projection[13];
-    objectTarget.style.setProperty("--item-x", (50 + 50 * xClip).toFixed(2) + "%");
-    objectTarget.style.setProperty("--item-y", (50 - 50 * yClip).toFixed(2) + "%");
+  function project(projection, x, y, z) {
+    const horizontal = projection[0] * x + projection[4] * y + projection[8] * z + projection[12];
+    const vertical = projection[1] * x + projection[5] * y + projection[9] * z + projection[13];
+    return [50 + 50 * horizontal, 50 - 50 * vertical];
+  }
+
+  function positionTargets(projection) {
+    const [itemLeft, itemTop] = project(projection, itemX, itemRise + itemHeights[chosen], itemZ);
+    const percent = (value) => value.toFixed(3) + "%";
+    objectTarget.style.setProperty("--item-x", percent(itemLeft));
+    objectTarget.style.setProperty("--item-y", percent(itemTop));
+
+    for (const { x, button } of bins) {
+      const corners = [];
+      for (const side of [-1, 1]) {
+        for (const height of [0, binHeight]) {
+          for (const edge of [-1, 1]) {
+            corners.push(project(projection, x + side * binWidth / 2, height, binZ + edge * binDepth / 2));
+          }
+        }
+      }
+      const columns = corners.map(([left]) => left);
+      const rows = corners.map(([, top]) => top);
+      const left = Math.min(...columns);
+      const top = Math.min(...rows);
+      const width = Math.max(...columns) - left;
+      const height = Math.max(...rows) - top;
+      const [labelX, labelY] = project(projection, x, .51, binZ + .412);
+      button.style.setProperty("--bin-x", percent(left));
+      button.style.setProperty("--bin-y", percent(top));
+      button.style.setProperty("--bin-width", percent(width));
+      button.style.setProperty("--bin-height", percent(height));
+      button.style.setProperty("--label-x", percent(100 * (labelX - left) / width));
+      button.style.setProperty("--label-y", percent(100 * (labelY - top) / height));
+    }
   }
 
   function render(now) {
@@ -1062,11 +1167,12 @@
       canvas.width = width;
       canvas.height = height;
     }
-    angle += (targetAngle - angle) * (reduceMotion.matches ? 1 : .095);
+    angle = reduceMotion.matches || Math.abs(targetAngle - angle) < .001
+      ? targetAngle : angle + (targetAngle - angle) * .095;
     const aspect = width / height;
-    const halfHeight = Math.max(2.62, 3.9 / aspect);
+    const halfHeight = Math.max(3.18, 3.9 / aspect);
     const radius = 12.6;
-    const target = point(-.18, 1.79, -.38);
+    const target = point(-.12, aspect > 1.5 ? 1.68 : 1.45, -.38);
     const eye = point(target[0] + Math.sin(angle) * radius, target[1] + 3.3, target[2] + Math.cos(angle) * radius);
     const projection = camera(eye, target, halfHeight * aspect, halfHeight);
     const progress = reaction === "correct" && !reduceMotion.matches
@@ -1074,7 +1180,11 @@
     const guiding = stage.dataset.guide === chosen;
     stage.toggleAttribute("data-sorting", progress > 0 && progress < 1);
     stage.toggleAttribute("data-sorted", progress >= 1);
-    if (progress === 0) placeObjectTarget(projection);
+    const layout = [width, height, angle, chosen].join("/");
+    if (layout !== previousLayout) {
+      positionTargets(projection);
+      previousLayout = layout;
+    }
     gl.viewport(0, 0, width, height);
     gl.clearColor(.94, .85, .71, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1121,10 +1231,17 @@
   document.addEventListener("visibilitychange", schedule);
   reduceMotion.addEventListener("change", schedule);
   window.classroomStage = {
-    setItem(key) { chosen = key; reaction = ""; canvas.dataset.item = key; schedule(); },
+    setItem(key) {
+      chosen = key;
+      reaction = "";
+      canvas.dataset.item = key;
+      delete stage.dataset.sorting;
+      delete stage.dataset.sorted;
+      schedule();
+    },
     react(kind) { reaction = kind; reactionElapsed = 0; reactionFrameAt = performance.now(); schedule(); },
     showGuide: schedule,
-    turn() { targetAngle = targetAngle > .3 ? -.23 : .45; canvas.dataset.angle = String(targetAngle); schedule(); },
+    turn() { targetAngle = targetAngle > 0 ? -.12 : .20; canvas.dataset.angle = String(targetAngle); schedule(); },
   };
   schedule();
 })();
@@ -1206,7 +1323,7 @@
     note.hidden = true;
     feedback.after(note);
 
-    const roundControls = [progress, progressDots, itemIcon, itemName, prompt, questionVoice, hint, feedback, note, binGrid, next];
+    const roundControls = [progress, progressDots, itemIcon, itemName, prompt, questionVoice, hint, feedback, note];
     const finishIsNested = lesson.contains(finish);
     let round = 0;
     let answered = false;
@@ -1339,7 +1456,7 @@
 
       reactToStage("setItem", item.key);
       document.dispatchEvent(new Event("classroom:activity"));
-      if (moveFocus) focusText(prompt);
+      if (moveFocus) objectTarget.focus();
     }
 
     function chooseBin(button) {
@@ -1366,12 +1483,13 @@
       clearGuide();
       feedback.textContent = "한 번 더 생각해 봐요. " + item.hint;
       reactToStage("react", "retry");
-      document.dispatchEvent(new Event("classroom:activity"));
+      playVoice(feedback.textContent);
     }
 
     function finishLesson() {
       stopSpeaking();
       listen.hidden = true;
+      next.hidden = true;
       objectTarget.hidden = true;
       clearGuide();
       reactToStage("showGuide");
