@@ -94,6 +94,32 @@
     .stage-display { position: absolute; inset: 0; }
     #scene, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
     #scene { display: block; }
+    .object-target {
+      position: absolute;
+      z-index: 2;
+      left: var(--item-x, 69%);
+      top: var(--item-y, 62%);
+      display: grid;
+      place-items: center;
+      width: clamp(53px, 7vw, 83px);
+      height: clamp(57px, 8vw, 90px);
+      transform: translate(-50%, -50%);
+      padding: 0;
+      border: 0;
+      border-radius: 44%;
+      color: var(--ink);
+      background: transparent;
+    }
+    .object-target:hover, .stage[data-guide]:not([data-sorting]) .object-target {
+      outline: 3px solid #fff3a4;
+      outline-offset: 0;
+      box-shadow: 0 0 0 5px #714d2675;
+    }
+    .object-target:focus-visible { outline: 3px solid var(--focus) !important; }
+    .stage:is([data-sorting], [data-sorted]) .object-target { visibility: hidden; }
+    .object-picture { font: 400 clamp(1.75rem, 5vw, 3.15rem)/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif; }
+    .stage[data-mode="3d"] .object-picture { display: none; }
+    .stage[data-mode="fallback"] .object-target { left: 69%; top: 62%; background: #fff4cd; }
     .scene-fallback {
       z-index: 1;
       overflow: hidden;
@@ -197,6 +223,19 @@
       background: #4f8955;
       box-shadow: 0 -2px 0 #719c5d;
     }
+    .fallback-point {
+      position: absolute;
+      display: none;
+      left: 39%;
+      top: 58%;
+      width: 22%;
+      height: clamp(11px, 2.5vw, 23px);
+      border-radius: 99px;
+      transform: rotate(8deg);
+      background: #d99e65;
+      box-shadow: inset 0 -3px #bb814c;
+    }
+    .stage[data-guide] .fallback-point { display: block; }
     .stage-controls {
       position: absolute;
       z-index: 2;
@@ -274,6 +313,17 @@
     }
     #item-name { font-size: clamp(1.48rem, 3vw, 2rem); font-weight: 900; line-height: 1.2; letter-spacing: -.07em; overflow-wrap: anywhere; }
     #prompt { margin-top: 5px; color: #4e5846; font-size: .97rem; font-weight: 700; line-height: 1.46; word-break: keep-all; }
+    .question-voice {
+      min-height: 44px;
+      margin-top: 3px;
+      padding: 5px 0;
+      border: 0;
+      border-radius: 4px;
+      color: var(--green);
+      background: transparent;
+      font-size: .86rem;
+      font-weight: 800;
+    }
     #hint { margin-top: 9px; color: #52675d; font-size: .86rem; line-height: 1.45; word-break: keep-all; }
     #hint:empty { display: none; }
     .bin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 15px; }
@@ -303,6 +353,7 @@
     .bin[data-bin="can"] { --bin-color: #fff1cf; --bin-border: #e6cf94; }
     .bin[data-bin="general"] { --bin-color: #eee9f5; --bin-border: #d2c3e1; }
     .bin:is(.correct, .is-correct, [data-state="correct"]) { outline: 3px solid #2a8056; outline-offset: -3px; }
+    .bin[data-guide]:not([data-state="correct"]) { box-shadow: inset 0 0 0 3px #2a8056; }
     .bin[data-state="retry"] { outline: 3px solid #9e5932; outline-offset: -3px; }
     .bin-icon {
       position: relative;
@@ -400,15 +451,24 @@
     .speech-example, #speech-status { margin-top: 6px; color: var(--muted); font-size: .82rem; line-height: 1.45; word-break: keep-all; }
     #speech-status:empty { margin-top: 0; }
     #feedback {
-      min-height: 46px;
-      margin: 12px 0 0;
+      margin: 12px 0 10px;
       color: #254e3c;
       font-size: .92rem;
       font-weight: 720;
       line-height: 1.48;
       word-break: keep-all;
     }
+    #feedback:empty { margin: 0; }
     #feedback[data-state="retry"] { color: #804c2b; }
+    #feedback:is([data-state="guide"], [data-state="correct"]) {
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      border-left: 4px solid #4a885f;
+      border-radius: 9px;
+      color: #254e3c;
+      background: #eaf3e2;
+      font-size: 1.03rem;
+    }
     .speech-caption { margin: 0 0 10px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
     .continue, .replay-button {
       width: 100%;
@@ -421,6 +481,7 @@
       font-size: .99rem;
       font-weight: 850;
     }
+    .continue { margin-top: 12px; }
     .continue:hover, .replay-button:hover { background: #16543d; }
     .noscript { margin-top: 12px; color: #86462b; }
     #finish { display: grid; gap: 14px; }
@@ -476,7 +537,7 @@
   <main class="shell">
     <header class="intro">
       <h1>분리배출 교실</h1>
-      <p>모모와 함께 물건이 들어갈 통을 찾아요.</p>
+      <p>물건을 누르면 모모가 알려 줘요. 들어갈 통을 찾아봐요.</p>
     </header>
     <div class="classroom">
       <section class="stage" id="stage" aria-label="모모의 분리배출 교실">
@@ -486,11 +547,15 @@
             <span class="fallback-window"></span>
             <span class="fallback-board">♻</span>
             <span class="fallback-table"></span>
+            <span class="fallback-point"></span>
             <span class="fallback-momo"><span class="fallback-face"></span></span>
           </div>
+          <button class="object-target" id="object-target" type="button" aria-label="이 물건 어디에 버리는지 듣기">
+            <span class="object-picture" id="object-picture" aria-hidden="true">📄</span>
+          </button>
         </div>
         <div class="stage-controls">
-          <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span> 모모 목소리 듣기</button>
+          <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span><span id="listen-label">모모가 알려 줘요</span></button>
           <button class="stage-button" id="turn" type="button"><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
         </div>
       </section>
@@ -508,9 +573,11 @@
             <div>
               <h2 id="item-name">깨끗한 종이</h2>
               <p id="prompt">어느 통에 넣을까요?</p>
+              <button class="question-voice" id="question-voice" type="button"><span aria-hidden="true">◖))</span> 문제 듣기</button>
             </div>
           </div>
           <p id="hint"></p>
+          <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
           <div class="bin-grid" id="bin-grid" role="group" aria-label="넣을 통 고르기">
             <button class="bin" data-bin="paper" type="button"><span class="bin-icon" aria-hidden="true">📄</span><span>종이</span></button>
             <button class="bin" data-bin="pet" type="button"><span class="bin-icon bin-icon-bottle" aria-hidden="true"></span><span>투명 페트병</span></button>
@@ -528,7 +595,6 @@
             <p class="speech-example" id="speech-write" hidden>“종이”, “페트병”, “캔”, “일반 쓰레기” 중 하나만 말해요.</p>
             <p id="speech-status" role="status" aria-live="polite" aria-atomic="true"></p>
           </div>
-          <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
           <button class="continue" id="next" type="button" hidden>다음 물건 보기</button>
         </section>
         <section id="finish" aria-labelledby="finish-title" hidden>
@@ -543,10 +609,10 @@
     </div>
     <details class="grownups" id="grownups">
       <summary>보호자·교사 안내</summary>
-      <p>화면 속 물건으로 먼저 연습해요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤, 시·군·구의 분리배출 안내를 따라 주세요. 모모 목소리는 기기에 설치된 한국어 음성으로 들을 수 있어요.</p>
+      <p>교실에서 물건을 누르거나 ‘모모가 알려 줘요’를 눌러 보세요. 모모가 물건을 가리키고 어느 통에 넣는지와 그 이유를 알려 줘요. 기기에 한국어 음성이 있으면 목소리로도 들을 수 있어요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤 시·군·구 안내를 따라 주세요.</p>
       <p>말로 고르기는 지원하는 브라우저에서 음성을 이 기기 안에서 인식해요. 이 도구는 마이크 음성과 인식한 말을 외부로 보내거나 저장하지 않아요. 처음에는 보호자가 ‘한국어 음성 인식 준비’를 눌러 인식 자료를 한 번 내려받아야 할 수 있어요. 자료 준비가 어렵거나 마이크를 쓰지 않을 때는 화면에서 통을 골라 계속 놀 수 있어요.</p>
       <ul>
-        <li><a href="https://www.law.go.kr/LSW/flDownload.do?flSeq=171464865">국가법령정보센터 품목별 분리배출 요령</a></li>
+        <li><a href="https://www.law.go.kr/flDownload.do?bylClsCd=200201&amp;flSeq=160907851">국가법령정보센터 품목별 분리배출 요령</a></li>
         <li><a href="https://www.ddm.go.kr/www/contents.do?key=860">서울 동대문구 재활용품 분리배출</a></li>
         <li><a href="https://www.ddm.go.kr/www/contents.do?key=858">서울 동대문구 일반 쓰레기 배출·수거</a></li>
       </ul>
@@ -559,6 +625,7 @@
   const canvas = document.getElementById("scene");
   const stage = document.getElementById("stage");
   const fallback = document.getElementById("scene-fallback");
+  const objectTarget = document.getElementById("object-target");
   const turn = document.getElementById("turn");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
@@ -568,6 +635,8 @@
     fallback.hidden = false;
     turn.hidden = true;
     stage.dataset.mode = "fallback";
+    delete stage.dataset.sorting;
+    delete stage.dataset.sorted;
   }
 
   if (!gl) {
@@ -827,6 +896,11 @@
   const destinations = ["paper", "pet", "can", "general"];
   const binStart = 1.1;
   const binSpacing = .64;
+  const itemX = 1.61;
+  const itemZ = 1.12;
+  const itemHeights = { paper: .49, pet: .73, can: .66, general: .61 };
+  const pointTime = .8;
+  const sortTime = .86;
   for (const [i, tones] of ["80bcbf", "8cbb86", "e8a875", "aa9aba"].entries()) {
     const x = binStart + i * binSpacing;
     box(x,.32,-2.16,.50,.63,.51,tones);
@@ -853,21 +927,24 @@
   let frameId = 0;
   let drawn = false;
 
-  function mascot(seconds) {
+  function mascot(seconds, pointing) {
     const out = [];
     const play = reduceMotion.matches ? 0 : seconds;
     const elapsed = reactionElapsed;
-    const jump = !reduceMotion.matches && reaction === "correct" && elapsed >= 0 && elapsed < .8
-      ? .37 * Math.sin((elapsed / .8) * Math.PI) : 0;
+    const cheer = elapsed - pointTime;
+    const jump = !reduceMotion.matches && reaction === "correct" && cheer >= 0 && cheer < .8
+      ? .37 * Math.sin((cheer / .8) * Math.PI) : 0;
     const shake = !reduceMotion.matches && reaction === "retry" && elapsed >= 0 && elapsed < .66
       ? Math.sin(elapsed * 27) * (.66 - elapsed) * .15 : 0;
-    const yaw = .28 + Math.sin(play * .55) * .07 + shake;
+    const yaw = (pointing ? .43 : .28) + Math.sin(play * .55) * .07 + shake;
     const pulse = .028 * Math.sin(play * 2.5);
+    const size = 1.13;
+    function worldPoint(x, y, z) {
+      return point(-.56 + size * (Math.cos(yaw) * x + Math.sin(yaw) * z),
+        y * size + jump + pulse, .97 + size * (-Math.sin(yaw) * x + Math.cos(yaw) * z));
+    }
     function body(shape, x, y, z, sx, sy, sz, tone, tilt = 0) {
-      const size = 1.13;
-      const worldX = -.56 + size * (Math.cos(yaw) * x + Math.sin(yaw) * z);
-      const worldZ = .97 + size * (-Math.sin(yaw) * x + Math.cos(yaw) * z);
-      out.push(part(shape, worldX, y * size + jump + pulse, worldZ, sx * size, sy * size, sz * size, tone, yaw, tilt));
+      out.push(part(shape, ...worldPoint(x, y, z), sx * size, sy * size, sz * size, tone, yaw, tilt));
     }
     const ellipsoid = (...args) => body("ball", ...args);
     const green = "91c67e";
@@ -877,8 +954,19 @@
     ellipsoid(0,.83,.386,.384,.41,.165,"ffebaa");
     ellipsoid(-.57,1.02,.08,.17,.37,.17,"82b778",-.66);
     const wave = Math.sin(play * 2.5) * .20 + (jump > 0 ? .45 : 0);
-    ellipsoid(.55,1.16,.06,.16,.38,.16,"8bbe77",-.77-wave);
-    ellipsoid(.77,1.38+wave*.20,.10,.155,.174,.152,"a1d087");
+    if (pointing) {
+      const shoulder = worldPoint(.46, 1.21, .09);
+      const aim = unit(minus(point(itemX, itemHeights[chosen], itemZ), shoulder));
+      const armYaw = Math.atan2(-aim[2], aim[0]);
+      const armTilt = -Math.atan2(Math.hypot(aim[0], aim[2]), aim[1]);
+      const alongArm = (length) => shoulder.map((position, i) => position + length * aim[i]);
+      out.push(part("ball", ...alongArm(.32), .17, .43, .16, "8bbe77", armYaw, armTilt));
+      out.push(part("ball", ...alongArm(.69), .15, .19, .15, "a1d087", armYaw, armTilt));
+      out.push(part("ball", ...alongArm(.88), .052, .20, .052, "a1d087", armYaw, armTilt));
+    } else {
+      ellipsoid(.55,1.16,.06,.16,.38,.16,"8bbe77",-.77-wave);
+      ellipsoid(.77,1.38+wave*.20,.10,.155,.174,.152,"a1d087");
+    }
     ellipsoid(-.72,.83,.13,.146,.17,.14,"a1d087");
     ellipsoid(0,1.76,.067,.67,.576,.554,"a1d28a");
     ellipsoid(0,1.69,.42,.53,.378,.254,"f8eaae");
@@ -896,20 +984,19 @@
     return out;
   }
 
-  function object(seconds) {
+  function object(seconds, progress) {
     const out = [];
     const time = reduceMotion.matches ? 0 : seconds;
     const yaw = .15 + time * .24;
     const bob = .06 * Math.sin(time * 2.2);
-    const progress = reaction === "correct" ? (reduceMotion.matches ? 1 : reactionElapsed / .86) : 0;
     if (progress >= 1) return out;
     const targetX = binStart + destinations.indexOf(chosen) * binSpacing;
     const lift = .95 * Math.sin(Math.PI * progress);
     const size = 1 - .82 * progress * progress;
     function item(shape, x, y, z, sx, sy, sz, tone, tilt = 0, extraYaw = 0) {
-      out.push(part(shape, 1.61 + (targetX - 1.61) * progress + size * (Math.cos(yaw)*x + Math.sin(yaw)*z),
+      out.push(part(shape, itemX + (targetX - itemX) * progress + size * (Math.cos(yaw)*x + Math.sin(yaw)*z),
         .035 + (.625 * progress) + y * size + lift + bob,
-        1.12 - 3.28 * progress + size * (-Math.sin(yaw)*x + Math.cos(yaw)*z),
+        itemZ + (-2.16 - itemZ) * progress + size * (-Math.sin(yaw)*x + Math.cos(yaw)*z),
         sx * size, sy * size, sz * size, tone, yaw + extraYaw, tilt));
     }
     if (chosen === "paper") {
@@ -940,10 +1027,29 @@
     return out;
   }
 
+  function binHighlight() {
+    const x = binStart + destinations.indexOf(chosen) * binSpacing;
+    const tone = "fff1a2";
+    return [
+      part("box", x, .709, -1.901, .27, .014, .021, tone),
+      part("box", x, .709, -2.419, .27, .014, .021, tone),
+      part("box", x - .259, .709, -2.16, .021, .014, .27, tone),
+      part("box", x + .259, .709, -2.16, .021, .014, .27, tone)
+    ];
+  }
+
+  function placeObjectTarget(projection) {
+    const y = itemHeights[chosen];
+    const xClip = projection[0] * itemX + projection[4] * y + projection[8] * itemZ + projection[12];
+    const yClip = projection[1] * itemX + projection[5] * y + projection[9] * itemZ + projection[13];
+    objectTarget.style.setProperty("--item-x", (50 + 50 * xClip).toFixed(2) + "%");
+    objectTarget.style.setProperty("--item-y", (50 - 50 * yClip).toFixed(2) + "%");
+  }
+
   function render(now) {
     if (!started) started = now;
     const sec = (now - started) / 1000;
-    if (reaction && reactionElapsed < .9) {
+    if (reaction && reactionElapsed < pointTime + sortTime) {
       reactionElapsed += Math.min(.07, Math.max(0, (now - reactionFrameAt) / 1000));
       reactionFrameAt = now;
     }
@@ -962,11 +1068,19 @@
     const radius = 12.6;
     const target = point(-.18, 1.79, -.38);
     const eye = point(target[0] + Math.sin(angle) * radius, target[1] + 3.3, target[2] + Math.cos(angle) * radius);
+    const projection = camera(eye, target, halfHeight * aspect, halfHeight);
+    const progress = reaction === "correct" && !reduceMotion.matches
+      ? Math.max(0, (reactionElapsed - pointTime) / sortTime) : 0;
+    const guiding = stage.dataset.guide === chosen;
+    stage.toggleAttribute("data-sorting", progress > 0 && progress < 1);
+    stage.toggleAttribute("data-sorted", progress >= 1);
+    if (progress === 0) placeObjectTarget(projection);
     gl.viewport(0, 0, width, height);
     gl.clearColor(.94, .85, .71, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.uniformMatrix4fv(projectionUniform, false, camera(eye, target, halfHeight * aspect, halfHeight));
-    for (const { mesh, matrix, normals, tone } of [...room, ...mascot(sec), ...object(sec)]) {
+    gl.uniformMatrix4fv(projectionUniform, false, projection);
+    const highlights = guiding ? binHighlight() : [];
+    for (const { mesh, matrix, normals, tone } of [...room, ...mascot(sec, guiding && progress === 0), ...object(sec, progress), ...highlights]) {
       gl.bindBuffer(gl.ARRAY_BUFFER, mesh.buffer);
       gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 24, 0);
       gl.vertexAttribPointer(normal, 3, gl.FLOAT, false, 24, 12);
@@ -1009,6 +1123,7 @@
   window.classroomStage = {
     setItem(key) { chosen = key; reaction = ""; canvas.dataset.item = key; schedule(); },
     react(kind) { reaction = kind; reactionElapsed = 0; reactionFrameAt = performance.now(); schedule(); },
+    showGuide: schedule,
     turn() { targetAngle = targetAngle > .3 ? -.23 : .45; canvas.dataset.angle = String(targetAngle); schedule(); },
   };
   schedule();
@@ -1026,7 +1141,7 @@
       bin: "종이류",
       prompt: "깨끗하고 마른 종이예요. 어느 통에 넣을까요?",
       hint: "물이나 음식이 묻지 않았어요.",
-      answer: "맞아요! 깨끗하고 마른 종이는 종이류에 넣어요."
+      answer: "종이 통에 넣어요. 깨끗하고 마른 종이는 새 종이로 만들 수 있어요."
     },
     {
       key: "pet",
@@ -1035,7 +1150,7 @@
       bin: "투명 페트병",
       prompt: "빈 투명 생수 페트병이에요. 어느 통에 넣을까요?",
       hint: "색이 없는 물병이에요. 비우고 라벨을 뗀 뒤 눌러서 뚜껑을 닫았어요.",
-      answer: "맞아요! 준비한 병은 투명 페트병 통에 따로 넣어요."
+      answer: "투명 페트병 통에 넣어요. 이런 물병끼리 모으면 새 가방을 만들 수 있어요."
     },
     {
       key: "can",
@@ -1044,7 +1159,7 @@
       bin: "캔류",
       prompt: "비우고 헹군 음료 캔이에요. 어느 통에 넣을까요?",
       hint: "속을 깨끗이 비운 금속 캔이에요.",
-      answer: "맞아요! 비우고 헹군 음료 캔은 캔류에 넣어요."
+      answer: "캔 통에 넣어요. 깨끗한 캔을 모아 녹이면 새 캔을 만들 수 있어요."
     },
     {
       key: "general",
@@ -1053,21 +1168,26 @@
       bin: "일반쓰레기",
       prompt: "한 번 사용한 휴지예요. 어느 통에 넣을까요?",
       hint: "이미 코를 닦는 데 썼어요.",
-      answer: "맞아요! 쓴 휴지는 일반쓰레기통에 넣어요."
+      answer: "일반 쓰레기통에 넣어요. 코를 닦은 휴지는 새 종이로 만들기 어려워요."
     }
   ];
 
   function initialize() {
     const get = (id) => document.getElementById(id);
+    const stage = get("stage");
     const scene = get("scene");
     const sceneFallback = get("scene-fallback");
+    const objectTarget = get("object-target");
+    const objectPicture = get("object-picture");
     const listen = get("listen");
+    const listenLabel = get("listen-label");
     const turn = get("turn");
     const progress = get("progress");
     const progressDots = get("progress-dots");
     const itemIcon = get("item-icon");
     const itemName = get("item-name");
     const prompt = get("prompt");
+    const questionVoice = get("question-voice");
     const hint = get("hint");
     const feedback = get("feedback");
     const binGrid = get("bin-grid");
@@ -1084,9 +1204,9 @@
     note.className = "speech-caption";
     note.setAttribute("role", "status");
     note.hidden = true;
-    hint.after(note);
+    feedback.after(note);
 
-    const roundControls = [progress, progressDots, itemIcon, itemName, prompt, hint, feedback, note, binGrid, next];
+    const roundControls = [progress, progressDots, itemIcon, itemName, prompt, questionVoice, hint, feedback, note, binGrid, next];
     const finishIsNested = lesson.contains(finish);
     let round = 0;
     let answered = false;
@@ -1122,12 +1242,10 @@
       }
     }
 
-    function playVoice() {
+    function playVoice(message) {
       document.dispatchEvent(new Event("classroom:activity"));
       stopSpeaking();
-      const item = items[round];
-      const message = feedback.textContent || (item.prompt + " " + item.hint);
-      const unavailable = "소리를 재생할 수 없어요. " + message;
+      const unavailable = "이 기기에서는 모모 목소리를 들을 수 없어요.";
       const synthesis = window.speechSynthesis;
       const VoiceMessage = window.SpeechSynthesisUtterance;
       try {
@@ -1161,6 +1279,23 @@
       }
     }
 
+    function clearGuide() {
+      delete stage.dataset.guide;
+      bins.forEach((bin) => { delete bin.dataset.guide; });
+      listenLabel.textContent = "모모가 알려 줘요";
+    }
+
+    function explainItem() {
+      const item = items[round];
+      stage.dataset.guide = item.key;
+      bins.find((bin) => bin.dataset.bin === item.key).dataset.guide = "true";
+      listenLabel.textContent = "설명 다시 듣기";
+      feedback.dataset.state = answered ? "correct" : "guide";
+      feedback.textContent = item.answer;
+      reactToStage("showGuide");
+      playVoice(item.answer);
+    }
+
     function drawRound(moveFocus = false) {
       stopSpeaking();
       const item = items[round];
@@ -1168,9 +1303,14 @@
       finish.hidden = true;
       lesson.hidden = false;
       listen.hidden = false;
+      objectTarget.hidden = false;
+      objectTarget.disabled = false;
+      objectTarget.setAttribute("aria-label", item.name + " 어디에 버리는지 듣기");
+      objectPicture.textContent = item.icon;
       roundControls.forEach((element) => { element.hidden = false; });
       restart.hidden = round === 0;
       showNote();
+      clearGuide();
 
       scene.dataset.item = item.key;
       if (sceneFallback) sceneFallback.dataset.item = item.key;
@@ -1214,15 +1354,16 @@
 
       if (correct) {
         answered = true;
-        feedback.textContent = item.answer;
         next.hidden = false;
-        next.focus();
+        next.focus({ preventScroll: true });
         bins.forEach((bin) => { bin.disabled = true; });
+        objectTarget.disabled = true;
         reactToStage("react", "correct");
-        document.dispatchEvent(new Event("classroom:activity"));
+        explainItem();
         return;
       }
 
+      clearGuide();
       feedback.textContent = "한 번 더 생각해 봐요. " + item.hint;
       reactToStage("react", "retry");
       document.dispatchEvent(new Event("classroom:activity"));
@@ -1231,6 +1372,9 @@
     function finishLesson() {
       stopSpeaking();
       listen.hidden = true;
+      objectTarget.hidden = true;
+      clearGuide();
+      reactToStage("showGuide");
       if (finishIsNested) {
         roundControls.forEach((element) => { element.hidden = true; });
       } else {
@@ -1256,7 +1400,12 @@
     }
 
     bins.forEach((bin) => bin.addEventListener("click", () => chooseBin(bin)));
-    listen.addEventListener("click", playVoice);
+    objectTarget.addEventListener("click", explainItem);
+    listen.addEventListener("click", explainItem);
+    questionVoice.addEventListener("click", () => {
+      const item = items[round];
+      playVoice(item.prompt + " " + item.hint);
+    });
     document.addEventListener("classroom:mic", stopSpeaking);
     turn.addEventListener("click", () => {
       if (!reactToStage("turn")) showNote("그림을 보고 물건을 살펴봐요.");
