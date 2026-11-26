@@ -336,6 +336,69 @@
       border-radius: 2px 2px 0 0;
       background: #47785e;
     }
+    .speech-controls {
+      margin-top: 14px;
+      border-top: 1px solid #ede2d0;
+      padding-top: 12px;
+    }
+    .speech-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+    .speech-button, .speech-prepare {
+      min-width: 0;
+      min-height: 47px;
+      max-width: 100%;
+      border: 1px solid #c8d9b8;
+      border-radius: 13px;
+      padding: 7px 11px;
+      color: #244f3c;
+      background: #ebf3e1;
+      font-weight: 840;
+      line-height: 1.3;
+      text-align: center;
+      word-break: keep-all;
+    }
+    .speech-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+    .speech-button:hover:not(:disabled) { background: #ddecce; }
+    .speech-button[aria-pressed="true"] { color: #fff; background: #206b4e; border-color: #206b4e; }
+    .speech-button:disabled { color: #59665d; border-color: #deded2; background: #f1f1e7; }
+    .speech-mic {
+      position: relative;
+      display: inline-block;
+      flex: 0 0 18px;
+      width: 18px;
+      height: 22px;
+    }
+    .speech-mic::before {
+      position: absolute;
+      top: 0;
+      left: 5px;
+      width: 8px;
+      height: 13px;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      content: "";
+    }
+    .speech-mic::after {
+      position: absolute;
+      top: 7px;
+      left: 2px;
+      width: 14px;
+      height: 11px;
+      border: 2px solid currentColor;
+      border-top: 0;
+      border-radius: 0 0 8px 8px;
+      content: "";
+    }
+    .speech-mic span { position: absolute; top: 18px; left: 8px; width: 2px; height: 4px; border-radius: 1px; background: currentColor; }
+    .speech-prepare { color: #5b4a2d; background: #fff5dc; border-color: #e6d7ae; font-size: .82rem; }
+    .speech-prepare:hover:not(:disabled) { background: #f8eccb; }
+    .speech-example, #speech-status { margin-top: 6px; color: var(--muted); font-size: .82rem; line-height: 1.45; word-break: keep-all; }
+    #speech-status:empty { margin-top: 0; }
     #feedback {
       min-height: 46px;
       margin: 12px 0 0;
@@ -454,6 +517,17 @@
             <button class="bin" data-bin="can" type="button"><span class="bin-icon" aria-hidden="true">🥫</span><span>캔</span></button>
             <button class="bin" data-bin="general" type="button"><span class="bin-icon" aria-hidden="true">🗑</span><span>일반 쓰레기</span></button>
           </div>
+          <div class="speech-controls" id="speech-controls" role="group" aria-label="말로 고르기">
+            <div class="speech-actions">
+              <button class="speech-button" id="speech-start" type="button" aria-pressed="false" aria-describedby="speech-status" disabled>
+                <span class="speech-mic" aria-hidden="true"><span></span></span>
+                <span id="speech-label">말로 고르기</span>
+              </button>
+              <button class="speech-prepare" id="speech-prepare" type="button" hidden>한국어 음성 인식 준비</button>
+            </div>
+            <p class="speech-example" id="speech-write" hidden>“종이”, “페트병”, “캔”, “일반 쓰레기” 중 하나만 말해요.</p>
+            <p id="speech-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          </div>
           <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
           <button class="continue" id="next" type="button" hidden>다음 물건 보기</button>
         </section>
@@ -470,6 +544,7 @@
     <details class="grownups" id="grownups">
       <summary>보호자·교사 안내</summary>
       <p>화면 속 물건으로 먼저 연습해요. 실제로 배출할 때는 용기가 비어 있고 깨끗한지 어른과 확인한 뒤, 시·군·구의 분리배출 안내를 따라 주세요. 모모 목소리는 기기에 설치된 한국어 음성으로 들을 수 있어요.</p>
+      <p>말로 고르기는 지원하는 브라우저에서 음성을 이 기기 안에서 인식해요. 이 도구는 마이크 음성과 인식한 말을 외부로 보내거나 저장하지 않아요. 처음에는 보호자가 ‘한국어 음성 인식 준비’를 눌러 인식 자료를 한 번 내려받아야 할 수 있어요. 자료 준비가 어렵거나 마이크를 쓰지 않을 때는 화면에서 통을 골라 계속 놀 수 있어요.</p>
       <ul>
         <li><a href="https://www.law.go.kr/LSW/flDownload.do?flSeq=171464865">국가법령정보센터 품목별 분리배출 요령</a></li>
         <li><a href="https://www.ddm.go.kr/www/contents.do?key=860">서울 동대문구 재활용품 분리배출</a></li>
@@ -1048,6 +1123,7 @@
     }
 
     function playVoice() {
+      document.dispatchEvent(new Event("classroom:activity"));
       stopSpeaking();
       const item = items[round];
       const message = feedback.textContent || (item.prompt + " " + item.hint);
@@ -1122,6 +1198,7 @@
       });
 
       reactToStage("setItem", item.key);
+      document.dispatchEvent(new Event("classroom:activity"));
       if (moveFocus) focusText(prompt);
     }
 
@@ -1142,11 +1219,13 @@
         next.focus();
         bins.forEach((bin) => { bin.disabled = true; });
         reactToStage("react", "correct");
+        document.dispatchEvent(new Event("classroom:activity"));
         return;
       }
 
       feedback.textContent = "한 번 더 생각해 봐요. " + item.hint;
       reactToStage("react", "retry");
+      document.dispatchEvent(new Event("classroom:activity"));
     }
 
     function finishLesson() {
@@ -1167,6 +1246,7 @@
         return row;
       }));
       finish.hidden = false;
+      document.dispatchEvent(new Event("classroom:activity"));
       focusText(finish.querySelector("h1, h2") || replay);
     }
 
@@ -1177,6 +1257,7 @@
 
     bins.forEach((bin) => bin.addEventListener("click", () => chooseBin(bin)));
     listen.addEventListener("click", playVoice);
+    document.addEventListener("classroom:mic", stopSpeaking);
     turn.addEventListener("click", () => {
       if (!reactToStage("turn")) showNote("그림을 보고 물건을 살펴봐요.");
     });
@@ -1192,6 +1273,225 @@
     restart.addEventListener("click", reset);
     replay.addEventListener("click", reset);
     drawRound();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  } else {
+    initialize();
+  }
+})();
+</script>
+  <script>
+(() => {
+  "use strict";
+
+  const aliases = new Map([
+    ["paper", ["종이", "종이류", "종이함", "종이통", "종이류함"]],
+    ["pet", ["페트병", "투명페트병", "투명한페트병", "투명페트병통", "페트병통", "페트병함", "생수페트병"]],
+    ["can", ["캔", "캔류", "캔함", "캔통", "음료캔"]],
+    ["general", ["일반쓰레기", "일반쓰레기통", "일반쓰레기함", "종량제", "종량제봉투"]],
+    ["next", ["다음", "다음물건", "다음으로", "다음문제"]],
+  ]);
+  const names = { paper: "종이", pet: "투명 페트병", can: "캔", general: "일반 쓰레기" };
+  const ending = /(?:이예요|이에요|예요|에요|입니다|으로넣어요|로넣어요|에넣어요|에넣어|로할래요|할래요|요)$/u;
+
+  function recognizeWord(transcript) {
+    const word = transcript.normalize("NFKC").replace(/[\s.,!?。！？]+/gu, "");
+    const bare = word.replace(ending, "");
+    for (const [key, words] of aliases) {
+      if (words.includes(word) || words.includes(bare)) return key;
+    }
+    return "";
+  }
+
+  function initialize() {
+    const get = id => document.getElementById(id);
+    const speech = get("speech-start");
+    const label = get("speech-label");
+    const prepare = get("speech-prepare");
+    const status = get("speech-status");
+    const example = get("speech-write");
+    const lesson = get("lesson");
+    const next = get("next");
+    const bins = new Map(Array.from(get("bin-grid").querySelectorAll("[data-bin]"),
+      button => [button.dataset.bin, button]));
+    const API = [window.SpeechRecognition, window.webkitSpeechRecognition].find(implementation =>
+      implementation?.prototype && "processLocally" in implementation.prototype &&
+      typeof implementation.available === "function");
+    const options = { langs: ["ko-KR"], processLocally: true, quality: "command" };
+    let availability = "checking";
+    let downloading = false;
+    let active = null;
+
+    function tell(message) {
+      status.textContent = message;
+    }
+
+    function phase() {
+      if (lesson.hidden) return "";
+      if (!next.hidden) return "next";
+      return Array.from(bins.values()).some(button => !button.disabled) ? "choose" : "";
+    }
+
+    function updateControls() {
+      const canStart = availability === "available" && Boolean(phase()) && !document.hidden;
+      speech.disabled = !active && !canStart;
+      speech.setAttribute("aria-pressed", String(Boolean(active)));
+      label.textContent = active ? "그만 듣기" : "말로 고르기";
+      prepare.hidden = !downloading && (availability !== "downloadable" || typeof API?.install !== "function");
+      prepare.disabled = downloading;
+      example.hidden = availability !== "available" || phase() !== "choose" || Boolean(active);
+    }
+
+    function readyMessage() {
+      switch (availability) {
+        case "available":
+          return phase() === "next" ? "말로 고르기를 누르고 ‘다음’이라고 말해도 돼요." : "말로 고르기를 누르고 통 이름을 말해요.";
+        case "checking":
+          return "기기에서 한국어를 들을 수 있는지 확인하고 있어요.";
+        case "downloadable":
+          return typeof API?.install === "function"
+            ? "처음에는 어른이 한국어 음성 인식을 준비해 주세요."
+            : "이 브라우저에는 한국어 설치 기능이 없어요. 통을 눌러 골라요.";
+        case "downloading":
+          return "기기가 한국어를 준비하고 있어요. 지금은 통을 눌러 골라도 돼요.";
+        default:
+          return "이 브라우저에서는 기기 안 한국어 인식을 쓸 수 없어요. 통을 눌러 골라요.";
+      }
+    }
+
+    async function refreshAvailability() {
+      try {
+        availability = API && isSecureContext ? await API.available(options) : "unavailable";
+      } catch {
+        availability = "unavailable";
+      }
+      updateControls();
+      tell(readyMessage());
+    }
+
+    function stop(session, message) {
+      if (session !== active) return;
+      active = null;
+      clearTimeout(session.timeout);
+      try { session.recognition.abort(); } catch {}
+      updateControls();
+      tell(message);
+    }
+
+    function guide(target) {
+      return target === "next" ? "‘다음’이라고 한 번 말해 주세요. 다음 물건 버튼을 눌러도 돼요."
+        : "‘종이’, ‘페트병’, ‘캔’, ‘일반 쓰레기’ 중 하나를 말해 주세요.";
+    }
+
+    function applyWord(session, result) {
+      if (session !== active || !result?.isFinal) return;
+      const transcript = result[0]?.transcript;
+      const key = typeof transcript === "string" ? recognizeWord(transcript) : "";
+      const action = key === "next" && session.target === "next" ? next
+        : session.target === "choose" ? bins.get(key) : null;
+      if (!action || action.disabled || action.hidden || phase() !== session.target) {
+        stop(session, "한 번 더 들어 볼까요? " + guide(session.target));
+        return;
+      }
+      stop(session, "");
+      action.click();
+      if (key !== "next") {
+        tell("‘" + names[key] + "’ 통을 골랐어요. " + (phase() === "next" ? "‘다음’이라고 말해도 돼요." : "다시 골라도 돼요."));
+      }
+    }
+
+    function start() {
+      if (active) {
+        stop(active, "지금은 듣기를 멈췄어요.");
+        return;
+      }
+      const target = phase();
+      if (availability !== "available" || !target || document.hidden) return;
+      let recognition;
+      try {
+        recognition = new API();
+        recognition.processLocally = true;
+        if (recognition.processLocally !== true) throw new Error("Local recognition is unavailable");
+        recognition.lang = "ko-KR";
+        if ("quality" in recognition) recognition.quality = "command";
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+      } catch {
+        availability = "unavailable";
+        updateControls();
+        tell(readyMessage());
+        return;
+      }
+
+      const session = { recognition, target, timeout: 0 };
+      const timeOut = () => stop(session, "다시 들어 볼까요? " + guide(target));
+      active = session;
+      recognition.onstart = () => {
+        if (active !== session) return;
+        clearTimeout(session.timeout);
+        session.timeout = setTimeout(timeOut, 6500);
+        tell("모모가 듣고 있어요. " + guide(target));
+      };
+      recognition.onresult = event => applyWord(session, event.results[event.resultIndex]);
+      recognition.onnomatch = timeOut;
+      recognition.onend = timeOut;
+      recognition.onerror = (event) => {
+        if (active !== session) return;
+        if (event.error === "not-allowed" || event.error === "audio-capture") {
+          stop(session, "마이크를 사용할 수 없어요. 어른에게 확인해 달라고 하거나 통을 눌러 골라요.");
+        } else if (event.error === "service-not-allowed" || event.error === "language-not-supported" || event.error === "network") {
+          stop(session, "기기 안 한국어 인식을 시작할 수 없어요. 통을 눌러 골라요.");
+        } else {
+          timeOut();
+        }
+      };
+
+      updateControls();
+      tell("마이크를 준비하고 있어요.");
+      document.dispatchEvent(new Event("classroom:mic"));
+      session.timeout = setTimeout(timeOut, 12000);
+      try {
+        recognition.start();
+      } catch {
+        stop(session, "듣기를 시작할 수 없어요. 통을 눌러 골라요.");
+      }
+    }
+
+    prepare.addEventListener("click", async () => {
+      if (availability !== "downloadable" || downloading || typeof API?.install !== "function") return;
+      downloading = true;
+      updateControls();
+      tell("기기에서 한국어 음성 인식을 준비하고 있어요. 준비하는 동안 통을 눌러 놀 수 있어요.");
+      let installed = false;
+      try {
+        installed = await API.install(options);
+      } catch {}
+      downloading = false;
+      await refreshAvailability();
+      if (!installed && availability !== "available") tell("한국어 음성 인식을 준비하지 못했어요. 통을 눌러 골라요.");
+    });
+
+    speech.addEventListener("click", start);
+    document.addEventListener("classroom:activity", () => {
+      if (active) {
+        stop(active, readyMessage());
+      } else {
+        updateControls();
+        if (!downloading) tell(readyMessage());
+      }
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && active) stop(active, "다른 화면으로 이동해서 듣기를 멈췄어요.");
+      if (!document.hidden && availability === "downloading" && !downloading) refreshAvailability();
+      updateControls();
+    });
+    addEventListener("pagehide", () => {
+      if (active) stop(active, "");
+    });
+    refreshAvailability();
   }
 
   if (document.readyState === "loading") {
