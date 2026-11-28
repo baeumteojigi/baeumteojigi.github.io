@@ -137,7 +137,8 @@
     }
 
     .tool.handoff { --accent: var(--ink); --tile: var(--sky); }
-    .tool.classroom { --accent: #80503b; --tile: #faebcb; }
+    .tool.classroom { --accent: var(--green); --tile: #faebcb; }
+    .tool.classroom h2 { color: var(--accent); }
 
     .tool-icon {
       display: grid;
@@ -178,7 +179,7 @@
     .action:hover { background: var(--tile, var(--mint)); }
     .action.primary:hover { background: #0e4535; }
     .handoff .action.primary:hover { background: #102f42; }
-    .classroom .action.primary:hover { background: #5e372a; }
+    .classroom .action.primary:hover { background: #0e4535; }
 
     .samples {
       margin-top: clamp(3rem, 7vw, 5rem);
