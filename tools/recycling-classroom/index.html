@@ -247,6 +247,8 @@
       gap: 8px;
       pointer-events: none;
     }
+    #stage[data-mode="fallback"] #scene:not([hidden]) { opacity: 0; }
+    #stage-mode-status { flex: 1 0 100%; margin: 0; padding: 6px 10px; background: #fffdf4; color: var(--ink); border-radius: 9px; }
     .stage-button, .restart-button {
       display: inline-flex;
       align-items: center;
@@ -537,12 +539,13 @@
   <main class="shell">
     <header class="intro">
       <h1>분리배출 교실</h1>
-      <p>물건을 누르면 모모가 알려 줘요. 들어갈 통을 찾아봐요.</p>
+      <p>아래에서 통을 눌러 바로 시작해요. 마이크 없이도 놀 수 있어요.</p>
+      <a class="guide-link" href="#lesson">분리배출 놀이로 바로 가기</a>
     </header>
     <div class="classroom">
-      <section class="stage" id="stage" aria-label="모모의 분리배출 교실">
+      <section class="stage" id="stage" data-mode="fallback" aria-label="모모의 분리배출 교실">
         <div class="stage-display">
-          <canvas id="scene" width="960" height="720" aria-hidden="true"></canvas>
+          <canvas id="scene" width="960" height="720" aria-hidden="true" hidden></canvas>
           <div class="scene-fallback" id="scene-fallback" aria-hidden="true">
             <span class="fallback-window"></span>
             <span class="fallback-board">♻</span>
@@ -556,11 +559,12 @@
         </div>
         <div class="stage-controls">
           <button class="stage-button" id="listen" type="button"><span class="stage-symbol" aria-hidden="true">◖))</span><span id="listen-label">모모가 알려 줘요</span></button>
-          <button class="stage-button" id="turn" type="button"><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
+          <button class="stage-button" id="turn" type="button" hidden><span class="stage-symbol" aria-hidden="true">⟳</span> 교실 돌려 보기</button>
+          <p id="stage-mode-status" class="speech-caption" role="status" tabindex="-1" hidden></p>
         </div>
       </section>
       <div class="activity">
-        <section id="lesson" aria-label="분리배출 놀이">
+        <section id="lesson" tabindex="-1" aria-label="분리배출 놀이">
           <div class="status-row">
             <div class="status-main">
               <p id="progress">첫 번째 문제</p>
@@ -627,8 +631,14 @@
   const fallback = document.getElementById("scene-fallback");
   const objectTarget = document.getElementById("object-target");
   const turn = document.getElementById("turn");
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
+  const status = document.getElementById("stage-mode-status");
+  let stopped = false;
+  let stopRendering = () => {};
+
+  const tell = (message) => {
+    status.textContent = message;
+    status.hidden = !message;
+  };
 
   function useFallback() {
     canvas.hidden = true;
@@ -639,16 +649,28 @@
     delete stage.dataset.sorted;
   }
 
-  if (!gl) {
+  function stopWithFallback() {
+    stopped = true;
+    stopRendering();
+    delete window.classroomStage;
+    const transferFocus = document.activeElement === turn;
     useFallback();
-    return;
+    tell("3D 화면을 표시하지 못했어요. 통을 눌러 풀던 문제를 이어가요.");
+    if (transferFocus) status.focus({ preventScroll: true });
   }
+
+  function start3D() {
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const mobile = matchMedia("(pointer: coarse)").matches || matchMedia("(max-width: 760px)").matches;
+  const gl = canvas.getContext("webgl", { alpha: false, antialias: !mobile });
+  if (!gl || gl.isContextLost()) { stopWithFallback(); return; }
+  canvas.hidden = false;
 
   const vertex = [
     "attribute vec3 aPosition, aNormal;",
     "uniform mat4 uModel, uViewProjection;",
     "uniform mat3 uNormal;",
-    "varying vec3 vNormal;",
+    "varying mediump vec3 vNormal;",
     "void main() {",
     "  vec4 world = uModel * vec4(aPosition, 1.0);",
     "  vNormal = normalize(uNormal * aNormal);",
@@ -658,7 +680,7 @@
   const fragment = [
     "precision mediump float;",
     "uniform vec3 uColor;",
-    "varying vec3 vNormal;",
+    "varying mediump vec3 vNormal;",
     "void main() {",
     "  vec3 normal = normalize(vNormal);",
     "  float glow = max(dot(normal, normalize(vec3(-0.55, 0.92, 0.72))), 0.0);",
@@ -688,7 +710,7 @@
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
   } catch (error) {
     console.warn("3D 교실을 열 수 없습니다.", error);
-    useFallback();
+    stopWithFallback();
     return;
   }
 
@@ -770,8 +792,8 @@
 
   function buildSphere() {
     const data = [];
-    const radial = 22;
-    const bands = 14;
+    const radial = mobile ? 14 : 22;
+    const bands = mobile ? 9 : 14;
     function sample(ring, step) {
       const lat = Math.PI * ring / bands;
       const lon = 2 * Math.PI * step / radial;
@@ -790,7 +812,7 @@
   function buildCylinder() {
     const data = [];
     const print = (p, n) => data.push(...p, ...n);
-    const count = 28;
+    const count = mobile ? 18 : 28;
     for (let step = 0; step < count; step += 1) {
       const a = 2 * Math.PI * step / count, b = 2 * Math.PI * (step + 1) / count;
       const n = [Math.cos(a), 0, Math.sin(a)], m = [Math.cos(b), 0, Math.sin(b)];
@@ -916,7 +938,7 @@
   roomCylinder(1.61,.17,1.12,.57,.09,.46,"eabf89");
   roomCylinder(1.61,.272,1.12,.58,.045,.46,"fff0c9");
 
-  let chosen = "paper";
+  let chosen = canvas.dataset.item || "paper";
   let reaction = "";
   let reactionElapsed = 0;
   let reactionFrameAt = 0;
@@ -1055,14 +1077,16 @@
     }
     const dims = canvas.getBoundingClientRect();
     if (!dims.width || !dims.height) return;
-    const dpr = Math.min(devicePixelRatio || 1, 1.6);
-    const width = Math.round(dims.width * dpr);
-    const height = Math.round(dims.height * dpr);
+    const dpr = Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.6,
+      mobile ? 640 / Math.max(dims.width, dims.height) : Infinity);
+    const width = Math.max(1, Math.round(dims.width * dpr));
+    const height = Math.max(1, Math.round(dims.height * dpr));
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
     }
-    angle += (targetAngle - angle) * (reduceMotion.matches ? 1 : .095);
+    const angleGap = targetAngle - angle;
+    angle += angleGap * (reduceMotion.matches || Math.abs(angleGap) < .002 ? 1 : mobile ? .22 : .095);
     const aspect = width / height;
     const halfHeight = Math.max(2.62, 3.9 / aspect);
     const radius = 12.6;
@@ -1094,32 +1118,44 @@
       stage.dataset.mode = "3d";
       canvas.dataset.rendered = "true";
       fallback.hidden = true;
+      turn.hidden = false;
+      tell("");
     }
   }
 
   function draw(now) {
     frameId = 0;
-    if (document.hidden) return;
-    if (reduceMotion.matches || now - lastFrameAt >= 25) {
+    if (stopped || document.hidden) return;
+    try {
+      if (gl.isContextLost()) { stopWithFallback(); return; }
+      if (!reduceMotion.matches && now - lastFrameAt < (mobile ? 40 : 25)) {
+        schedule();
+        return;
+      }
       render(now);
       lastFrameAt = now;
+      const moving = angle !== targetAngle || (reaction && reactionElapsed < pointTime + sortTime);
+      if (!drawn || (!reduceMotion.matches && (!mobile || moving))) schedule();
+    } catch {
+      stopWithFallback();
     }
-    if (!reduceMotion.matches) schedule();
   }
 
   function schedule() {
-    if (!frameId && !gl.isContextLost()) frameId = requestAnimationFrame(draw);
+    if (stopped || frameId) return;
+    if (gl.isContextLost()) { stopWithFallback(); return; }
+    frameId = requestAnimationFrame(draw);
   }
 
-  canvas.addEventListener("webglcontextlost", (event) => {
-    event.preventDefault();
+  stopRendering = () => {
     cancelAnimationFrame(frameId);
     frameId = 0;
-    useFallback();
-  });
+  };
+  canvas.addEventListener("webglcontextlost", stopWithFallback);
   addEventListener("resize", schedule);
   document.addEventListener("visibilitychange", schedule);
-  reduceMotion.addEventListener("change", schedule);
+  if (typeof reduceMotion.addEventListener === "function") reduceMotion.addEventListener("change", schedule);
+  else if (typeof reduceMotion.addListener === "function") reduceMotion.addListener(schedule);
   window.classroomStage = {
     setItem(key) { chosen = key; reaction = ""; canvas.dataset.item = key; schedule(); },
     react(kind) { reaction = kind; reactionElapsed = 0; reactionFrameAt = performance.now(); schedule(); },
@@ -1127,6 +1163,11 @@
     turn() { targetAngle = targetAngle > .3 ? -.23 : .45; canvas.dataset.angle = String(targetAngle); schedule(); },
   };
   schedule();
+  }
+
+  requestAnimationFrame(() => {
+    try { start3D(); } catch { stopWithFallback(); }
+  });
 })();
 </script>
   <script>
